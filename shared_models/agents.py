@@ -5,11 +5,10 @@ Pydantic models for AI agent inputs and outputs.
 All agent outputs are strict JSON with confidence scores.
 """
 
-from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from typing import Any
+from typing import Any, Optional
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field, field_validator
@@ -207,17 +206,17 @@ class TriageResult(BaseAgentOutput):
     )
 
     # Structured incident mapping fields requested by UI
-    raw_log: str | None = Field(default=None, description="Representative raw log line")
-    source_ip: str | None = Field(default=None, description="Source IP")
-    destination_ip: str | None = Field(default=None, description="Destination IP/host")
+    raw_log: Optional[str] = Field(default=None, description="Representative raw log line")
+    source_ip: Optional[str] = Field(default=None, description="Source IP")
+    destination_ip: Optional[str] = Field(default=None, description="Destination IP/host")
     suspicious: bool = Field(default=True, description="Whether behavior is suspicious")
     suspicious_indicator: str = Field(default="null", description="url|referer|user_agent|payload|source ip|null")
-    attack_name: str | None = Field(default=None, description="Attack or pattern name")
-    brief_description: str | None = Field(default=None, description="Short analyst-readable description")
-    recommended_action_short: str | None = Field(default=None, description="Primary response action")
+    attack_name: Optional[str] = Field(default=None, description="Attack or pattern name")
+    brief_description: Optional[str] = Field(default=None, description="Short analyst-readable description")
+    recommended_action_short: Optional[str] = Field(default=None, description="Primary response action")
     confidence_score: int = Field(default=1, ge=1, le=10, description="Confidence score from 1 to 10")
-    mitre_tactic: str | None = Field(default=None, description="MITRE ATT&CK tactic")
-    mitre_technique: str | None = Field(default=None, description="MITRE technique ID")
+    mitre_tactic: Optional[str] = Field(default=None, description="MITRE ATT&CK tactic")
+    mitre_technique: Optional[str] = Field(default=None, description="MITRE technique ID")
 
 
 class AgentOutput(BaseModel):
@@ -229,10 +228,10 @@ class AgentOutput(BaseModel):
     chunk_id: UUID
     
     # Individual agent outputs
-    behavioral: BehavioralInterpretation | None = None
-    intent: ThreatIntent | None = None
-    mitre: MitreMapping | None = None
-    triage: TriageResult | None = None
+    behavioral: Optional[BehavioralInterpretation] = None
+    intent: Optional[ThreatIntent] = None
+    mitre: Optional[MitreMapping] = None
+    triage: Optional[TriageResult] = None
     
     # Overall assessment
     overall_confidence: float = Field(
@@ -275,5 +274,5 @@ class AgentError(BaseModel):
     agent_name: str
     error_type: str
     error_message: str
-    raw_output: str | None = None
+    raw_output: Optional[str] = None
     timestamp: datetime = Field(default_factory=datetime.utcnow)

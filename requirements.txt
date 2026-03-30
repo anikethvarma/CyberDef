@@ -36,3 +36,5 @@ python-dotenv>=1.0.0
 # Development Dependencies
 pytest>=7.4.0
 ruff>=0.1.0
+eval_type_backport
+

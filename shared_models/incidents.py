@@ -4,13 +4,13 @@ Incident Models
 Pydantic models for incident management and reporting.
 """
 
-from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
+from typing import Optional
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class IncidentStatus(str, Enum):
@@ -55,7 +55,7 @@ class IncidentTimeline(BaseModel):
     timestamp: datetime
     event_type: str
     description: str
-    actor: str | None = None
+    actor: Optional[str] = None
     evidence_refs: list[str] = Field(default_factory=list)
 
 
@@ -84,13 +84,13 @@ class Incident(BaseModel):
     file_ids: list[UUID] = Field(default_factory=list)
     
     # Actor information
-    primary_actor_ip: str | None = None
+    primary_actor_ip: Optional[str] = None
     actor_ips: list[str] = Field(default_factory=list)
     affected_hosts: list[str] = Field(default_factory=list)
     
     # MITRE mapping
     mitre_techniques: list[MitreReference] = Field(default_factory=list)
-    primary_tactic: str | None = None
+    primary_tactic: Optional[str] = None
     
     # Confidence
     overall_confidence: float = Field(ge=0.0, le=1.0)
@@ -102,40 +102,36 @@ class Incident(BaseModel):
 
     # Analyst-mapped fields for UI/JSON export
     mi_id: str = Field(default="GenAI_SOC", alias="$MI_ID")
-    raw_log: str | None = None
-    source_ip: str | None = None
-    destination_ip: str | None = None
+    raw_log: Optional[str] = None
+    source_ip: Optional[str] = None
+    destination_ip: Optional[str] = None
     suspicious: bool = True
-    suspicious_indicator: str | None = None
-    attack_name: str | None = None
-    brief_description: str | None = None
-    recommended_action: str | None = None
+    suspicious_indicator: Optional[str] = None
+    attack_name: Optional[str] = None
+    brief_description: Optional[str] = None
+    recommended_action: Optional[str] = None
     confidence_score: int = Field(default=1, ge=1, le=10)
-    mitre_tactic: str | None = None
-    mitre_technique: str | None = None
+    mitre_tactic: Optional[str] = None
+    mitre_technique: Optional[str] = None
     
     # Timeline
     timeline: list[IncidentTimeline] = Field(default_factory=list)
     
     # Detection metadata
-    detection_tier: str | None = None  # "deterministic", "correlation", "ai_agent"
-    detection_rule: str | None = None  # Which rule/correlation triggered this
+    detection_tier: Optional[str] = None  # "deterministic", "correlation", "ai_agent"
+    detection_rule: Optional[str] = None  # Which rule/correlation triggered this
     
     # Assignment and tracking
-    assigned_to: str | None = None
+    assigned_to: Optional[str] = None
     tags: list[str] = Field(default_factory=list)
     notes: list[str] = Field(default_factory=list)
     
     # Timestamps
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
-    resolved_at: datetime | None = None
+    resolved_at: Optional[datetime] = None
     
-    class Config:
-        json_encoders = {
-            datetime: lambda v: v.isoformat(),
-            UUID: lambda v: str(v),
-        }
+    model_config = ConfigDict()
 
 
 class IncidentCreateRequest(BaseModel):
@@ -144,17 +140,17 @@ class IncidentCreateRequest(BaseModel):
     description: str
     priority: IncidentPriority = IncidentPriority.MEDIUM
     chunk_ids: list[UUID] = Field(default_factory=list)
-    assigned_to: str | None = None
+    assigned_to: Optional[str] = None
     tags: list[str] = Field(default_factory=list)
 
 
 class IncidentUpdateRequest(BaseModel):
     """Request to update an incident."""
-    status: IncidentStatus | None = None
-    priority: IncidentPriority | None = None
-    assigned_to: str | None = None
-    notes: str | None = None
-    tags: list[str] | None = None
+    status: Optional[IncidentStatus] = None
+    priority: Optional[IncidentPriority] = None
+    assigned_to: Optional[str] = None
+    notes: Optional[str] = None
+    tags: Optional[list[str]] = None
 
 
 class IncidentSummary(BaseModel):
@@ -167,19 +163,19 @@ class IncidentSummary(BaseModel):
     last_seen: datetime
     chunk_count: int
     confidence: float
-    primary_tactic: str | None = None
+    primary_tactic: Optional[str] = None
     file_ids: list[UUID] = Field(default_factory=list)
-    raw_log: str | None = None
-    source_ip: str | None = None
-    destination_ip: str | None = None
+    raw_log: Optional[str] = None
+    source_ip: Optional[str] = None
+    destination_ip: Optional[str] = None
     suspicious: bool = True
-    suspicious_indicator: str | None = None
-    attack_name: str | None = None
-    brief_description: str | None = None
-    recommended_action: str | None = None
+    suspicious_indicator: Optional[str] = None
+    attack_name: Optional[str] = None
+    brief_description: Optional[str] = None
+    recommended_action: Optional[str] = None
     confidence_score: int = 1
-    mitre_tactic: str | None = None
-    mitre_technique: str | None = None
+    mitre_tactic: Optional[str] = None
+    mitre_technique: Optional[str] = None
 
 
 

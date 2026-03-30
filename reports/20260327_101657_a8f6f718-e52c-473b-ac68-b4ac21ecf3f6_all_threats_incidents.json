@@ -1,0 +1,184 @@
+{
+  "file_id": "a8f6f718-e52c-473b-ac68-b4ac21ecf3f6",
+  "filename": "all_threats.csv",
+  "generated_at": "2026-03-27T10:16:57.076591+00:00",
+  "incident_count": 8,
+  "incidents": [
+    {
+      "incident_id": "164a9164-b703-4c41-853f-32b85d9694c2",
+      "title": "[SQL_INJECTION] SQL injection attempt detected from 0.1.0.1",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "a8f6f718-e52c-473b-ac68-b4ac21ecf3f6"
+      ],
+      "first_seen": "2026-03-27T10:16:27.817975",
+      "last_seen": "2026-03-27T10:16:27.817975",
+      "raw_log": "do=inforum&listforumid=(select(0)from(select(sleep(6)))v)/*'%2B(select(0)from(select(sleep(6)))v)%2B'\\\"%2B(select(0)from(select(sleep(6)))v)%2B\\\"*/&result=10",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "payload",
+      "attack_name": "sql_injection",
+      "brief_description": "SQL injection attempt detected",
+      "recommended_action": "Investigate sql_injection from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190"
+    },
+    {
+      "incident_id": "4369d4a3-6f80-42f8-947c-40e1fc612381",
+      "title": "[BLIND_SQL_INJECTION] Blind SQL injection attempt detected from 0.1.0.1",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "a8f6f718-e52c-473b-ac68-b4ac21ecf3f6"
+      ],
+      "first_seen": "2026-03-27T10:16:27.817975",
+      "last_seen": "2026-03-27T10:16:27.817975",
+      "raw_log": "do=inforum&listforumid=(select(0)from(select(sleep(6)))v)/*'%2B(select(0)from(select(sleep(6)))v)%2B'\\\"%2B(select(0)from(select(sleep(6)))v)%2B\\\"*/&result=10",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "payload",
+      "attack_name": "blind_sql_injection",
+      "brief_description": "Blind SQL injection attempt detected",
+      "recommended_action": "Investigate blind_sql_injection from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190"
+    },
+    {
+      "incident_id": "3a79abb2-a280-4c71-a25a-24e7be1341bd",
+      "title": "[OS_COMMAND_INJECTION] OS command injection attempt from 0.1.0.1",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "a8f6f718-e52c-473b-ac68-b4ac21ecf3f6"
+      ],
+      "first_seen": "2026-03-27T10:16:27.818973",
+      "last_seen": "2026-03-27T10:16:27.818973",
+      "raw_log": "searchIn=/content/dam/tcs/investor-relations/financial-statements&selectedQuarter=q3&haiku630498=shell_exec(ifconfig)",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "payload",
+      "attack_name": "os_command_injection",
+      "brief_description": "OS command injection attempt",
+      "recommended_action": "Investigate os_command_injection from 0.1.0.1",
+      "confidence_score": 8,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190"
+    },
+    {
+      "incident_id": "99f03a39-f0a0-4723-b2c1-b958b87d8073",
+      "title": "[PATH_TRAVERSAL] Path traversal attempt from 0.1.0.1",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "a8f6f718-e52c-473b-ac68-b4ac21ecf3f6"
+      ],
+      "first_seen": "2026-03-27T10:16:27.817975",
+      "last_seen": "2026-03-27T10:16:27.817975",
+      "raw_log": "eqbzeyas=%3Cscript%3Ealert%28%22XSS%22%29%3B%3C%2Fscript%3E&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+%22+or+SLEEP%285%29+or+%22&dqohnhch=..%2F..%2Fetc%2Fpasswd",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "path_traversal",
+      "brief_description": "Path traversal attempt",
+      "recommended_action": "Investigate path_traversal from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190"
+    },
+    {
+      "incident_id": "5b3ab158-318f-41e8-9132-63413ce04a40",
+      "title": "[CORRELATION] Multi-vector: 6 attack types (blind_sql_injection, local_file_inclusion, sql_inj",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "a8f6f718-e52c-473b-ac68-b4ac21ecf3f6"
+      ],
+      "first_seen": "2026-03-27T10:16:55.631947",
+      "last_seen": "2026-03-27T10:16:55.631947",
+      "raw_log": "{'categories': ['blind_sql_injection', 'local_file_inclusion', 'sql_injection', 'os_command_injection', 'cross_site_scripting', 'path_traversal']}",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "multi_vector_attacker",
+      "brief_description": "Multi-vector: 6 attack types (blind_sql_injection, local_file_inclusion, sql_injection, os_command_injection, cross_site_scripting)",
+      "recommended_action": "Investigate correlated activity from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1595"
+    },
+    {
+      "incident_id": "126b85db-6ce5-4af1-af36-3c4590f5ab96",
+      "title": "[CORRELATION] Campaign: 25 IPs using csrf_indicator",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "a8f6f718-e52c-473b-ac68-b4ac21ecf3f6"
+      ],
+      "first_seen": "2026-03-27T10:16:55.729337",
+      "last_seen": "2026-03-27T10:16:55.729337",
+      "raw_log": "{'signature': 'csrf_indicator', 'ips': ['106.222.231.91', '157.51.143.16', '27.59.110.224', '103.120.51.122', '103.80.58.191', '152.59.222.129', '152.58.135.24', '130.41.149.9', '170.225.12.33', '17.233.103.151']}",
+      "source_ip": "106.222.231.91",
+      "destination_ip": "157.51.143.16",
+      "suspicious": true,
+      "suspicious_indicator": "source ip",
+      "attack_name": "campaign_detection",
+      "brief_description": "Campaign: 25 IPs using csrf_indicator",
+      "recommended_action": "Investigate correlated activity from 106.222.231.91",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1595"
+    },
+    {
+      "incident_id": "632920f7-0b17-45e0-993f-c4e7744b30c8",
+      "title": "[CORRELATION] Campaign: 6 IPs using os_command_injection",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "a8f6f718-e52c-473b-ac68-b4ac21ecf3f6"
+      ],
+      "first_seen": "2026-03-27T10:16:55.822746",
+      "last_seen": "2026-03-27T10:16:55.822746",
+      "raw_log": "{'signature': 'os_command_injection', 'ips': ['0.1.0.1', '14.143.222.50', '20.204.21.38', '115.113.2.42', '20.198.123.84', '49.37.116.75']}",
+      "source_ip": "0.1.0.1",
+      "destination_ip": "14.143.222.50",
+      "suspicious": true,
+      "suspicious_indicator": "payload",
+      "attack_name": "campaign_detection",
+      "brief_description": "Campaign: 6 IPs using os_command_injection",
+      "recommended_action": "Investigate correlated activity from 0.1.0.1",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1595"
+    },
+    {
+      "incident_id": "e6718cff-925e-41d7-ac1e-9dcfa8961490",
+      "title": "[CORRELATION] Campaign: 3 IPs using slowloris_indicator",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "a8f6f718-e52c-473b-ac68-b4ac21ecf3f6"
+      ],
+      "first_seen": "2026-03-27T10:16:55.932023",
+      "last_seen": "2026-03-27T10:16:55.932023",
+      "raw_log": "{'signature': 'slowloris_indicator', 'ips': ['106.66.39.251', '106.219.224.117', '131.229.221.23']}",
+      "source_ip": "106.66.39.251",
+      "destination_ip": "106.219.224.117",
+      "suspicious": true,
+      "suspicious_indicator": "source ip",
+      "attack_name": "campaign_detection",
+      "brief_description": "Campaign: 3 IPs using slowloris_indicator",
+      "recommended_action": "Investigate correlated activity from 106.66.39.251",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1595"
+    }
+  ]
+}

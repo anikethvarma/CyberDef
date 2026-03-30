@@ -4,14 +4,13 @@ Event Models
 Pydantic models for raw, parsed, and normalized network security events.
 """
 
-from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from typing import Any
+from typing import Any, Optional
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, Field, computed_field
+from pydantic import BaseModel, ConfigDict, Field, computed_field
 import hashlib
 import json
 
@@ -62,22 +61,22 @@ class ParsedEvent(BaseModel):
     """
     file_id: UUID
     row_hash: str
-    timestamp: datetime | None = None
-    source_address: str | None = None
-    destination_address: str | None = None
-    destination_hostname: str | None = None
-    action: str | None = None
-    protocol: str | None = None
-    source_port: int | None = None
-    destination_port: int | None = None
-    username: str | None = None
-    application: str | None = None
-    bytes_sent: int | None = None
-    bytes_received: int | None = None
-    duration_ms: int | None = None
-    raw_message: str | None = None
+    timestamp: Optional[datetime] = None
+    source_address: Optional[str] = None
+    destination_address: Optional[str] = None
+    destination_hostname: Optional[str] = None
+    action: Optional[str] = None
+    protocol: Optional[str] = None
+    source_port: Optional[int] = None
+    destination_port: Optional[int] = None
+    username: Optional[str] = None
+    application: Optional[str] = None
+    bytes_sent: Optional[int] = None
+    bytes_received: Optional[int] = None
+    duration_ms: Optional[int] = None
+    raw_message: Optional[str] = None
     vendor_specific: dict[str, Any] = Field(default_factory=dict)
-    parsed_data: dict[str, Any] | None = None  # Extended fields for normalization
+    parsed_data: Optional[dict[str, Any]] = None  # Extended fields for normalization
     parse_errors: list[str] = Field(default_factory=list)
 
 
@@ -94,115 +93,111 @@ class NormalizedEvent(BaseModel):
     
     # Core network fields
     src_ip: str
-    src_port: int | None = None
-    dst_ip: str | None = None
-    dst_port: int | None = None
-    dst_host: str | None = None
+    src_port: Optional[int] = None
+    dst_ip: Optional[str] = None
+    dst_port: Optional[int] = None
+    dst_host: Optional[str] = None
     
     # Action and protocol
     action: EventAction
     protocol: NetworkProtocol = NetworkProtocol.OTHER
     
     # Identity
-    username: str | None = None
+    username: Optional[str] = None
     
     # Traffic metrics
-    bytes_sent: int | None = None
-    bytes_received: int | None = None
-    duration_ms: int | None = None
+    bytes_sent: Optional[int] = None
+    bytes_received: Optional[int] = None
+    duration_ms: Optional[int] = None
     
     # Application context
-    application: str | None = None
+    application: Optional[str] = None
     
     # Internal/External classification
-    is_internal_src: bool | None = None
-    is_internal_dst: bool | None = None
+    is_internal_src: Optional[bool] = None
+    is_internal_dst: Optional[bool] = None
     
     # ========== SECURITY ENRICHMENT FIELDS ==========
     
     # Severity and priority
-    severity: str | None = None  # INFO, LOW, MEDIUM, HIGH, CRITICAL
-    risk_score: int | None = None  # 0-100
+    severity: Optional[str] = None  # INFO, LOW, MEDIUM, HIGH, CRITICAL
+    risk_score: Optional[int] = None  # 0-100
     
     # Session tracking
-    session_id: str | None = None
-    connection_id: str | None = None
+    session_id: Optional[str] = None
+    connection_id: Optional[str] = None
     
     # Geographic data (for external IPs)
-    geo_country: str | None = None
-    geo_region: str | None = None
-    geo_city: str | None = None
-    geo_latitude: float | None = None
-    geo_longitude: float | None = None
+    geo_country: Optional[str] = None
+    geo_region: Optional[str] = None
+    geo_city: Optional[str] = None
+    geo_latitude: Optional[float] = None
+    geo_longitude: Optional[float] = None
     
     # Threat intelligence
-    threat_intel_match: str | None = None  # IOC match from threat feeds
-    threat_category: str | None = None  # malware, phishing, c2, etc.
+    threat_intel_match: Optional[str] = None  # IOC match from threat feeds
+    threat_category: Optional[str] = None  # malware, phishing, c2, etc.
     
     # ========== ENDPOINT DATA FIELDS ==========
     
     # Process information (for endpoint logs)
-    process_name: str | None = None
-    process_id: int | None = None
-    process_path: str | None = None
-    parent_process_name: str | None = None
-    parent_process_id: int | None = None
-    command_line: str | None = None
+    process_name: Optional[str] = None
+    process_id: Optional[int] = None
+    process_path: Optional[str] = None
+    parent_process_name: Optional[str] = None
+    parent_process_id: Optional[int] = None
+    command_line: Optional[str] = None
     
     # File operations
-    file_name: str | None = None
-    file_path: str | None = None
-    file_hash: str | None = None  # MD5, SHA1, or SHA256
-    file_size: int | None = None
+    file_name: Optional[str] = None
+    file_path: Optional[str] = None
+    file_hash: Optional[str] = None  # MD5, SHA1, or SHA256
+    file_size: Optional[int] = None
     
     # Registry operations (Windows)
-    registry_key: str | None = None
-    registry_value: str | None = None
+    registry_key: Optional[str] = None
+    registry_value: Optional[str] = None
     
     # ========== HTTP/WEB APPLICATION FIELDS ==========
     
     # HTTP metadata
-    http_method: str | None = None  # GET, POST, PUT, DELETE, etc.
-    http_status: int | None = None  # 200, 404, 500, etc.
-    http_version: str | None = None  # HTTP/1.1, HTTP/2
-    uri_path: str | None = None
-    uri_query: str | None = None
-    user_agent: str | None = None
-    referrer: str | None = None
-    content_type: str | None = None
+    http_method: Optional[str] = None  # GET, POST, PUT, DELETE, etc.
+    http_status: Optional[int] = None  # 200, 404, 500, etc.
+    http_version: Optional[str] = None  # HTTP/1.1, HTTP/2
+    uri_path: Optional[str] = None
+    uri_query: Optional[str] = None
+    user_agent: Optional[str] = None
+    referrer: Optional[str] = None
+    content_type: Optional[str] = None
     
     # Request/Response data
-    request_size: int | None = None
-    response_size: int | None = None
+    request_size: Optional[int] = None
+    response_size: Optional[int] = None
     
     # ========== EMAIL FIELDS ==========
     
-    email_from: str | None = None
-    email_to: list[str] | None = None
-    email_subject: str | None = None
-    attachment_names: list[str] | None = None
+    email_from: Optional[str] = None
+    email_to: Optional[list[str]] = None
+    email_subject: Optional[str] = None
+    attachment_names: Optional[list[str]] = None
     
     # ========== DNS FIELDS ==========
     
-    dns_query: str | None = None
-    dns_query_type: str | None = None  # A, AAAA, MX, TXT, etc.
-    dns_response: list[str] | None = None
+    dns_query: Optional[str] = None
+    dns_query_type: Optional[str] = None  # A, AAAA, MX, TXT, etc.
+    dns_response: Optional[list[str]] = None
     
     # ========== METADATA ==========
     
     # Original log fields for forensics
-    original_message: str | None = None
-    vendor_specific: dict[str, Any] | None = None
+    original_message: Optional[str] = None
+    vendor_specific: Optional[dict[str, Any]] = None
     
     # Enrichment flags
     enriched: bool = False
-    enrichment_source: str | None = None
+    enrichment_source: Optional[str] = None
     
-    class Config:
-        json_encoders = {
-            datetime: lambda v: v.isoformat(),
-            UUID: lambda v: str(v),
-        }
+    model_config = ConfigDict()
 
 
 class EventBatch(BaseModel):

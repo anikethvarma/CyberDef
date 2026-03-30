@@ -130,5 +130,51 @@
       "total_processing_time_ms": 0,
       "created_at": "2026-03-23T08:06:01.740551"
     }
+  ],
+  "778febd6-de4a-4f33-b84d-7e8707d2a4d2": [
+    {
+      "analysis_id": "ebf6c60d-269f-4c8d-96ee-4ed666a87a07",
+      "chunk_id": "10d39de5-9a1c-4682-abd7-12e59e2ab563",
+      "overall_confidence": 0.7249999999999999,
+      "requires_human_review": true,
+      "total_processing_time_ms": 982868,
+      "created_at": "2026-03-27T10:38:55.654352",
+      "behavioral": {
+        "interpretation": "A brief, high-intensity burst of activity was observed from an external actor with a mix of GET and POST requests.",
+        "is_suspicious": true,
+        "confidence": 0.7,
+        "reasoning": "The bursty temporal pattern, combined with the presence of both GET and POST requests, suggests potential malicious activity.",
+        "key_indicators": [
+          "bursty temporal pattern",
+          "external actor",
+          "mix of GET and POST requests"
+        ]
+      },
+      "intent": {
+        "suspected_intent": "Potential reconnaissance or initial access attempt",
+        "kill_chain_stage": "Reconnaissance",
+        "confidence": 0.6,
+        "alternative_intents": [
+          "Normal user activity",
+          "Legitimate application usage"
+        ],
+        "reasoning": "The bursty temporal pattern and high events per minute suggest a potential attack. The presence of GET and POST HTTP methods, along with various user agents, could indicate reconnaissance or initial access attempts. However, the lack of specific indicators (e.g., suspicious domains, DNS tunneling) and the relatively low confidence score reflect the possibility that this is normal system activity."
+      },
+      "mitre": {
+        "technique_id": "T1046",
+        "technique_name": "Network Service Discovery",
+        "tactic": "Reconnaissance",
+        "justification": "The presence of multiple HTTP methods (GET, POST) and status codes (200, 302, 403) suggests an attempt to enumerate network services.",
+        "confidence": 0.8
+      },
+      "triage": {
+        "priority": "High",
+        "risk_reason": "The observed bursty activity pattern and high failure rate indicate a potential malicious attack.",
+        "recommended_action": "Investigate the source IP and review network logs for further details.",
+        "confidence": 0.8,
+        "executive_summary": "Potential security incident detected, may impact business operations.",
+        "technical_summary": "The observed activity pattern is characterized by brief, high-intensity bursts of GET and POST requests with a failure rate of 50%. The source IP is external and has not been seen before in the network. Further investigation is required to determine the nature of this activity."
+      }
+    }
   ]
 }

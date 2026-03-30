@@ -4,14 +4,14 @@ File Models
 Pydantic models for file intake, validation, and metadata.
 """
 
-from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
+from typing import Optional
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class FileSource(str, Enum):
@@ -36,8 +36,8 @@ class FileValidationResult(BaseModel):
     """Result of file validation."""
     is_valid: bool
     file_size_bytes: int
-    row_count: int | None = None
-    column_count: int | None = None
+    row_count: Optional[int] = None
+    column_count: Optional[int] = None
     detected_encoding: str = "utf-8"
     detected_delimiter: str = ","
     has_header: bool = True
@@ -56,7 +56,7 @@ class FileMetadata(BaseModel):
     # Source information
     original_filename: str
     source: FileSource
-    source_path: str | None = None  # For local scan
+    source_path: Optional[str] = None  # For local scan
     
     # Storage
     storage_path: str  # Path in raw storage
@@ -64,25 +64,25 @@ class FileMetadata(BaseModel):
     # Validation
     checksum_sha256: str
     file_size_bytes: int
-    content_type: str | None = "text/csv"  # MIME type
-    description: str | None = None  # Optional description
+    content_type: Optional[str] = "text/csv"  # MIME type
+    description: Optional[str] = None  # Optional description
     
     # Content metadata
-    row_count: int | None = None
-    column_count: int | None = None
+    row_count: Optional[int] = None
+    column_count: Optional[int] = None
     columns: list[str] = Field(default_factory=list)
     
     # Parser hints
-    detected_format: str | None = None  # firewall, network_log, etc.
-    detected_vendor: str | None = None
+    detected_format: Optional[str] = None  # firewall, network_log, etc.
+    detected_vendor: Optional[str] = None
     
     # Status tracking
     status: FileStatus = FileStatus.PENDING
     
     # Timestamps
     uploaded_at: datetime = Field(default_factory=datetime.utcnow)
-    validated_at: datetime | None = None
-    processed_at: datetime | None = None
+    validated_at: Optional[datetime] = None
+    processed_at: Optional[datetime] = None
     
     # Processing results
     events_created: int = 0
@@ -94,19 +94,14 @@ class FileMetadata(BaseModel):
     ai_analysis_count: int = 0
     incidents_created: int = 0
     
-    class Config:
-        json_encoders = {
-            datetime: lambda v: v.isoformat(),
-            UUID: lambda v: str(v),
-            Path: lambda v: str(v),
-        }
+    model_config = ConfigDict()
 
 
 class FileUploadRequest(BaseModel):
     """Request model for file upload."""
     filename: str
     content_type: str = "text/csv"
-    description: str | None = None
+    description: Optional[str] = None
     tags: list[str] = Field(default_factory=list)
 
 

@@ -1,4 +1,4 @@
-﻿"""
+"""
 Syslog Apache Access Log Parser
 
 Parses log files that contain a single `logevent` column
@@ -18,37 +18,49 @@ from core.logging import get_logger
 logger = get_logger(__name__)
 
 
-# Syslog prefix:
-#   <PRI>Mon DD HH:MM:SS hostname process[PID]:
-# Some exports include a space after >, so keep it optional.
-_SYSLOG_PREFIX_RE = re.compile(
+# Combined regex patterns for new Apache log format
+# Pattern 1: Extended format with hostname, daemon, and detailed fields
+_APACHE_EXTENDED_RE = re.compile(
+    r"<\d+>\w+[\s\d\:]+(?P<HostName>[\S]+)\s(?P<Daemon>[\w\-\d\[\]]+)\:?\s"
+    r"(?P<DstIP>[\d\.]+|\-)\s(?P<SrcIP>[\d\.]+|\-)(?:\,\s[\d\.]+\,\s[\d\.]+|\,\s+[\d\.]+|)"
+    r"(?:[\s\-]+)(?P<UserID>[\d\-]+)\s+(?:(?P<domain>[a-zA-Z\-\.]+)|(?:\d+\.){3}\d+|).*?"
+    r"(?P<SystemTStamp>\d{2}[\/\w\:]+).*?\][\s\"]+(?P<HTTPMethod>\w+)\s(?P<URL>\S+).*?\"?\s"
+    r"(?P<responsecode>\d+)\s(?P<RXLen>\d+|\-)\s+(?:(?P<TimeTaken>\d+|-)\s+|)?"
+    r"(?:\"?(?P<HTTPReferer>\S+|\-)\"\s\"?(?P<UserAgent>.*)\")?",
+    re.DOTALL
+)
+
+# Pattern 2: Standard format with hostname and daemon  
+_APACHE_STANDARD_RE = re.compile(
+    r"<\d+>\w{3}\s+\d{1,2}\s+\d{2}\:\d{2}\:\d{2}\s+(?P<HostName>[\S]+)\s(?P<Daemon>[\w\-\d\[\]]+)\:\s"
+    r"(?P<DstIP>[\d\.\:]+|\-)\s(?P<SrcIP>[\d\.]+|\-)(?:\,\s[\d\.]+|\s\,\:|\s\,\S|\:\S+|\s\,[\d\.]+|\,[\d\.]+|\s\,\s[\d\.:]+|(?:\d+\.)+\S*\s|[,%\d]|\s)*\s"
+    r"(?:(?P<domain>\S+|\-)\s)?(?P<UserID>\d+|\-)\s[^a-zA-z]*?\[(?P<SystemTStamp>\d{2}\S+).*?\][\s\"]+(?P<HTTPMethod>\w+)\s(?P<URL>\S+).*?\s"
+    r"(?P<responsecode>\d+)\s(?P<RXLen>\d+|\-)(?:\s(?P<TimeTaken>\d+))?\s+"
+    r"(\"(?P<HTTPReferer>\S+|)\"\s\"?(?P<UserAgent>\-|.*)\")?",
+    re.DOTALL
+)
+
+# Pattern 3: Flexible pattern for simpler formats
+_APACHE_FLEXIBLE_RE = re.compile(
+    r"<\d+>\w+\s+\d{1,2}\s+\d{2}\:\d{2}\:\d{2}\s+(?P<HostName>[\S]+)\s(?P<Daemon>[\w\-\d\[\]]+)\:?\s"
+    r"(?P<DstIP>[\d\.]+|\-)\s(?P<SrcIP>[\d\.]+|\-)\s+"
+    r"(?P<UserID>[\w\-]+)\s+(?P<domain>[\w\-\.]+)\s+"
+    r"(?P<SystemTStamp>\d{2}[\/\w\:]+).*?\]\s*\"?(?P<HTTPMethod>\w+)\s(?P<URL>\S+).*?\"\s+"
+    r"(?P<responsecode>\d+)\s(?P<RXLen>\d+|\-)(?:\s(?P<TimeTaken>\d+))?"
+    r"(?:\s+\"?(?P<HTTPReferer>\S+|\-)\"\s\"?(?P<UserAgent>.*)\")?",
+    re.DOTALL
+)
+
+# Legacy fallback patterns for backward compatibility
+_LEGACY_SYSLOG_PREFIX_RE = re.compile(
     r"^<\d+>\s*\w+\s+\d+\s+\d+:\d+:\d+\s+\S+\s+\S+:\s+"
 )
 
-# Strict parser for canonical Apache-combined layout.
-_APACHE_RE = re.compile(
-    r"(?P<src_ip>\S+)"
-    r"\s+(?P<dst_ip>\S+)"
-    r"\s+(?P<port>\d+)"
-    r"\s+(?P<vhost>\S+)"
-    r"\s+\S+\s+\S+"
-    r"\s+\[(?P<ts>[^\]]+)\]"
-    r'\s+"(?P<method>\S+)\s+(?P<uri>.+?)'
-    r'(?:\s+HTTP/[^\"]*)?"'
-    r"\s+(?P<status>\d+)"
-    r"\s+(?P<bytes>\S+)"
-    r"(?:\s+(?P<timetaken>\d+))?"
-    r'(?:\s+"(?P<referer>[^"]*)")?'
-    r'(?:\s+"(?P<ua>[^"]*)")?',
-    re.DOTALL,
-)
-
-# Flexible fallbacks for noisy real-world exports.
-_REQUEST_RE = re.compile(
+_LEGACY_REQUEST_RE = re.compile(
     r'"(?P<method>[A-Z]+)\s+(?P<uri>.+?)(?:\s+HTTP/[^\"]*)?"'
 )
-_TIMESTAMP_RE = re.compile(r"\[(?P<ts>[^\]]+)\]")
-_STATUS_PREFIX_RE = re.compile(
+_LEGACY_TIMESTAMP_RE = re.compile(r"\[(?P<ts>[^\]]+)\]")
+_LEGACY_STATUS_PREFIX_RE = re.compile(
     r"^(?P<status>\d{3})(?:\s+(?P<bytes>\S+))?(?:\s+(?P<timetaken>\S+))?"
 )
 
@@ -78,7 +90,7 @@ class SyslogApacheParser(BaseParser):
         """
         Return high confidence when:
         1. There is effectively one non-empty column.
-        2. Sample rows match syslog prefix.
+        2. Sample rows match new syslog format patterns.
         """
         if not columns:
             return 0.0
@@ -91,33 +103,48 @@ class SyslogApacheParser(BaseParser):
         if not col_match and len(non_empty_cols) != 1:
             return 0.0
 
-        syslog_hits = 0
+        pattern_hits = 0
         for row in sample_rows[:10]:
             raw = self._get_raw(row)
-            if raw and _SYSLOG_PREFIX_RE.match(raw):
-                syslog_hits += 1
+            if raw:
+                # Check for new patterns first
+                if (_APACHE_EXTENDED_RE.match(raw) or 
+                    _APACHE_STANDARD_RE.match(raw) or 
+                    _APACHE_FLEXIBLE_RE.match(raw) or
+                    _LEGACY_SYSLOG_PREFIX_RE.match(raw)):
+                    pattern_hits += 1
 
-        if syslog_hits == 0:
+        if pattern_hits == 0:
             return 0.0
 
-        ratio = syslog_hits / min(len(sample_rows), 10)
-        return 0.5 + (ratio * 0.45)
+        ratio = pattern_hits / min(len(sample_rows), 10)
+        return 0.6 + (ratio * 0.35)  # Higher confidence for new patterns
 
     def parse_row(self, raw_row: RawEventRow) -> ParsedEvent:
-        """Parse a syslog-wrapped Apache access log row."""
+        """Parse a syslog-wrapped Apache access log row with new regex patterns."""
         raw = self._get_raw(raw_row.raw_data) or ""
 
-        # Strip syslog prefix and normalize one noisy variant.
-        body = _SYSLOG_PREFIX_RE.sub("", raw).strip()
+        # Try new extended pattern first
+        extended_match = _APACHE_EXTENDED_RE.match(raw)
+        if extended_match:
+            return self._build_from_extended(raw_row, raw, extended_match)
+
+        # Try new standard pattern
+        standard_match = _APACHE_STANDARD_RE.match(raw)
+        if standard_match:
+            return self._build_from_standard(raw_row, raw, standard_match)
+
+        # Try flexible pattern
+        flexible_match = _APACHE_FLEXIBLE_RE.match(raw)
+        if flexible_match:
+            return self._build_from_flexible(raw_row, raw, flexible_match)
+
+        # Fallback to legacy parsing for backward compatibility
+        body = _LEGACY_SYSLOG_PREFIX_RE.sub("", raw).strip()
         body = body.replace("--[", "- - [")
 
-        # 1) strict parser first
-        strict = _APACHE_RE.match(body)
-        if strict:
-            return self._build_from_strict(raw_row, raw, strict)
-
-        # 2) flexible fallback for non-canonical token spacing
-        parsed = self._parse_flexible(body)
+        # Legacy flexible fallback
+        parsed = self._parse_flexible_legacy(body)
         if not parsed:
             logger.debug(f"Could not parse syslog/apache line | row_hash={raw_row.row_hash}")
             return ParsedEvent(
@@ -151,14 +178,23 @@ class SyslogApacheParser(BaseParser):
             vendor_specific={"vhost": parsed.get("vhost")},
         )
 
-    def _build_from_strict(self, raw_row: RawEventRow, raw: str, m: re.Match[str]) -> ParsedEvent:
-        """Build ParsedEvent from strict regex match."""
-        src_ip = self._clean_ip(m.group("src_ip"))
-        dst_ip = self._clean_ip(m.group("dst_ip"))
-        timestamp = self._parse_ts(m.group("ts"))
-        status = self._parse_int(m.group("status"))
-        bytes_sent = self._parse_int(m.group("bytes"))
-        timetaken = self._parse_int(m.group("timetaken"))
+    def _build_from_extended(self, raw_row: RawEventRow, raw: str, m: re.Match[str]) -> ParsedEvent:
+        """Build ParsedEvent from extended regex match."""
+        src_ip = self._clean_ip(m.group("SrcIP"))
+        dst_ip = self._clean_ip(m.group("DstIP"))
+        
+        # If the log only contains one IP in the DstIP slot (e.g. 0.0.0.0 - - -), it is the client/source IP
+        if not src_ip and dst_ip:
+            src_ip, dst_ip = dst_ip, None
+
+        timestamp = self._parse_ts(m.group("SystemTStamp"))
+        status = self._parse_int(m.group("responsecode"))
+        bytes_sent = self._parse_int(m.group("RXLen"))
+        timetaken = self._parse_int(m.group("TimeTaken"))
+        hostname = m.group("HostName")
+        daemon = m.group("Daemon")
+        user_id = m.group("UserID")
+        domain = m.group("domain")
 
         return ParsedEvent(
             file_id=raw_row.file_id,
@@ -166,34 +202,142 @@ class SyslogApacheParser(BaseParser):
             timestamp=timestamp,
             source_address=src_ip,
             destination_address=dst_ip,
-            destination_hostname=m.group("vhost") or None,
-            destination_port=self._parse_port(m.group("port")),
+            destination_hostname=hostname,
+            destination_port=None,  # Not captured in this pattern
             protocol="HTTP",
             action="ALLOW" if status and status < 400 else ("DENY" if status and status >= 400 else None),
             bytes_sent=bytes_sent,
             duration_ms=timetaken,
             raw_message=raw[:512],
             parsed_data={
-                "http_method": m.group("method"),
+                "http_method": m.group("HTTPMethod"),
                 "http_status": status,
-                "uri_path": m.group("uri"),
-                "user_agent": m.group("ua"),
-                "referrer": m.group("referer"),
+                "uri_path": m.group("URL"),
+                "user_agent": m.group("UserAgent"),
+                "referrer": m.group("HTTPReferer"),
                 "original_message": raw,
+                "user_id": user_id,
+                "domain": domain,
+                "daemon": daemon,
             },
-            vendor_specific={"vhost": m.group("vhost")},
+            vendor_specific={
+                "hostname": hostname,
+                "daemon": daemon,
+                "user_id": user_id,
+                "domain": domain,
+            },
         )
 
-    def _parse_flexible(self, body: str) -> dict[str, Any] | None:
-        """Parse apache-like lines with irregular spacing/token layout."""
-        req = _REQUEST_RE.search(body)
+    def _build_from_standard(self, raw_row: RawEventRow, raw: str, m: re.Match[str]) -> ParsedEvent:
+        """Build ParsedEvent from standard regex match."""
+        src_ip = self._clean_ip(m.group("SrcIP"))
+        dst_ip = self._clean_ip(m.group("DstIP"))
+        
+        # If the log only contains one IP in the DstIP slot (e.g. 0.0.0.0 - - -), it is the client/source IP
+        if not src_ip and dst_ip:
+            src_ip, dst_ip = dst_ip, None
+
+        timestamp = self._parse_ts(m.group("SystemTStamp"))
+        status = self._parse_int(m.group("responsecode"))
+        bytes_sent = self._parse_int(m.group("RXLen"))
+        timetaken = self._parse_int(m.group("TimeTaken"))
+        hostname = m.group("HostName")
+        daemon = m.group("Daemon")
+        user_id = m.group("UserID")
+        domain = m.group("domain")
+
+        return ParsedEvent(
+            file_id=raw_row.file_id,
+            row_hash=raw_row.row_hash,
+            timestamp=timestamp,
+            source_address=src_ip,
+            destination_address=dst_ip,
+            destination_hostname=hostname,
+            destination_port=None,  # Not captured in this pattern
+            protocol="HTTP",
+            action="ALLOW" if status and status < 400 else ("DENY" if status and status >= 400 else None),
+            bytes_sent=bytes_sent,
+            duration_ms=timetaken,
+            raw_message=raw[:512],
+            parsed_data={
+                "http_method": m.group("HTTPMethod"),
+                "http_status": status,
+                "uri_path": m.group("URL"),
+                "user_agent": m.group("UserAgent"),
+                "referrer": m.group("HTTPReferer"),
+                "original_message": raw,
+                "user_id": user_id,
+                "domain": domain,
+                "daemon": daemon,
+            },
+            vendor_specific={
+                "hostname": hostname,
+                "daemon": daemon,
+                "user_id": user_id,
+                "domain": domain,
+            },
+        )
+
+    def _build_from_flexible(self, raw_row: RawEventRow, raw: str, m: re.Match[str]) -> ParsedEvent:
+        """Build ParsedEvent from flexible regex match."""
+        src_ip = self._clean_ip(m.group("SrcIP"))
+        dst_ip = self._clean_ip(m.group("DstIP"))
+        
+        # If the log only contains one IP in the DstIP slot (e.g. 0.0.0.0 - - -), it is the client/source IP
+        if not src_ip and dst_ip:
+            src_ip, dst_ip = dst_ip, None
+
+        timestamp = self._parse_ts(m.group("SystemTStamp"))
+        status = self._parse_int(m.group("responsecode"))
+        bytes_sent = self._parse_int(m.group("RXLen"))
+        timetaken = self._parse_int(m.group("TimeTaken"))
+        hostname = m.group("HostName")
+        daemon = m.group("Daemon")
+        user_id = m.group("UserID")
+        domain = m.group("domain")
+
+        return ParsedEvent(
+            file_id=raw_row.file_id,
+            row_hash=raw_row.row_hash,
+            timestamp=timestamp,
+            source_address=src_ip,
+            destination_address=dst_ip,
+            destination_hostname=hostname,
+            destination_port=None,
+            protocol="HTTP",
+            action="ALLOW" if status and status < 400 else ("DENY" if status and status >= 400 else None),
+            bytes_sent=bytes_sent,
+            duration_ms=timetaken,
+            raw_message=raw[:512],
+            parsed_data={
+                "http_method": m.group("HTTPMethod"),
+                "http_status": status,
+                "uri_path": m.group("URL"),
+                "user_agent": m.group("UserAgent"),
+                "referrer": m.group("HTTPReferer"),
+                "original_message": raw,
+                "user_id": user_id,
+                "domain": domain,
+                "daemon": daemon,
+            },
+            vendor_specific={
+                "hostname": hostname,
+                "daemon": daemon,
+                "user_id": user_id,
+                "domain": domain,
+            },
+        )
+
+    def _parse_flexible_legacy(self, body: str) -> dict[str, Any] | None:
+        """Parse apache-like lines with irregular spacing/token layout (legacy)."""
+        req = _LEGACY_REQUEST_RE.search(body)
         if not req:
             return None
 
         prefix = body[:req.start()].strip()
         suffix = body[req.end():].strip()
 
-        ts_match = _TIMESTAMP_RE.search(prefix)
+        ts_match = _LEGACY_TIMESTAMP_RE.search(prefix)
         ts = ts_match.group("ts") if ts_match else None
 
         if ts_match:
@@ -213,7 +357,7 @@ class SyslogApacheParser(BaseParser):
         status = None
         bytes_sent = None
         timetaken = None
-        status_match = _STATUS_PREFIX_RE.match(suffix)
+        status_match = _LEGACY_STATUS_PREFIX_RE.match(suffix)
         if status_match:
             status = status_match.group("status")
             bytes_sent = status_match.group("bytes")

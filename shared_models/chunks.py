@@ -5,14 +5,13 @@ Pydantic models for entity-centric behavioral chunks and summaries.
 These are the primary input format for AI agents.
 """
 
-from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from typing import Any
+from typing import Any, Optional
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class TemporalPattern(str, Enum):
@@ -50,18 +49,18 @@ class TimeWindow(BaseModel):
 
 class ActorContext(BaseModel):
     """Actor information for a chunk."""
-    src_ip: str | None = None
+    src_ip: Optional[str] = None
     src_ips: list[str] = Field(default_factory=list)  # If multiple
-    username: str | None = None
-    hostname: str | None = None
-    is_internal: bool | None = None
+    username: Optional[str] = None
+    hostname: Optional[str] = None
+    is_internal: Optional[bool] = None
 
 
 class TargetContext(BaseModel):
     """Target information for a chunk."""
-    dst_ip: str | None = None
+    dst_ip: Optional[str] = None
     dst_ips: list[str] = Field(default_factory=list)
-    dst_host: str | None = None
+    dst_host: Optional[str] = None
     dst_hosts: list[str] = Field(default_factory=list)
     unique_target_count: int = 0
 
@@ -95,9 +94,9 @@ class ActivityProfile(BaseModel):
 
 class EnvironmentContext(BaseModel):
     """Environment context for a chunk."""
-    environment: str | None = None  # PROD, DEV, STAGING
-    network_zone: str | None = None  # DMZ, INTERNAL, EXTERNAL
-    asset_criticality: str | None = None  # HIGH, MEDIUM, LOW
+    environment: Optional[str] = None  # PROD, DEV, STAGING
+    network_zone: Optional[str] = None  # DMZ, INTERNAL, EXTERNAL
+    asset_criticality: Optional[str] = None  # HIGH, MEDIUM, LOW
 
 
 class BehavioralChunk(BaseModel):
@@ -146,11 +145,7 @@ class BehavioralChunk(BaseModel):
     # Metadata
     created_at: datetime = Field(default_factory=datetime.utcnow)
     
-    class Config:
-        json_encoders = {
-            datetime: lambda v: v.isoformat(),
-            UUID: lambda v: str(v),
-        }
+    model_config = ConfigDict()
 
 
 class ChunkSummary(BaseModel):
@@ -184,44 +179,44 @@ class ChunkSummary(BaseModel):
     # Red flags (deterministically computed)
     red_flags: list[str] = Field(default_factory=list)
     # Threat intelligence context
-    threat_indicators: list[str] | None = None
-    severity_distribution: dict[str, int] | None = None  # INFO, LOW, MEDIUM, HIGH, CRITICAL counts
+    threat_indicators: Optional[list[str]] = None
+    severity_distribution: Optional[dict[str, int]] = None  # INFO, LOW, MEDIUM, HIGH, CRITICAL counts
     
     # ========== EXTENDED THREAT DETECTION FIELDS ==========
     
     # HTTP/Web attack patterns
-    http_methods_seen: list[str] | None = None
-    http_status_codes: dict[str, int] | None = None  # Status code -> count
-    suspicious_uri_patterns: list[str] | None = None  # SQLi, XSS, path traversal indicators
-    user_agents_seen: list[str] | None = None
-    http_attack_indicators: list[str] | None = None  # Specific attack signatures detected
+    http_methods_seen: Optional[list[str]] = None
+    http_status_codes: Optional[dict[str, int]] = None  # Status code -> count
+    suspicious_uri_patterns: Optional[list[str]] = None  # SQLi, XSS, path traversal indicators
+    user_agents_seen: Optional[list[str]] = None
+    http_attack_indicators: Optional[list[str]] = None  # Specific attack signatures detected
     
     # Process/Endpoint behavior
-    process_names_seen: list[str] | None = None
-    suspicious_processes: list[str] | None = None  # Known malicious or unusual processes
-    command_line_patterns: list[str] | None = None  # Suspicious command patterns
-    file_operations: dict[str, int] | None = None  # Operation type -> count
-    registry_modifications: list[str] | None = None  # Registry keys modified
+    process_names_seen: Optional[list[str]] = None
+    suspicious_processes: Optional[list[str]] = None  # Known malicious or unusual processes
+    command_line_patterns: Optional[list[str]] = None  # Suspicious command patterns
+    file_operations: Optional[dict[str, int]] = None  # Operation type -> count
+    registry_modifications: Optional[list[str]] = None  # Registry keys modified
     
     # Geographic anomalies
-    source_countries: list[str] | None = None  # Unique countries seen
+    source_countries: Optional[list[str]] = None  # Unique countries seen
     geo_anomaly_detected: bool = False
-    geo_anomaly_description: str | None = None  # e.g., "Access from blacklisted country"
+    geo_anomaly_description: Optional[str] = None  # e.g., "Access from blacklisted country"
     impossible_travel_detected: bool = False  # Same user from distant locations
     
     # DNS patterns
-    dns_queries: list[str] | None = None
-    suspicious_domains: list[str] | None = None  # DGA, C2, known malicious
-    dns_tunneling_indicators: list[str] | None = None
+    dns_queries: Optional[list[str]] = None
+    suspicious_domains: Optional[list[str]] = None  # DGA, C2, known malicious
+    dns_tunneling_indicators: Optional[list[str]] = None
     
     # Email patterns (for email logs)
-    email_senders: list[str] | None = None
-    suspicious_attachments: list[str] | None = None
-    phishing_indicators: list[str] | None = None
+    email_senders: Optional[list[str]] = None
+    suspicious_attachments: Optional[list[str]] = None
+    phishing_indicators: Optional[list[str]] = None
     
     # Session tracking
     unique_sessions: int = 0
-    session_anomalies: list[str] | None = None  # Session hijacking, anomalous duration
+    session_anomalies: Optional[list[str]] = None  # Session hijacking, anomalous duration
     
     @classmethod
     def from_chunk(cls, chunk: BehavioralChunk) -> "ChunkSummary":

@@ -1,4 +1,4 @@
-﻿"""
+"""
 AegisNet - AI-Based Network Threat Analysis Platform
 
 Main FastAPI application entry point.
@@ -294,7 +294,7 @@ async def analyze_file(
 
     # â”€â”€ Scale optimization: risk-score, deprioritize, and cap for AI â”€â”€
     MAX_AI_CHUNKS = 20          # Generous cap â€” ~4 min with 5 concurrent
-    MAX_AI_CONCURRENT = 5       # Ollama handles 5 parallel fine with local models
+    MAX_AI_CONCURRENT = 2       # Reduce to 2 to prevent Ollama HTTP timeouts during heavy load
 
     if needs_ai and suspicious_chunks:
         # Build set of IPs fully covered by high-confidence deterministic rules

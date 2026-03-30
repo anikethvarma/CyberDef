@@ -4,7 +4,6 @@ AegisNet Shared Models
 Core Pydantic models used across all modules for type-safe data handling.
 """
 
-from __future__ import annotations
 
 from shared_models.events import (
     NormalizedEvent,
