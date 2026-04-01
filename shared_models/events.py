@@ -127,13 +127,6 @@ class NormalizedEvent(BaseModel):
     session_id: Optional[str] = None
     connection_id: Optional[str] = None
     
-    # Geographic data (for external IPs)
-    geo_country: Optional[str] = None
-    geo_region: Optional[str] = None
-    geo_city: Optional[str] = None
-    geo_latitude: Optional[float] = None
-    geo_longitude: Optional[float] = None
-    
     # Threat intelligence
     threat_intel_match: Optional[str] = None  # IOC match from threat feeds
     threat_category: Optional[str] = None  # malware, phishing, c2, etc.

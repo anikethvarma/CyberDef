@@ -69,7 +69,7 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173", "http://localhost:5174"],
+    allow_origins=["http://localhost:3000", "http://localhost:5173", "http://localhost:5174", "http://10.170.25.3:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -228,10 +228,8 @@ async def analyze_file(
     normalizer = NormalizationService()
     event_batch = normalizer.normalize_batch(parsed_events)
 
-    # Enrich with GeoIP (singleton - loads CSV only once)
-    from enrichment.geoip_service import get_geoip_service
-    geoip_svc = get_geoip_service()
-    enriched_events = geoip_svc.enrich_batch(event_batch.events)
+    # Use normalized events directly (GeoIP removed for performance)
+    enriched_events = event_batch.events
 
     logger.info(f"Parse & normalize complete | file_id={file_id}, events={len(enriched_events)}")
 

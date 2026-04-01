@@ -1,0 +1,404 @@
+{
+  "date": "2026-04-01",
+  "batch_count": 4,
+  "total_events": 56,
+  "saved_at": "2026-04-01T07:20:17.075987",
+  "actors": {
+    "0.1.0.1": {
+      "ip": "0.1.0.1",
+      "first_seen": "2026-04-01T06:49:13.334207",
+      "last_seen": "2026-04-01T07:20:16.673592",
+      "total_requests": 28,
+      "requests_by_status": {
+        "200": 20,
+        "302": 8
+      },
+      "unique_uris_accessed": 16,
+      "auth_failures_total": 0,
+      "auth_successes_total": 20,
+      "attack_signatures_seen": [
+        "sql_injection",
+        "blind_sql_injection",
+        "os_command_injection",
+        "path_traversal"
+      ],
+      "attack_categories_seen": [
+        "sql_injection",
+        "blind_sql_injection",
+        "os_command_injection",
+        "path_traversal"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T06:49:13.335208",
+          "category": "sql_injection",
+          "rule_name": "sql_injection",
+          "evidence": "do=inforum&listforumid=(select(0)from(select(sleep(6)))v)/*'%2B(select(0)from(select(sleep(6)))v)%2B",
+          "batch_number": 1
+        },
+        {
+          "timestamp": "2026-04-01T06:49:13.335208",
+          "category": "blind_sql_injection",
+          "rule_name": "blind_sql_injection",
+          "evidence": "do=inforum&listforumid=(select(0)from(select(sleep(6)))v)/*'%2B(select(0)from(select(sleep(6)))v)%2B",
+          "batch_number": 1
+        },
+        {
+          "timestamp": "2026-04-01T06:49:13.335208",
+          "category": "os_command_injection",
+          "rule_name": "os_command_injection",
+          "evidence": "searchIn=/content/dam/tcs/investor-relations/financial-statements&selectedQuarter=q3&haiku630498=she",
+          "batch_number": 1
+        },
+        {
+          "timestamp": "2026-04-01T06:49:13.334207",
+          "category": "path_traversal",
+          "rule_name": "path_traversal",
+          "evidence": "eqbzeyas=%3Cscript%3Ealert%28%22XSS%22%29%3B%3C%2Fscript%3E&ygocslug=UNION+SELECT+ALL+FROM+informati",
+          "batch_number": 1
+        },
+        {
+          "timestamp": "2026-04-01T07:08:51.295531",
+          "category": "sql_injection",
+          "rule_name": "sql_injection",
+          "evidence": "do=inforum&listforumid=(select(0)from(select(sleep(6)))v)/*'%2B(select(0)from(select(sleep(6)))v)%2B",
+          "batch_number": 2
+        },
+        {
+          "timestamp": "2026-04-01T07:08:51.295531",
+          "category": "blind_sql_injection",
+          "rule_name": "blind_sql_injection",
+          "evidence": "do=inforum&listforumid=(select(0)from(select(sleep(6)))v)/*'%2B(select(0)from(select(sleep(6)))v)%2B",
+          "batch_number": 2
+        },
+        {
+          "timestamp": "2026-04-01T07:08:51.296527",
+          "category": "os_command_injection",
+          "rule_name": "os_command_injection",
+          "evidence": "searchIn=/content/dam/tcs/investor-relations/financial-statements&selectedQuarter=q3&haiku630498=she",
+          "batch_number": 2
+        },
+        {
+          "timestamp": "2026-04-01T07:08:51.295531",
+          "category": "path_traversal",
+          "rule_name": "path_traversal",
+          "evidence": "eqbzeyas=%3Cscript%3Ealert%28%22XSS%22%29%3B%3C%2Fscript%3E&ygocslug=UNION+SELECT+ALL+FROM+informati",
+          "batch_number": 2
+        },
+        {
+          "timestamp": "2026-04-01T07:11:47.473078",
+          "category": "sql_injection",
+          "rule_name": "sql_injection",
+          "evidence": "do=inforum&listforumid=(select(0)from(select(sleep(6)))v)/*'%2B(select(0)from(select(sleep(6)))v)%2B",
+          "batch_number": 3
+        },
+        {
+          "timestamp": "2026-04-01T07:11:47.473078",
+          "category": "blind_sql_injection",
+          "rule_name": "blind_sql_injection",
+          "evidence": "do=inforum&listforumid=(select(0)from(select(sleep(6)))v)/*'%2B(select(0)from(select(sleep(6)))v)%2B",
+          "batch_number": 3
+        },
+        {
+          "timestamp": "2026-04-01T07:11:47.473078",
+          "category": "os_command_injection",
+          "rule_name": "os_command_injection",
+          "evidence": "searchIn=/content/dam/tcs/investor-relations/financial-statements&selectedQuarter=q3&haiku630498=she",
+          "batch_number": 3
+        },
+        {
+          "timestamp": "2026-04-01T07:11:47.472084",
+          "category": "path_traversal",
+          "rule_name": "path_traversal",
+          "evidence": "eqbzeyas=%3Cscript%3Ealert%28%22XSS%22%29%3B%3C%2Fscript%3E&ygocslug=UNION+SELECT+ALL+FROM+informati",
+          "batch_number": 3
+        },
+        {
+          "timestamp": "2026-04-01T07:20:16.673592",
+          "category": "sql_injection",
+          "rule_name": "sql_injection",
+          "evidence": "do=inforum&listforumid=(select(0)from(select(sleep(6)))v)/*'%2B(select(0)from(select(sleep(6)))v)%2B",
+          "batch_number": 4
+        },
+        {
+          "timestamp": "2026-04-01T07:20:16.673592",
+          "category": "blind_sql_injection",
+          "rule_name": "blind_sql_injection",
+          "evidence": "do=inforum&listforumid=(select(0)from(select(sleep(6)))v)/*'%2B(select(0)from(select(sleep(6)))v)%2B",
+          "batch_number": 4
+        },
+        {
+          "timestamp": "2026-04-01T07:20:16.673592",
+          "category": "os_command_injection",
+          "rule_name": "os_command_injection",
+          "evidence": "searchIn=/content/dam/tcs/investor-relations/financial-statements&selectedQuarter=q3&haiku630498=she",
+          "batch_number": 4
+        },
+        {
+          "timestamp": "2026-04-01T07:20:16.672560",
+          "category": "path_traversal",
+          "rule_name": "path_traversal",
+          "evidence": "eqbzeyas=%3Cscript%3Ealert%28%22XSS%22%29%3B%3C%2Fscript%3E&ygocslug=UNION+SELECT+ALL+FROM+informati",
+          "batch_number": 4
+        }
+      ],
+      "user_agents_seen": [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:130.0) Gecko/20100101 Firefox/130.0",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.6613.186 Electron/32.3.3 Safari/537.36"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 1,
+          "count": 7,
+          "timestamp": "2026-04-01T06:49:24.841665"
+        },
+        {
+          "batch": 2,
+          "count": 7,
+          "timestamp": "2026-04-01T07:08:51.337302"
+        },
+        {
+          "batch": 3,
+          "count": 7,
+          "timestamp": "2026-04-01T07:11:47.520385"
+        },
+        {
+          "batch": 4,
+          "count": 7,
+          "timestamp": "2026-04-01T07:20:17.075987"
+        }
+      ],
+      "threat_score": 1.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 4
+    },
+    "0.0.0.0": {
+      "ip": "0.0.0.0",
+      "first_seen": "2026-04-01T06:49:13.335208",
+      "last_seen": "2026-04-01T07:20:16.674600",
+      "total_requests": 28,
+      "requests_by_status": {
+        "403": 28
+      },
+      "unique_uris_accessed": 12,
+      "auth_failures_total": 0,
+      "auth_successes_total": 0,
+      "attack_signatures_seen": [
+        "local_file_inclusion",
+        "path_traversal",
+        "arbitrary_file_read",
+        "double_url_encoding",
+        "xss",
+        "unicode_abuse"
+      ],
+      "attack_categories_seen": [
+        "local_file_inclusion",
+        "path_traversal",
+        "arbitrary_file_read",
+        "evasion",
+        "cross_site_scripting",
+        "insecure_input_validation"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T06:49:13.335208",
+          "category": "local_file_inclusion",
+          "rule_name": "local_file_inclusion",
+          "evidence": "../../../../../../../etc/passwd",
+          "batch_number": 1
+        },
+        {
+          "timestamp": "2026-04-01T06:49:13.335208",
+          "category": "path_traversal",
+          "rule_name": "path_traversal",
+          "evidence": "../../../../../../../etc/passwd",
+          "batch_number": 1
+        },
+        {
+          "timestamp": "2026-04-01T06:49:13.335208",
+          "category": "arbitrary_file_read",
+          "rule_name": "arbitrary_file_read",
+          "evidence": "attributes.id=test&attributes.file=../../administrator/mail/download.cfm&filename=../lib/password.pr",
+          "batch_number": 1
+        },
+        {
+          "timestamp": "2026-04-01T06:49:13.335208",
+          "category": "evasion",
+          "rule_name": "double_url_encoding",
+          "evidence": "%252e%252e%252fetc%252fpasswd",
+          "batch_number": 1
+        },
+        {
+          "timestamp": "2026-04-01T06:49:13.335208",
+          "category": "cross_site_scripting",
+          "rule_name": "xss",
+          "evidence": "wpapp_shortcode=\\\"%3E%3Cscript%3Ealert(document.domain)%3C/script%3E&wpappninja_simul4=1",
+          "batch_number": 1
+        },
+        {
+          "timestamp": "2026-04-01T06:49:13.335208",
+          "category": "insecure_input_validation",
+          "rule_name": "unicode_abuse",
+          "evidence": "..%c0%afetc%c0%afpasswd",
+          "batch_number": 1
+        },
+        {
+          "timestamp": "2026-04-01T07:08:51.296527",
+          "category": "local_file_inclusion",
+          "rule_name": "local_file_inclusion",
+          "evidence": "../../../../../../../etc/passwd",
+          "batch_number": 2
+        },
+        {
+          "timestamp": "2026-04-01T07:08:51.296527",
+          "category": "path_traversal",
+          "rule_name": "path_traversal",
+          "evidence": "../../../../../../../etc/passwd",
+          "batch_number": 2
+        },
+        {
+          "timestamp": "2026-04-01T07:08:51.296527",
+          "category": "arbitrary_file_read",
+          "rule_name": "arbitrary_file_read",
+          "evidence": "attributes.id=test&attributes.file=../../administrator/mail/download.cfm&filename=../lib/password.pr",
+          "batch_number": 2
+        },
+        {
+          "timestamp": "2026-04-01T07:08:51.296527",
+          "category": "evasion",
+          "rule_name": "double_url_encoding",
+          "evidence": "%252e%252e%252fetc%252fpasswd",
+          "batch_number": 2
+        },
+        {
+          "timestamp": "2026-04-01T07:08:51.296527",
+          "category": "cross_site_scripting",
+          "rule_name": "xss",
+          "evidence": "wpapp_shortcode=\\\"%3E%3Cscript%3Ealert(document.domain)%3C/script%3E&wpappninja_simul4=1",
+          "batch_number": 2
+        },
+        {
+          "timestamp": "2026-04-01T07:08:51.296527",
+          "category": "insecure_input_validation",
+          "rule_name": "unicode_abuse",
+          "evidence": "..%c0%afetc%c0%afpasswd",
+          "batch_number": 2
+        },
+        {
+          "timestamp": "2026-04-01T07:11:47.473078",
+          "category": "local_file_inclusion",
+          "rule_name": "local_file_inclusion",
+          "evidence": "../../../../../../../etc/passwd",
+          "batch_number": 3
+        },
+        {
+          "timestamp": "2026-04-01T07:11:47.473078",
+          "category": "path_traversal",
+          "rule_name": "path_traversal",
+          "evidence": "../../../../../../../etc/passwd",
+          "batch_number": 3
+        },
+        {
+          "timestamp": "2026-04-01T07:11:47.473078",
+          "category": "arbitrary_file_read",
+          "rule_name": "arbitrary_file_read",
+          "evidence": "attributes.id=test&attributes.file=../../administrator/mail/download.cfm&filename=../lib/password.pr",
+          "batch_number": 3
+        },
+        {
+          "timestamp": "2026-04-01T07:11:47.473078",
+          "category": "evasion",
+          "rule_name": "double_url_encoding",
+          "evidence": "%252e%252e%252fetc%252fpasswd",
+          "batch_number": 3
+        },
+        {
+          "timestamp": "2026-04-01T07:11:47.481100",
+          "category": "cross_site_scripting",
+          "rule_name": "xss",
+          "evidence": "wpapp_shortcode=\\\"%3E%3Cscript%3Ealert(document.domain)%3C/script%3E&wpappninja_simul4=1",
+          "batch_number": 3
+        },
+        {
+          "timestamp": "2026-04-01T07:11:47.480093",
+          "category": "insecure_input_validation",
+          "rule_name": "unicode_abuse",
+          "evidence": "..%c0%afetc%c0%afpasswd",
+          "batch_number": 3
+        },
+        {
+          "timestamp": "2026-04-01T07:20:16.674600",
+          "category": "local_file_inclusion",
+          "rule_name": "local_file_inclusion",
+          "evidence": "../../../../../../../etc/passwd",
+          "batch_number": 4
+        },
+        {
+          "timestamp": "2026-04-01T07:20:16.674600",
+          "category": "path_traversal",
+          "rule_name": "path_traversal",
+          "evidence": "../../../../../../../etc/passwd",
+          "batch_number": 4
+        },
+        {
+          "timestamp": "2026-04-01T07:20:16.674600",
+          "category": "arbitrary_file_read",
+          "rule_name": "arbitrary_file_read",
+          "evidence": "attributes.id=test&attributes.file=../../administrator/mail/download.cfm&filename=../lib/password.pr",
+          "batch_number": 4
+        },
+        {
+          "timestamp": "2026-04-01T07:20:16.674600",
+          "category": "evasion",
+          "rule_name": "double_url_encoding",
+          "evidence": "%252e%252e%252fetc%252fpasswd",
+          "batch_number": 4
+        },
+        {
+          "timestamp": "2026-04-01T07:20:16.674600",
+          "category": "cross_site_scripting",
+          "rule_name": "xss",
+          "evidence": "wpapp_shortcode=\\\"%3E%3Cscript%3Ealert(document.domain)%3C/script%3E&wpappninja_simul4=1",
+          "batch_number": 4
+        },
+        {
+          "timestamp": "2026-04-01T07:20:16.674600",
+          "category": "insecure_input_validation",
+          "rule_name": "unicode_abuse",
+          "evidence": "..%c0%afetc%c0%afpasswd",
+          "batch_number": 4
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 1,
+          "count": 7,
+          "timestamp": "2026-04-01T06:49:24.841665"
+        },
+        {
+          "batch": 2,
+          "count": 7,
+          "timestamp": "2026-04-01T07:08:51.337302"
+        },
+        {
+          "batch": 3,
+          "count": 7,
+          "timestamp": "2026-04-01T07:11:47.520385"
+        },
+        {
+          "batch": 4,
+          "count": 7,
+          "timestamp": "2026-04-01T07:20:17.075987"
+        }
+      ],
+      "threat_score": 1.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 4
+    }
+  }
+}

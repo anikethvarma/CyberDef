@@ -1,0 +1,272 @@
+{
+  "file_id": "ab6ab141-1c38-4113-9751-a8c1b55bc6c6",
+  "filename": "all_threats.csv",
+  "generated_at": "2026-04-01T07:24:49.929436+00:00",
+  "incident_count": 12,
+  "incidents": [
+    {
+      "incident_id": "a8d3dc25-3d0e-413d-83fc-782019ab27c0",
+      "title": "[LOCAL_FILE_INCLUSION] Local file inclusion attempt from 0.0.0.0",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "ab6ab141-1c38-4113-9751-a8c1b55bc6c6"
+      ],
+      "first_seen": "2026-04-01T07:20:16.674600",
+      "last_seen": "2026-04-01T07:20:16.674600",
+      "raw_log": "../../../../../../../etc/passwd",
+      "source_ip": "0.0.0.0",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "source ip",
+      "attack_name": "local_file_inclusion",
+      "brief_description": "Local file inclusion attempt",
+      "recommended_action": "Investigate local_file_inclusion from 0.0.0.0",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190"
+    },
+    {
+      "incident_id": "418253b7-a393-4afa-962b-581e6e972ab1",
+      "title": "[SQL_INJECTION] SQL injection attempt detected from 0.1.0.1",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "ab6ab141-1c38-4113-9751-a8c1b55bc6c6"
+      ],
+      "first_seen": "2026-04-01T07:20:16.673592",
+      "last_seen": "2026-04-01T07:20:16.673592",
+      "raw_log": "do=inforum&listforumid=(select(0)from(select(sleep(6)))v)/*'%2B(select(0)from(select(sleep(6)))v)%2B'\\\"%2B(select(0)from(select(sleep(6)))v)%2B\\\"*/&result=10",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "payload",
+      "attack_name": "sql_injection",
+      "brief_description": "SQL injection attempt detected",
+      "recommended_action": "Investigate sql_injection from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190"
+    },
+    {
+      "incident_id": "189bdfaf-f9da-4ac1-b042-173ffca93941",
+      "title": "[BLIND_SQL_INJECTION] Blind SQL injection attempt detected from 0.1.0.1",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "ab6ab141-1c38-4113-9751-a8c1b55bc6c6"
+      ],
+      "first_seen": "2026-04-01T07:20:16.673592",
+      "last_seen": "2026-04-01T07:20:16.673592",
+      "raw_log": "do=inforum&listforumid=(select(0)from(select(sleep(6)))v)/*'%2B(select(0)from(select(sleep(6)))v)%2B'\\\"%2B(select(0)from(select(sleep(6)))v)%2B\\\"*/&result=10",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "payload",
+      "attack_name": "blind_sql_injection",
+      "brief_description": "Blind SQL injection attempt detected",
+      "recommended_action": "Investigate blind_sql_injection from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190"
+    },
+    {
+      "incident_id": "8b44897a-0d9f-449f-b8bf-19a925de9ff3",
+      "title": "[OS_COMMAND_INJECTION] OS command injection attempt from 0.1.0.1",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "ab6ab141-1c38-4113-9751-a8c1b55bc6c6"
+      ],
+      "first_seen": "2026-04-01T07:20:16.673592",
+      "last_seen": "2026-04-01T07:20:16.673592",
+      "raw_log": "searchIn=/content/dam/tcs/investor-relations/financial-statements&selectedQuarter=q3&haiku630498=shell_exec(ifconfig)",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "payload",
+      "attack_name": "os_command_injection",
+      "brief_description": "OS command injection attempt",
+      "recommended_action": "Investigate os_command_injection from 0.1.0.1",
+      "confidence_score": 8,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190"
+    },
+    {
+      "incident_id": "c2d4cb81-6bce-454c-b8c6-23d9c5aa8f25",
+      "title": "[PATH_TRAVERSAL] Path traversal attempt from 0.0.0.0",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "ab6ab141-1c38-4113-9751-a8c1b55bc6c6"
+      ],
+      "first_seen": "2026-04-01T07:20:16.674600",
+      "last_seen": "2026-04-01T07:20:16.674600",
+      "raw_log": "../../../../../../../etc/passwd",
+      "source_ip": "0.0.0.0",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "path_traversal",
+      "brief_description": "Path traversal attempt",
+      "recommended_action": "Investigate path_traversal from 0.0.0.0",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190"
+    },
+    {
+      "incident_id": "4402c7ea-d6d8-4790-9a95-f87dcd7af6a6",
+      "title": "[PATH_TRAVERSAL] Path traversal attempt from 0.1.0.1",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "ab6ab141-1c38-4113-9751-a8c1b55bc6c6"
+      ],
+      "first_seen": "2026-04-01T07:20:16.672560",
+      "last_seen": "2026-04-01T07:20:16.673592",
+      "raw_log": "eqbzeyas=%3Cscript%3Ealert%28%22XSS%22%29%3B%3C%2Fscript%3E&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+%22+or+SLEEP%285%29+or+%22&dqohnhch=..%2F..%2Fetc%2Fpasswd",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "path_traversal",
+      "brief_description": "Path traversal attempt",
+      "recommended_action": "Investigate path_traversal from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190"
+    },
+    {
+      "incident_id": "5620e9d5-9a84-4a1b-b1df-771ca3756ccf",
+      "title": "[ARBITRARY_FILE_READ] Arbitrary file read via parameter manipulation from 0.0.0.0",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "ab6ab141-1c38-4113-9751-a8c1b55bc6c6"
+      ],
+      "first_seen": "2026-04-01T07:20:16.674600",
+      "last_seen": "2026-04-01T07:20:16.674600",
+      "raw_log": "attributes.id=test&attributes.file=../../administrator/mail/download.cfm&filename=../lib/password.properties&attributes.locale=it&attributes.var=it&attributes.jscript=false&attributes.type=text/html&a",
+      "source_ip": "0.0.0.0",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "source ip",
+      "attack_name": "arbitrary_file_read",
+      "brief_description": "Arbitrary file read via parameter manipulation",
+      "recommended_action": "Investigate arbitrary_file_read from 0.0.0.0",
+      "confidence_score": 8,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190"
+    },
+    {
+      "incident_id": "6427a864-5699-4a15-965f-b82ed03f9cd4",
+      "title": "[EVASION] Double URL encoding to bypass WAF/filters from 0.0.0.0",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "ab6ab141-1c38-4113-9751-a8c1b55bc6c6"
+      ],
+      "first_seen": "2026-04-01T07:20:16.674600",
+      "last_seen": "2026-04-01T07:20:16.674600",
+      "raw_log": "%252e%252e%252fetc%252fpasswd",
+      "source_ip": "0.0.0.0",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "double_url_encoding",
+      "brief_description": "Double URL encoding to bypass WAF/filters",
+      "recommended_action": "Investigate evasion from 0.0.0.0",
+      "confidence_score": 8,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190"
+    },
+    {
+      "incident_id": "9da2f7f3-37d8-4dd7-982a-ae76769e34eb",
+      "title": "[CROSS_SITE_SCRIPTING] Cross-site scripting attempt from 0.0.0.0",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "ab6ab141-1c38-4113-9751-a8c1b55bc6c6"
+      ],
+      "first_seen": "2026-04-01T07:20:16.674600",
+      "last_seen": "2026-04-01T07:20:16.674600",
+      "raw_log": "wpapp_shortcode=\\\"%3E%3Cscript%3Ealert(document.domain)%3C/script%3E&wpappninja_simul4=1",
+      "source_ip": "0.0.0.0",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "source ip",
+      "attack_name": "xss",
+      "brief_description": "Cross-site scripting attempt",
+      "recommended_action": "Investigate cross_site_scripting from 0.0.0.0",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190"
+    },
+    {
+      "incident_id": "74f9cef5-f6f3-4aba-bfb8-29098bf2c68a",
+      "title": "[INSECURE_INPUT_VALIDATION] Unicode/UTF-8 overlong sequences from 0.0.0.0",
+      "status": "new",
+      "priority": "medium",
+      "file_ids": [
+        "ab6ab141-1c38-4113-9751-a8c1b55bc6c6"
+      ],
+      "first_seen": "2026-04-01T07:20:16.674600",
+      "last_seen": "2026-04-01T07:20:16.674600",
+      "raw_log": "..%c0%afetc%c0%afpasswd",
+      "source_ip": "0.0.0.0",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "null",
+      "attack_name": "unicode_abuse",
+      "brief_description": "Unicode/UTF-8 overlong sequences",
+      "recommended_action": "Investigate insecure_input_validation from 0.0.0.0",
+      "confidence_score": 7,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190"
+    },
+    {
+      "incident_id": "f9554769-93f8-41b3-ae00-a1f29f8997a2",
+      "title": "[CORRELATION] Multi-vector: 4 attack types (sql_injection, blind_sql_injection, os_command_inj",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "ab6ab141-1c38-4113-9751-a8c1b55bc6c6"
+      ],
+      "first_seen": "2026-04-01T07:20:18.648316",
+      "last_seen": "2026-04-01T07:20:18.648316",
+      "raw_log": "{'categories': ['sql_injection', 'blind_sql_injection', 'os_command_injection', 'path_traversal']}",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "multi_vector_attacker",
+      "brief_description": "Multi-vector: 4 attack types (sql_injection, blind_sql_injection, os_command_injection, path_traversal)",
+      "recommended_action": "Investigate correlated activity from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1595"
+    },
+    {
+      "incident_id": "c31073c0-7e77-4d2e-8e85-3181b62716a4",
+      "title": "[CORRELATION] Multi-vector: 6 attack types (local_file_inclusion, path_traversal, arbitrary_fi",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "ab6ab141-1c38-4113-9751-a8c1b55bc6c6"
+      ],
+      "first_seen": "2026-04-01T07:20:18.767699",
+      "last_seen": "2026-04-01T07:20:18.767699",
+      "raw_log": "{'categories': ['local_file_inclusion', 'path_traversal', 'arbitrary_file_read', 'evasion', 'cross_site_scripting', 'insecure_input_validation']}",
+      "source_ip": "0.0.0.0",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "multi_vector_attacker",
+      "brief_description": "Multi-vector: 6 attack types (local_file_inclusion, path_traversal, arbitrary_file_read, evasion, cross_site_scripting)",
+      "recommended_action": "Investigate correlated activity from 0.0.0.0",
+      "confidence_score": 9,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1595"
+    }
+  ]
+}

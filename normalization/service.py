@@ -97,17 +97,22 @@ class NormalizationService:
             Normalized event or None if normalization fails
         """
         try:
-            # Extract and validate source IP (required)
+            # Extract and validate IPs (require at least one)
             src_ip = self._normalize_ip(parsed.source_address)
-            if not src_ip:
+            dst_ip = self._normalize_ip(parsed.destination_address)
+            
+            # Reject only if BOTH IPs are missing (false positive)
+            if not src_ip and not dst_ip:
                 logger.warning(
-                    f"Missing source IP | file_id={parsed.file_id}, row_hash={parsed.row_hash}"
+                    f"Missing both source and destination IPs | file_id={parsed.file_id}, row_hash={parsed.row_hash}"
                 )
                 self.normalization_errors += 1
                 return None
-
-            # Normalize destination IP (optional)
-            dst_ip = self._normalize_ip(parsed.destination_address)
+            
+            # If src_ip is missing, use dst_ip as primary actor
+            if not src_ip:
+                src_ip = dst_ip
+                dst_ip = None
 
             # Get or infer timestamp - always normalize to naive UTC
             timestamp = self._strip_tz(parsed.timestamp) or datetime.utcnow()

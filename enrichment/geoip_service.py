@@ -39,6 +39,7 @@ class CSVGeoIPService:
         
         self.csv_path = None
         self.networks: List[Tuple[ipaddress.IPv4Network, Dict[str, str]]] = []
+        self.network_addresses: List[int] = []  # Precomputed network addresses for faster binary search
         self.enabled = False
         self._lookup_cache: Dict[str, Optional[Dict[str, str]]] = {}  # IP lookup cache
         
@@ -117,6 +118,9 @@ class CSVGeoIPService:
         networks.sort(key=lambda x: x[0].network_address)
         self.networks = networks
         
+        # Precompute network addresses for faster binary search
+        self.network_addresses = [net[0].network_address for net in self.networks]
+        
         logger.info(f"Loaded {len(self.networks)} IP networks from CSV")
         return True
 
@@ -127,25 +131,29 @@ class CSVGeoIPService:
             return self._lookup_cache[ip_str]
         
         try:
-            ip = ipaddress.IPv4Address(ip_str)
+            ip_int = int(ipaddress.IPv4Address(ip_str))
             
-            # Binary search through sorted networks
-            left, right = 0, len(self.networks) - 1
+            # Binary search through sorted network addresses
+            left, right = 0, len(self.network_addresses) - 1
+            result = None
+            
             while left <= right:
                 mid = (left + right) // 2
                 network, geo_data = self.networks[mid]
+                net_addr = self.network_addresses[mid]
                 
-                if ip in network:
-                    self._lookup_cache[ip_str] = geo_data
-                    return geo_data
-                elif ip < network.network_address:
+                # Check if IP is in this network
+                if ip_int >= net_addr and ip_int <= int(network.broadcast_address):
+                    result = geo_data
+                    break
+                elif ip_int < net_addr:
                     right = mid - 1
                 else:
                     left = mid + 1
             
-            # Cache miss
-            self._lookup_cache[ip_str] = None
-            return None
+            # Cache result
+            self._lookup_cache[ip_str] = result
+            return result
             
         except Exception as e:
             logger.debug(f"IP lookup failed for {ip_str}: {e}")
@@ -167,27 +175,45 @@ class CSVGeoIPService:
         return event
 
     def enrich_batch(self, events: List[NormalizedEvent]) -> List[NormalizedEvent]:
-        """Enrich batch of events with geographic data."""
-        if not self.enabled:
+        """Enrich batch of events with geographic data (optimized for unique IPs)."""
+        if not self.enabled or not events:
             return events
         
-        enriched = []
-        external_ips_processed = 0
-        
+        # Extract unique external IPs to avoid redundant lookups
+        unique_ips = set()
         for event in events:
-            enriched_event = self.enrich_event(event)
-            
-            # Count external IPs processed
-            if ((event.is_internal_src is False and event.src_ip) or 
-                (event.is_internal_dst is False and event.dst_ip)):
-                external_ips_processed += 1
-            
-            enriched.append(enriched_event)
+            if event.is_internal_src is False and event.src_ip:
+                unique_ips.add(event.src_ip)
+            if event.is_internal_dst is False and event.dst_ip:
+                unique_ips.add(event.dst_ip)
         
-        if external_ips_processed > 0:
-            logger.debug(f"CSV GeoIP enriched {external_ips_processed} external IPs in batch")
+        # Pre-lookup all unique IPs (with caching)
+        ip_geo_map = {}
+        for ip in unique_ips:
+            ip_geo_map[ip] = self._lookup_ip(ip)
         
-        return enriched
+        # Apply cached results to all events
+        for event in events:
+            if event.is_internal_src is False and event.src_ip and event.src_ip in ip_geo_map:
+                geo_data = ip_geo_map[event.src_ip]
+                if geo_data:
+                    event.geo_country = geo_data.get('country_name') or None
+                    event.geo_region = None
+                    event.geo_city = None
+                    event.geo_latitude = None
+                    event.geo_longitude = None
+            
+            if event.is_internal_dst is False and event.dst_ip and event.dst_ip in ip_geo_map:
+                geo_data = ip_geo_map[event.dst_ip]
+                if geo_data:
+                    event.geo_country = geo_data.get('country_name') or None
+                    event.geo_region = None
+                    event.geo_city = None
+                    event.geo_latitude = None
+                    event.geo_longitude = None
+        
+        logger.info(f"CSV GeoIP enriched batch | events={len(events)}, unique_ips={len(unique_ips)}, cache_hits={len(self._lookup_cache)}")
+        return events
 
     def _add_geo_data(self, event: NormalizedEvent, ip: str, ip_type: str):
         """Add geographic data for an IP address."""

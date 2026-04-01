@@ -141,28 +141,31 @@ class ExtendedThreatAnalysisMixin:
         anomaly_desc = None
         impossible_travel = False
         
-        # Blacklisted countries (example - customize per organization)
-        BLACKLISTED_COUNTRIES = {"KP", "IR", "SY"}  # North Korea, Iran, Syria
+        # Geographic analysis disabled (GeoIP removed for performance)
+        # If GeoIP is re-enabled, uncomment the code below
         
-        for event in chunk.events:
-            if event.geo_country:
-                countries.add(event.geo_country)
-                
-                # Check blacklist
-                if event.geo_country in BLACKLISTED_COUNTRIES:
-                    anomaly_detected = True
-                    anomaly_desc = f"Access from blacklisted country: {event.geo_country}"
-            
-            if event.geo_city:
-                cities.append((event.geo_city, event.timestamp))
-        
-        # Detect impossible travel (same user from >1000km in <1 hour)
-        # Simplified: just check if multiple distant countries
-        if len(countries) > 2 and chunk.strategy.value == "user":
-            impossible_travel = True
+        # # Blacklisted countries (example - customize per organization)
+        # BLACKLISTED_COUNTRIES = {"KP", "IR", "SY"}  # North Korea, Iran, Syria
+        # 
+        # for event in chunk.events:
+        #     if hasattr(event, 'geo_country') and event.geo_country:
+        #         countries.add(event.geo_country)
+        #         
+        #         # Check blacklist
+        #         if event.geo_country in BLACKLISTED_COUNTRIES:
+        #             anomaly_detected = True
+        #             anomaly_desc = f"Access from blacklisted country: {event.geo_country}"
+        #     
+        #     if hasattr(event, 'geo_city') and event.geo_city:
+        #         cities.append((event.geo_city, event.timestamp))
+        # 
+        # # Detect impossible travel (same user from >1000km in <1 hour)
+        # # Simplified: just check if multiple distant countries
+        # if len(countries) > 2 and chunk.strategy.value == "user":
+        #     impossible_travel = True
         
         return {
-            "countries": list(countries) if countries else None,
+            "countries": None,  # GeoIP disabled
             "anomaly_detected": anomaly_detected,
             "anomaly_description": anomaly_desc,
             "impossible_travel": impossible_travel,

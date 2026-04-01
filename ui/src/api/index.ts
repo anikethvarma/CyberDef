@@ -1,6 +1,6 @@
 import axios, { AxiosHeaders } from 'axios';
 
-export const API_BASE_URL = 'http://localhost:8000/api/v1';
+export const API_BASE_URL = 'http://10.170.25.3:8000/api/v1';
 export const AUTH_STORAGE_KEY = 'cyberdef_auth_token';
 
 let authToken: string | null =
@@ -188,7 +188,7 @@ export const getValidationStats = async () => {
 
 // Health check
 export const healthCheck = async () => {
-    const response = await axios.get('http://localhost:8000/health');
+    const response = await axios.get('http://10.170.25.3:8000/health');
     return response.data;
 };
 

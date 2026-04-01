@@ -196,5 +196,71 @@
         ]
       }
     }
+  ],
+  "84cb0b1d-6a2f-4040-a7e3-0d6f1d39fb55": [
+    {
+      "analysis_id": "50aa44d2-06f8-4167-b88b-7c0436413cf2",
+      "chunk_id": "781fcccb-9d77-46fe-a006-96b3219e283a",
+      "overall_confidence": 0.7249999999999999,
+      "requires_human_review": true,
+      "total_processing_time_ms": 896734,
+      "created_at": "2026-04-01T06:49:26.521419",
+      "behavioral": {
+        "interpretation": "A brief, high-intensity burst of activity was observed from an external actor with a mix of GET and POST requests.",
+        "is_suspicious": true,
+        "confidence": 0.7,
+        "reasoning": "The bursty temporal pattern, combined with the presence of both GET and POST requests, suggests potential malicious intent.",
+        "key_indicators": [
+          "bursty temporal pattern",
+          "external actor",
+          "mix of GET and POST requests"
+        ]
+      },
+      "intent": {
+        "suspected_intent": "Potential reconnaissance or initial access attempt",
+        "kill_chain_stage": "Reconnaissance",
+        "confidence": 0.6,
+        "alternative_intents": [
+          "Normal user activity",
+          "Legitimate application usage"
+        ],
+        "reasoning": "The bursty temporal pattern and high failure rate suggest a potential attack, but the lack of specific indicators (e.g., suspicious domains, DNS tunneling) makes it difficult to pinpoint the intent. The presence of multiple HTTP methods and status codes could be indicative of reconnaissance or initial access attempts."
+      },
+      "mitre": {
+        "technique_id": "T1046",
+        "technique_name": "Network Service Discovery",
+        "tactic": "Reconnaissance",
+        "justification": "The presence of multiple HTTP methods (POST, GET) and status codes (200, 302, 403) suggests an attempt to enumerate network services.",
+        "confidence": 0.8
+      },
+      "triage": {
+        "priority": "High",
+        "risk_reason": "The observed bursty activity pattern and high failure rate indicate a potential malicious attack.",
+        "recommended_action": "Investigate the source IP and network zone for any signs of unauthorized access or lateral movement.",
+        "confidence": 0.8,
+        "executive_summary": "Potential security breach detected, may impact business operations.",
+        "technical_summary": "The activity profile shows a brief, high-intensity burst of activity with a failure rate of 50%. The user agents seen are from various browsers and platforms, indicating potential exploitation of vulnerabilities."
+      }
+    }
+  ],
+  "ab6ab141-1c38-4113-9751-a8c1b55bc6c6": [
+    {
+      "analysis_id": "ef621c37-f39d-455b-9379-88e33a83c21a",
+      "chunk_id": "882fd534-a1a1-471f-b873-d346990012f6",
+      "overall_confidence": 0.0,
+      "requires_human_review": false,
+      "total_processing_time_ms": 268808,
+      "created_at": "2026-04-01T07:20:21.080320",
+      "behavioral": {
+        "interpretation": "A brief, high-intensity burst of activity was observed from an external actor with a mix of GET and POST requests.",
+        "is_suspicious": false,
+        "confidence": 0.6,
+        "reasoning": "The temporal pattern is unusual, but the lack of specific indicators for malicious behavior or failed authentication patterns keeps the confidence low.",
+        "key_indicators": [
+          "bursty temporal pattern",
+          "external actor"
+        ]
+      }
+    }
   ]
 }
