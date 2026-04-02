@@ -1,4 +1,4 @@
-﻿"""
+"""
 Family 2: Authentication, Session & Access Control Rules (9 rules)
 """
 
@@ -150,8 +150,7 @@ class JWTManipulationRule(ThreatRule):
     description = "JWT token manipulation attempt"
     check_fields = ["uri_path", "uri_query", "original_message"]
     patterns = [
-        r"(?:alg|algorithm)\s*[=:]\s*[\"']?none",
-        r"eyJ[A-Za-z0-9_-]{5,}\.eyJ[A-Za-z0-9_-]{5,}\.",
+        r"(?i)^(?!.*ScormEngineInterface).*(eyJ[^.]*ImFsZyI6Im5vbmUifQ|\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.\b|(GET|POST).*(token=|jwt=|auth=).*eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]*)",
     ]
 
 

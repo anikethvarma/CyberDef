@@ -1,4 +1,4 @@
-﻿"""Family 1: Web Application Injection Attack Rules (13 rules)"""
+"""Family 1: Web Application Injection Attack Rules (13 rules)"""
 
 from __future__ import annotations
 
@@ -95,7 +95,8 @@ class CommandInjectionRule(ThreatRule):
     description = "OS command injection attempt"
     check_fields = ["uri_path", "uri_query", "original_message"]
     patterns = [
-        r"(?i)((;\s*(whoami|id|uname|cat|ls|bash|sh))|&&|\||`|\$\(|invoke-webrequest|iex|downloadstring|wget|curl|webclient|powershell|\.exe).*powershell(?:\.exe)?",
+        r"(?i)((;\s*(whoami|id|uname|cat|ls|bash|sh|shell_exec))|&&|\||`|\$\(|invoke-webrequest|iex|downloadstring|wget|curl|webclient|powershell|\.exe).*powershell(?:\.exe)?",
+        r"(?i)\bshell_exec\s*\(",
     ]
 
 
