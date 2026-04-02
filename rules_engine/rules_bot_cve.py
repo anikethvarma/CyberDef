@@ -35,7 +35,7 @@ class HeadlessBrowserRule(ThreatRule):
     description = "Headless browser or automation tool"
     check_fields = ["user_agent"]
     patterns = [
-        r"HeadlessChrome",
+        r"(?i)\bHeadlessChrome\/\d+(?:\.\d+){1,3}\b.*\b(curl|wget|python|libwww|java|requests)\b|(?:^|\s)HeadlessChrome\/\d+(?:\.\d+){1,3}\b(?:\s*$)",
         r"PhantomJS",
         r"(?:Selenium|webdriver|Playwright)",
         r"Puppeteer",

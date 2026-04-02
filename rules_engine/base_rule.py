@@ -44,7 +44,17 @@ class ThreatRule(ABC):
         """
         Check if an event matches this rule.
         Returns ThreatMatch if matched, None otherwise.
+        
+        For signature-based attacks (INJECTION and CVE_EXPLOIT families),
+        only consider events with 2XX or 3XX status codes.
         """
+        # Status code filtering for signature-based attacks
+        if self.family in (ThreatFamily.INJECTION, ThreatFamily.CVE_EXPLOIT):
+            if event.http_status is not None:
+                # Only match if status code is 2XX or 3XX
+                if not (200 <= event.http_status < 400):
+                    return None
+        
         for field_name in self.check_fields:
             value = getattr(event, field_name, None)
             if not value:

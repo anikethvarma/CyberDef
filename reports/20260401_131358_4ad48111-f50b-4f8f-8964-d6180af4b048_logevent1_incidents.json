@@ -1,0 +1,815 @@
+{
+  "MI_ID": "GenAI_SOC",
+  "file_id": "4ad48111-f50b-4f8f-8964-d6180af4b048",
+  "filename": "logevent1.csv",
+  "generated_at": "2026-04-01T13:13:58.487874+00:00",
+  "incident_count": 22,
+  "emp_id": null,
+  "incidents": [
+    {
+      "incident_id": "8d2712f9-c779-43ff-8b21-f17170020a83",
+      "title": "[BLIND_SQL_INJECTION] Blind SQL injection attempt detected from 0.1.0.1",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "raw_log": "eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&dqohnhch=../../etc/passwd",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "hostname": null,
+      "suspicious": true,
+      "suspicious_indicator": "payload",
+      "attack_name": "blind_sql_injection",
+      "brief_description": "Blind SQL injection attempt detected",
+      "recommended_action": "Investigate blind_sql_injection from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "correlation": {
+        "signature_attacks": [
+          "blind_sql_injection",
+          "blind_sql_injection",
+          "Exploit Public-Facing Application"
+        ],
+        "src_ip": "0.1.0.1",
+        "dst_ip": null,
+        "hostname": null,
+        "raw_logs": [
+          "eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&dqohnhch=../../etc/passwd"
+        ],
+        "correlation_reason": "Deterministic rule match: blind_sql_injection | MITRE ATT&CK: Initial Access - T1190 | High confidence detection (0.92)"
+      }
+    },
+    {
+      "incident_id": "aab9a7ab-a23e-4fcd-b3e3-1a89f3f6610d",
+      "title": "[LOCAL_FILE_INCLUSION] Local file inclusion attempt from 0.1.0.1",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "raw_log": "eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&dqohnhch=../../etc/passwd",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "hostname": null,
+      "suspicious": true,
+      "suspicious_indicator": "source ip",
+      "attack_name": "local_file_inclusion",
+      "brief_description": "Local file inclusion attempt",
+      "recommended_action": "Investigate local_file_inclusion from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "correlation": {
+        "signature_attacks": [
+          "local_file_inclusion",
+          "local_file_inclusion",
+          "Exploit Public-Facing Application"
+        ],
+        "src_ip": "0.1.0.1",
+        "dst_ip": null,
+        "hostname": null,
+        "raw_logs": [
+          "eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&dqohnhch=../../etc/passwd"
+        ],
+        "correlation_reason": "Deterministic rule match: local_file_inclusion | MITRE ATT&CK: Initial Access - T1190 | High confidence detection (0.90)"
+      }
+    },
+    {
+      "incident_id": "ab3f5f6a-9276-400f-a2f3-2242ff5d9213",
+      "title": "[LOCAL_FILE_INCLUSION] Local file inclusion attempt from 0.0.0.0",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "raw_log": "../../../../../../../etc/passwd",
+      "source_ip": "0.0.0.0",
+      "destination_ip": null,
+      "hostname": null,
+      "suspicious": true,
+      "suspicious_indicator": "source ip",
+      "attack_name": "local_file_inclusion",
+      "brief_description": "Local file inclusion attempt",
+      "recommended_action": "Investigate local_file_inclusion from 0.0.0.0",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "correlation": {
+        "signature_attacks": [
+          "local_file_inclusion",
+          "local_file_inclusion",
+          "Exploit Public-Facing Application"
+        ],
+        "src_ip": "0.0.0.0",
+        "dst_ip": null,
+        "hostname": null,
+        "raw_logs": [
+          "../../../../../../../etc/passwd"
+        ],
+        "correlation_reason": "Deterministic rule match: local_file_inclusion | MITRE ATT&CK: Initial Access - T1190 | High confidence detection (0.90)"
+      }
+    },
+    {
+      "incident_id": "a21e6b2a-3da9-4a25-a095-1896de143538",
+      "title": "[SQL_INJECTION] SQL injection attempt detected from 6.1.8.1",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "raw_log": "<150>Dec  17 01:53:15 servernameabc httpd[12345]: 3.4.5.6 6.1.8.1 12345 abc.example.net - - [17/Dec/2025:01:53:15 +0530] \"GET /uxportal/uxportalhome.html/home' UNION SELECT@@version-- HTTP/1.1\" 200 24",
+      "source_ip": "6.1.8.1",
+      "destination_ip": "6.1.8.1",
+      "hostname": "6.1.8.1",
+      "suspicious": true,
+      "suspicious_indicator": "payload",
+      "attack_name": "sql_injection",
+      "brief_description": "SQL injection attempt detected",
+      "recommended_action": "Investigate sql_injection from 6.1.8.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "correlation": {
+        "signature_attacks": [
+          "sql_injection",
+          "sql_injection",
+          "Exploit Public-Facing Application"
+        ],
+        "src_ip": "6.1.8.1",
+        "dst_ip": "6.1.8.1",
+        "hostname": "6.1.8.1",
+        "raw_logs": [
+          "<150>Dec  17 01:53:15 servernameabc httpd[12345]: 3.4.5.6 6.1.8.1 12345 abc.example.net - - [17/Dec/2025:01:53:15 +0530] \"GET /uxportal/uxportalhome.html/home' UNION SELECT@@version-- HTTP/1.1\" 200 24"
+        ],
+        "correlation_reason": "Deterministic rule match: sql_injection | MITRE ATT&CK: Initial Access - T1190 | High confidence detection (0.90)"
+      }
+    },
+    {
+      "incident_id": "7580cbac-7490-4790-846a-3c1b3387a79a",
+      "title": "[SQL_INJECTION] SQL injection attempt detected from 0.1.0.1",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "raw_log": "do=inforum&listforumid=(select(0)from(select(sleep(6)))v)/*'+(select(0)from(select(sleep(6)))v)+'\"+(select(0)from(select(sleep(6)))v)+\"*/&result=10",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "hostname": null,
+      "suspicious": true,
+      "suspicious_indicator": "payload",
+      "attack_name": "sql_injection",
+      "brief_description": "SQL injection attempt detected",
+      "recommended_action": "Investigate sql_injection from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "correlation": {
+        "signature_attacks": [
+          "sql_injection",
+          "sql_injection",
+          "Exploit Public-Facing Application"
+        ],
+        "src_ip": "0.1.0.1",
+        "dst_ip": null,
+        "hostname": null,
+        "raw_logs": [
+          "do=inforum&listforumid=(select(0)from(select(sleep(6)))v)/*'+(select(0)from(select(sleep(6)))v)+'\"+(select(0)from(select(sleep(6)))v)+\"*/&result=10"
+        ],
+        "correlation_reason": "Deterministic rule match: sql_injection | MITRE ATT&CK: Initial Access - T1190 | High confidence detection (0.90)"
+      }
+    },
+    {
+      "incident_id": "ed6fb210-8efc-4da5-a617-8d062224b883",
+      "title": "[CROSS_SITE_SCRIPTING] Cross-site scripting attempt from 0.1.0.1",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "raw_log": "eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&dqohnhch=../../etc/passwd",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "hostname": null,
+      "suspicious": true,
+      "suspicious_indicator": "source ip",
+      "attack_name": "xss",
+      "brief_description": "Cross-site scripting attempt",
+      "recommended_action": "Investigate cross_site_scripting from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "correlation": {
+        "signature_attacks": [
+          "xss",
+          "xss",
+          "Exploit Public-Facing Application"
+        ],
+        "src_ip": "0.1.0.1",
+        "dst_ip": null,
+        "hostname": null,
+        "raw_logs": [
+          "eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&dqohnhch=../../etc/passwd"
+        ],
+        "correlation_reason": "Deterministic rule match: xss | MITRE ATT&CK: Initial Access - T1190 | High confidence detection (0.90)"
+      }
+    },
+    {
+      "incident_id": "f99f28be-e7f0-4070-8969-685f095b688c",
+      "title": "[PATH_TRAVERSAL] Path traversal attempt from 0.1.0.1",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "raw_log": "eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&dqohnhch=../../etc/passwd",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "hostname": null,
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "path_traversal",
+      "brief_description": "Path traversal attempt",
+      "recommended_action": "Investigate path_traversal from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "correlation": {
+        "signature_attacks": [
+          "path_traversal",
+          "path_traversal",
+          "Exploit Public-Facing Application"
+        ],
+        "src_ip": "0.1.0.1",
+        "dst_ip": null,
+        "hostname": null,
+        "raw_logs": [
+          "eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&dqohnhch=../../etc/passwd"
+        ],
+        "correlation_reason": "Deterministic rule match: path_traversal | MITRE ATT&CK: Initial Access - T1190 | High confidence detection (0.90)"
+      }
+    },
+    {
+      "incident_id": "9d456873-1ff0-497f-af07-ce4742cd7e8e",
+      "title": "[PATH_TRAVERSAL] Path traversal attempt from 0.0.0.0",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "raw_log": "../../../../../../../etc/passwd",
+      "source_ip": "0.0.0.0",
+      "destination_ip": null,
+      "hostname": null,
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "path_traversal",
+      "brief_description": "Path traversal attempt",
+      "recommended_action": "Investigate path_traversal from 0.0.0.0",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "correlation": {
+        "signature_attacks": [
+          "path_traversal",
+          "path_traversal",
+          "Exploit Public-Facing Application"
+        ],
+        "src_ip": "0.0.0.0",
+        "dst_ip": null,
+        "hostname": null,
+        "raw_logs": [
+          "../../../../../../../etc/passwd"
+        ],
+        "correlation_reason": "Deterministic rule match: path_traversal | MITRE ATT&CK: Initial Access - T1190 | High confidence detection (0.90)"
+      }
+    },
+    {
+      "incident_id": "a3c59fbe-32ad-418f-83b8-60c714878849",
+      "title": "[ARBITRARY_FILE_READ] Arbitrary file read via parameter manipulation from 0.0.0.0",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "raw_log": "attributes.id=test&attributes.file=../../administrator/mail/download.cfm&filename=../lib/password.properties&attributes.locale=it&attributes.var=it&attributes.jscript=false&attributes.type=text/html&a",
+      "source_ip": "0.0.0.0",
+      "destination_ip": null,
+      "hostname": null,
+      "suspicious": true,
+      "suspicious_indicator": "source ip",
+      "attack_name": "arbitrary_file_read",
+      "brief_description": "Arbitrary file read via parameter manipulation",
+      "recommended_action": "Investigate arbitrary_file_read from 0.0.0.0",
+      "confidence_score": 8,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "correlation": {
+        "signature_attacks": [
+          "arbitrary_file_read",
+          "arbitrary_file_read",
+          "Exploit Public-Facing Application"
+        ],
+        "src_ip": "0.0.0.0",
+        "dst_ip": null,
+        "hostname": null,
+        "raw_logs": [
+          "attributes.id=test&attributes.file=../../administrator/mail/download.cfm&filename=../lib/password.properties&attributes.locale=it&attributes.var=it&attributes.jscript=false&attributes.type=text/html&a"
+        ],
+        "correlation_reason": "Deterministic rule match: arbitrary_file_read | MITRE ATT&CK: Initial Access - T1190"
+      }
+    },
+    {
+      "incident_id": "2ceaad4e-7bd0-4011-b50c-719aecb7b16e",
+      "title": "[CORRELATION] Multi-vector: 6 attack types (sql_injection, blind_sql_injection, os_command_inj",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:58.214510",
+      "last_seen": "2026-04-01T11:38:58.214510",
+      "raw_log": "{'categories': ['sql_injection', 'blind_sql_injection', 'os_command_injection', 'path_traversal', 'local_file_inclusion', 'cross_site_scripting']}",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "hostname": null,
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "multi_vector_attacker",
+      "brief_description": "Multi-vector: 6 attack types (sql_injection, blind_sql_injection, os_command_injection, path_traversal, local_file_inclusion)",
+      "recommended_action": "Investigate correlated activity from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1595",
+      "correlation": {
+        "signature_attacks": [
+          "multi_vector_attacker",
+          "multi_vector_attacker",
+          "Active Scanning"
+        ],
+        "src_ip": "0.1.0.1",
+        "dst_ip": null,
+        "hostname": null,
+        "raw_logs": [
+          "{'categories': ['sql_injection', 'blind_sql_injection', 'os_command_injection', 'path_traversal', 'local_file_inclusion', 'cross_site_scripting']}"
+        ],
+        "correlation_reason": "Cross-batch correlation detected via multi_vector_attacker | MITRE ATT&CK: Reconnaissance - T1595 | High confidence detection (0.90)"
+      }
+    },
+    {
+      "incident_id": "73bbc067-3fe9-4350-b141-9674497eda72",
+      "title": "[CORRELATION] Multi-vector: 6 attack types (local_file_inclusion, path_traversal, arbitrary_fi",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:58.308747",
+      "last_seen": "2026-04-01T11:38:58.308747",
+      "raw_log": "{'categories': ['local_file_inclusion', 'path_traversal', 'arbitrary_file_read', 'evasion', 'cross_site_scripting', 'insecure_input_validation']}",
+      "source_ip": "0.0.0.0",
+      "destination_ip": null,
+      "hostname": null,
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "multi_vector_attacker",
+      "brief_description": "Multi-vector: 6 attack types (local_file_inclusion, path_traversal, arbitrary_file_read, evasion, cross_site_scripting)",
+      "recommended_action": "Investigate correlated activity from 0.0.0.0",
+      "confidence_score": 9,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1595",
+      "correlation": {
+        "signature_attacks": [
+          "multi_vector_attacker",
+          "multi_vector_attacker",
+          "Active Scanning"
+        ],
+        "src_ip": "0.0.0.0",
+        "dst_ip": null,
+        "hostname": null,
+        "raw_logs": [
+          "{'categories': ['local_file_inclusion', 'path_traversal', 'arbitrary_file_read', 'evasion', 'cross_site_scripting', 'insecure_input_validation']}"
+        ],
+        "correlation_reason": "Cross-batch correlation detected via multi_vector_attacker | MITRE ATT&CK: Reconnaissance - T1595 | High confidence detection (0.90)"
+      }
+    },
+    {
+      "incident_id": "8836c655-2d78-4078-879a-fed5275936ab",
+      "title": "[CORRELATION] Campaign: 25 IPs using csrf_indicator",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:58.402023",
+      "last_seen": "2026-04-01T11:38:58.402023",
+      "raw_log": "{'signature': 'csrf_indicator', 'ips': ['106.222.231.91', '157.51.143.16', '27.59.110.224', '103.120.51.122', '103.80.58.191', '152.59.222.129', '152.58.135.24', '130.41.149.9', '170.225.12.33', '17.233.103.151']}",
+      "source_ip": "106.222.231.91",
+      "destination_ip": "157.51.143.16",
+      "hostname": "157.51.143.16",
+      "suspicious": true,
+      "suspicious_indicator": "source ip",
+      "attack_name": "campaign_detection",
+      "brief_description": "Campaign: 25 IPs using csrf_indicator",
+      "recommended_action": "Investigate correlated activity from 106.222.231.91",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1595",
+      "correlation": {
+        "signature_attacks": [
+          "campaign_detection",
+          "campaign_detection",
+          "Active Scanning"
+        ],
+        "src_ip": "106.222.231.91",
+        "dst_ip": "157.51.143.16",
+        "hostname": "157.51.143.16",
+        "raw_logs": [
+          "{'signature': 'csrf_indicator', 'ips': ['106.222.231.91', '157.51.143.16', '27.59.110.224', '103.120.51.122', '103.80.58.191', '152.59.222.129', '152.58.135.24', '130.41.149.9', '170.225.12.33', '17.233.103.151']}"
+        ],
+        "correlation_reason": "Cross-batch correlation detected via campaign_detection | MITRE ATT&CK: Reconnaissance - T1595 | High confidence detection (0.80)"
+      }
+    },
+    {
+      "incident_id": "75573ac9-551f-4826-99c8-46162faa312b",
+      "title": "[CORRELATION] Campaign: 3 IPs using slowloris_indicator",
+      "status": "new",
+      "priority": "critical",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:58.470557",
+      "last_seen": "2026-04-01T11:38:58.470557",
+      "raw_log": "{'signature': 'slowloris_indicator', 'ips': ['106.66.39.251', '106.219.224.117', '131.229.221.23']}",
+      "source_ip": "106.66.39.251",
+      "destination_ip": "106.219.224.117",
+      "hostname": "106.219.224.117",
+      "suspicious": true,
+      "suspicious_indicator": "source ip",
+      "attack_name": "campaign_detection",
+      "brief_description": "Campaign: 3 IPs using slowloris_indicator",
+      "recommended_action": "Investigate correlated activity from 106.66.39.251",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1595",
+      "correlation": {
+        "signature_attacks": [
+          "campaign_detection",
+          "campaign_detection",
+          "Active Scanning"
+        ],
+        "src_ip": "106.66.39.251",
+        "dst_ip": "106.219.224.117",
+        "hostname": "106.219.224.117",
+        "raw_logs": [
+          "{'signature': 'slowloris_indicator', 'ips': ['106.66.39.251', '106.219.224.117', '131.229.221.23']}"
+        ],
+        "correlation_reason": "Cross-batch correlation detected via campaign_detection | MITRE ATT&CK: Reconnaissance - T1595 | High confidence detection (0.80)"
+      }
+    },
+    {
+      "incident_id": "bc2d1e72-78e3-41fd-a9a4-23668a75ae34",
+      "title": "A brief, high-intensity burst of activity from an  from Unknown actor",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "raw_log": "event_id=UUID('fbfcf337-91f3-453b-9ee5-919078a06170') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='ff0e78b8ebdf19fb' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 311935) src_ip='106.222.231.91' src_port=None dst_ip='10.40.54.114' dst_port=None dst_host='CDCUPGHDLSG01' action",
+      "source_ip": null,
+      "destination_ip": "10.40.54.10",
+      "hostname": "10.40.54.10",
+      "suspicious": true,
+      "suspicious_indicator": "scanning behavior",
+      "attack_name": "Port Scanning",
+      "brief_description": "External actor engaged in scanning behavior on 9 targets.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "correlation": {
+        "signature_attacks": [
+          "Port Scanning",
+          "Network Service Discovery"
+        ],
+        "src_ip": null,
+        "dst_ip": "10.40.54.10",
+        "hostname": "10.40.54.10",
+        "raw_logs": [
+          "event_id=UUID('fbfcf337-91f3-453b-9ee5-919078a06170') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='ff0e78b8ebdf19fb' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 311935) src_ip='106.222.231.91' src_port=None dst_ip='10.40.54.114' dst_port=None dst_host='CDCUPGHDLSG01' action"
+        ],
+        "correlation_reason": "MITRE ATT&CK: Reconnaissance - T1046"
+      }
+    },
+    {
+      "incident_id": "766a2b8e-16d2-4827-bc45-39d09bc64721",
+      "title": "The observed network activity exhibits scanning be from Unknown actor",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.310939",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "raw_log": "event_id=UUID('861a0682-954e-4dc3-afe9-672526b5b626') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='5a110d6e5689aa70' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 310939) src_ip='152.56.156.138' src_port=None dst_ip='10.16.189.24' dst_port=None dst_host='CDCDRUXPUAMW05' actio",
+      "source_ip": null,
+      "destination_ip": "10.16.189.10",
+      "hostname": "10.16.189.10",
+      "suspicious": true,
+      "suspicious_indicator": "user_agent",
+      "attack_name": "Port Scanning",
+      "brief_description": "Scanning behavior targeting internal systems.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "correlation": {
+        "signature_attacks": [
+          "Port Scanning",
+          "Network Service Discovery"
+        ],
+        "src_ip": null,
+        "dst_ip": "10.16.189.10",
+        "hostname": "10.16.189.10",
+        "raw_logs": [
+          "event_id=UUID('861a0682-954e-4dc3-afe9-672526b5b626') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='5a110d6e5689aa70' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 310939) src_ip='152.56.156.138' src_port=None dst_ip='10.16.189.24' dst_port=None dst_host='CDCDRUXPUAMW05' actio"
+        ],
+        "correlation_reason": "MITRE ATT&CK: Reconnaissance - T1046"
+      }
+    },
+    {
+      "incident_id": "a680b1f4-8261-4e36-a18b-6e435e1195be",
+      "title": "A brief, high-intensity burst of activity from an  from Unknown actor",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.310939",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "raw_log": "event_id=UUID('e81e3959-30a4-4fff-8a4d-fc75d4e2db7b') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='9592e40b2b2b08ea' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 310939) src_ip='152.58.177.235' src_port=None dst_ip='10.16.189.19' dst_port=None dst_host='CDCDRUXPUAMW02' actio",
+      "source_ip": null,
+      "destination_ip": "10.16.189.11",
+      "hostname": "10.16.189.11",
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "Reconnaissance",
+      "brief_description": "Actor exhibiting scanning behavior targeting multiple systems.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "correlation": {
+        "signature_attacks": [
+          "Reconnaissance",
+          "Network Service Discovery"
+        ],
+        "src_ip": null,
+        "dst_ip": "10.16.189.11",
+        "hostname": "10.16.189.11",
+        "raw_logs": [
+          "event_id=UUID('e81e3959-30a4-4fff-8a4d-fc75d4e2db7b') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='9592e40b2b2b08ea' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 310939) src_ip='152.58.177.235' src_port=None dst_ip='10.16.189.19' dst_port=None dst_host='CDCDRUXPUAMW02' actio"
+        ],
+        "correlation_reason": "MITRE ATT&CK: Reconnaissance - T1046"
+      }
+    },
+    {
+      "incident_id": "7d88804d-8c63-4e84-b34f-499aeef3f615",
+      "title": "A remote actor with scanning behavior targeting 12 from Unknown actor",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "raw_log": "event_id=UUID('e9186677-b23c-42a7-94d4-fb0765347d22') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='e391b9872c58c1cf' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 311935) src_ip='193.105.74.58' src_port=None dst_ip='10.16.189.21' dst_port=None dst_host='CDCDRUXPUAMW03' action",
+      "source_ip": null,
+      "destination_ip": "10.16.189.11",
+      "hostname": "10.16.189.11",
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "Port Scanning",
+      "brief_description": "External actor engaged in scanning behavior on 12 targets.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "correlation": {
+        "signature_attacks": [
+          "Port Scanning",
+          "Network Service Discovery"
+        ],
+        "src_ip": null,
+        "dst_ip": "10.16.189.11",
+        "hostname": "10.16.189.11",
+        "raw_logs": [
+          "event_id=UUID('e9186677-b23c-42a7-94d4-fb0765347d22') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='e391b9872c58c1cf' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 311935) src_ip='193.105.74.58' src_port=None dst_ip='10.16.189.21' dst_port=None dst_host='CDCDRUXPUAMW03' action"
+        ],
+        "correlation_reason": "MITRE ATT&CK: Reconnaissance - T1046"
+      }
+    },
+    {
+      "incident_id": "4d5ccd70-dd0f-4cf8-bfd8-3d6d3a5e3602",
+      "title": "A brief, high-intensity burst of activity was obse from Unknown actor",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.310939",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "raw_log": "event_id=UUID('8c397d7d-fee9-4e22-b543-8d61b8f3472d') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='24b12e04a9fc038e' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 310939) src_ip='122.171.20.147' src_port=None dst_ip='10.16.189.19' dst_port=None dst_host='CDCDRCCSSMW62' action",
+      "source_ip": null,
+      "destination_ip": "10.16.189.10",
+      "hostname": "10.16.189.10",
+      "suspicious": true,
+      "suspicious_indicator": "scanning behavior",
+      "attack_name": "Port Scanning",
+      "brief_description": "Potential port scanning activity detected on 10 targets.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "correlation": {
+        "signature_attacks": [
+          "Port Scanning",
+          "Network Service Discovery"
+        ],
+        "src_ip": null,
+        "dst_ip": "10.16.189.10",
+        "hostname": "10.16.189.10",
+        "raw_logs": [
+          "event_id=UUID('8c397d7d-fee9-4e22-b543-8d61b8f3472d') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='24b12e04a9fc038e' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 310939) src_ip='122.171.20.147' src_port=None dst_ip='10.16.189.19' dst_port=None dst_host='CDCDRCCSSMW62' action"
+        ],
+        "correlation_reason": "MITRE ATT&CK: Reconnaissance - T1046"
+      }
+    },
+    {
+      "incident_id": "63869743-407e-48e9-81ed-fbbb5ccaadbf",
+      "title": "A brief, high-intensity burst of activity was obse from Unknown actor",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.348054",
+      "raw_log": "event_id=UUID('c07caea9-435d-44cf-8847-a2ebb21b3a09') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='aa87826e5b191510' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 312938) src_ip='157.51.143.16' src_port=None dst_ip='10.40.54.10' dst_port=None dst_host='CDCUPGHDLSG03' action=<",
+      "source_ip": null,
+      "destination_ip": "10.40.54.10",
+      "hostname": "10.40.54.10",
+      "suspicious": true,
+      "suspicious_indicator": "scanning behavior",
+      "attack_name": "Port Scanning",
+      "brief_description": "Actor exhibited scanning behavior targeting 10 entities.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "correlation": {
+        "signature_attacks": [
+          "Port Scanning",
+          "Network Service Discovery"
+        ],
+        "src_ip": null,
+        "dst_ip": "10.40.54.10",
+        "hostname": "10.40.54.10",
+        "raw_logs": [
+          "event_id=UUID('c07caea9-435d-44cf-8847-a2ebb21b3a09') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='aa87826e5b191510' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 312938) src_ip='157.51.143.16' src_port=None dst_ip='10.40.54.10' dst_port=None dst_host='CDCUPGHDLSG03' action=<"
+        ],
+        "correlation_reason": "MITRE ATT&CK: Reconnaissance - T1046"
+      }
+    },
+    {
+      "incident_id": "6d6d187c-484b-4600-9d80-6d06e24708ed",
+      "title": "A brief, high-intensity burst of activity from an  from Unknown actor",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "raw_log": "event_id=UUID('bf8d6a2c-0086-492f-bd79-9bb859f2df28') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='270093308aea5d1b' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 312938) src_ip='130.213.32.166' src_port=None dst_ip='10.16.189.14' dst_port=None dst_host='CDCDRCCSSMW63' action",
+      "source_ip": null,
+      "destination_ip": "10.16.189.11",
+      "hostname": "10.16.189.11",
+      "suspicious": true,
+      "suspicious_indicator": "scanning behavior",
+      "attack_name": "Port Scan",
+      "brief_description": "Brief, high-intensity bursts of scanning activity detected.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "correlation": {
+        "signature_attacks": [
+          "Port Scan",
+          "Network Service Discovery"
+        ],
+        "src_ip": null,
+        "dst_ip": "10.16.189.11",
+        "hostname": "10.16.189.11",
+        "raw_logs": [
+          "event_id=UUID('bf8d6a2c-0086-492f-bd79-9bb859f2df28') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='270093308aea5d1b' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 312938) src_ip='130.213.32.166' src_port=None dst_ip='10.16.189.14' dst_port=None dst_host='CDCDRCCSSMW63' action"
+        ],
+        "correlation_reason": "MITRE ATT&CK: Reconnaissance - T1046"
+      }
+    },
+    {
+      "incident_id": "5bcb54cd-894a-4971-8a19-13a8dcabd0d6",
+      "title": "A remote actor with scanning behavior targeting 9  from Unknown actor",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "raw_log": "event_id=UUID('b0fd0267-abfc-49ce-84dd-7558c9a58edd') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='a8dcaf0904ae7e4d' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 312938) src_ip='49.37.147.208' src_port=None dst_ip='10.16.189.19' dst_port=None dst_host='CDCDRUXPUAMW01' action",
+      "source_ip": "null",
+      "destination_ip": "null",
+      "hostname": "null",
+      "suspicious": true,
+      "suspicious_indicator": "scanning behavior",
+      "attack_name": "Port Scanning",
+      "brief_description": "External scanning activity detected on 9 targets.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "correlation": {
+        "signature_attacks": [
+          "Port Scanning",
+          "Network Service Discovery"
+        ],
+        "src_ip": "null",
+        "dst_ip": "null",
+        "hostname": "null",
+        "raw_logs": [
+          "event_id=UUID('b0fd0267-abfc-49ce-84dd-7558c9a58edd') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='a8dcaf0904ae7e4d' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 312938) src_ip='49.37.147.208' src_port=None dst_ip='10.16.189.19' dst_port=None dst_host='CDCDRUXPUAMW01' action"
+        ],
+        "correlation_reason": "MITRE ATT&CK: Reconnaissance - T1046"
+      }
+    },
+    {
+      "incident_id": "40fb1150-df1b-4e92-99c9-6176cf39d2ea",
+      "title": "A brief, high-intensity burst of activity was obse from Unknown actor",
+      "status": "new",
+      "priority": "high",
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "first_seen": "2026-04-01T11:38:57.310939",
+      "last_seen": "2026-04-01T11:38:57.348054",
+      "raw_log": "event_id=UUID('1fbe47c3-37ed-436d-9e0d-f36bc59690c2') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='8185218b922353fe' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 310939) src_ip='152.57.92.88' src_port=None dst_ip='10.16.189.10' dst_port=None dst_host='CDCDRUXPUAMW06' action=",
+      "source_ip": null,
+      "destination_ip": "10.16.189.10",
+      "hostname": "10.16.189.10",
+      "suspicious": true,
+      "suspicious_indicator": "user_agent",
+      "attack_name": "Port Scan",
+      "brief_description": "Scanning behavior detected on 8 targets.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "correlation": {
+        "signature_attacks": [
+          "Port Scan",
+          "Network Service Discovery"
+        ],
+        "src_ip": null,
+        "dst_ip": "10.16.189.10",
+        "hostname": "10.16.189.10",
+        "raw_logs": [
+          "event_id=UUID('1fbe47c3-37ed-436d-9e0d-f36bc59690c2') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='8185218b922353fe' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 310939) src_ip='152.57.92.88' src_port=None dst_ip='10.16.189.10' dst_port=None dst_host='CDCDRUXPUAMW06' action="
+        ],
+        "correlation_reason": "MITRE ATT&CK: Reconnaissance - T1046"
+      }
+    }
+  ]
+}

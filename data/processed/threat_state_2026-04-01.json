@@ -1,32 +1,36 @@
 {
   "date": "2026-04-01",
-  "batch_count": 4,
-  "total_events": 56,
-  "saved_at": "2026-04-01T07:20:17.075987",
+  "batch_count": 5,
+  "total_events": 286,
+  "saved_at": "2026-04-01T11:38:57.595883",
   "actors": {
     "0.1.0.1": {
       "ip": "0.1.0.1",
       "first_seen": "2026-04-01T06:49:13.334207",
-      "last_seen": "2026-04-01T07:20:16.673592",
-      "total_requests": 28,
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "total_requests": 32,
       "requests_by_status": {
-        "200": 20,
-        "302": 8
+        "200": 22,
+        "302": 10
       },
-      "unique_uris_accessed": 16,
+      "unique_uris_accessed": 19,
       "auth_failures_total": 0,
-      "auth_successes_total": 20,
+      "auth_successes_total": 22,
       "attack_signatures_seen": [
         "sql_injection",
         "blind_sql_injection",
         "os_command_injection",
-        "path_traversal"
+        "path_traversal",
+        "local_file_inclusion",
+        "xss"
       ],
       "attack_categories_seen": [
         "sql_injection",
         "blind_sql_injection",
         "os_command_injection",
-        "path_traversal"
+        "path_traversal",
+        "local_file_inclusion",
+        "cross_site_scripting"
       ],
       "attack_timeline": [
         {
@@ -140,6 +144,41 @@
           "rule_name": "path_traversal",
           "evidence": "eqbzeyas=%3Cscript%3Ealert%28%22XSS%22%29%3B%3C%2Fscript%3E&ygocslug=UNION+SELECT+ALL+FROM+informati",
           "batch_number": 4
+        },
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "category": "blind_sql_injection",
+          "rule_name": "blind_sql_injection",
+          "evidence": "eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+S",
+          "batch_number": 5
+        },
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "category": "local_file_inclusion",
+          "rule_name": "local_file_inclusion",
+          "evidence": "eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+S",
+          "batch_number": 5
+        },
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "category": "sql_injection",
+          "rule_name": "sql_injection",
+          "evidence": "do=inforum&listforumid=(select(0)from(select(sleep(6)))v)/*'+(select(0)from(select(sleep(6)))v)+'\"+(",
+          "batch_number": 5
+        },
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "category": "cross_site_scripting",
+          "rule_name": "xss",
+          "evidence": "eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+S",
+          "batch_number": 5
+        },
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "category": "path_traversal",
+          "rule_name": "path_traversal",
+          "evidence": "eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+S",
+          "batch_number": 5
         }
       ],
       "user_agents_seen": [
@@ -168,22 +207,27 @@
           "batch": 4,
           "count": 7,
           "timestamp": "2026-04-01T07:20:17.075987"
+        },
+        {
+          "batch": 5,
+          "count": 4,
+          "timestamp": "2026-04-01T11:38:57.592878"
         }
       ],
       "threat_score": 1.0,
       "escalated_to_ai": false,
       "associated_incidents": [],
-      "batches_seen_in": 4
+      "batches_seen_in": 5
     },
     "0.0.0.0": {
       "ip": "0.0.0.0",
       "first_seen": "2026-04-01T06:49:13.335208",
-      "last_seen": "2026-04-01T07:20:16.674600",
-      "total_requests": 28,
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "total_requests": 30,
       "requests_by_status": {
-        "403": 28
+        "403": 30
       },
-      "unique_uris_accessed": 12,
+      "unique_uris_accessed": 14,
       "auth_failures_total": 0,
       "auth_successes_total": 0,
       "attack_signatures_seen": [
@@ -370,6 +414,27 @@
           "rule_name": "unicode_abuse",
           "evidence": "..%c0%afetc%c0%afpasswd",
           "batch_number": 4
+        },
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "category": "local_file_inclusion",
+          "rule_name": "local_file_inclusion",
+          "evidence": "../../../../../../../etc/passwd",
+          "batch_number": 5
+        },
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "category": "path_traversal",
+          "rule_name": "path_traversal",
+          "evidence": "../../../../../../../etc/passwd",
+          "batch_number": 5
+        },
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "category": "arbitrary_file_read",
+          "rule_name": "arbitrary_file_read",
+          "evidence": "attributes.id=test&attributes.file=../../administrator/mail/download.cfm&filename=../lib/password.pr",
+          "batch_number": 5
         }
       ],
       "user_agents_seen": [],
@@ -393,12 +458,4507 @@
           "batch": 4,
           "count": 7,
           "timestamp": "2026-04-01T07:20:17.075987"
+        },
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.592878"
         }
       ],
       "threat_score": 1.0,
       "escalated_to_ai": false,
       "associated_incidents": [],
-      "batches_seen_in": 4
+      "batches_seen_in": 5
+    },
+    "152.57.92.88": {
+      "ip": "152.57.92.88",
+      "first_seen": "2026-04-01T11:38:57.310939",
+      "last_seen": "2026-04-01T11:38:57.310939",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.58.177.235": {
+      "ip": "152.58.177.235",
+      "first_seen": "2026-04-01T11:38:57.310939",
+      "last_seen": "2026-04-01T11:38:57.348054",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "122.171.20.147": {
+      "ip": "122.171.20.147",
+      "first_seen": "2026-04-01T11:38:57.310939",
+      "last_seen": "2026-04-01T11:38:57.310939",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "49.42.48.204": {
+      "ip": "49.42.48.204",
+      "first_seen": "2026-04-01T11:38:57.310939",
+      "last_seen": "2026-04-01T11:38:57.310939",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.56.156.138": {
+      "ip": "152.56.156.138",
+      "first_seen": "2026-04-01T11:38:57.310939",
+      "last_seen": "2026-04-01T11:38:57.310939",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "103.203.172.242": {
+      "ip": "103.203.172.242",
+      "first_seen": "2026-04-01T11:38:57.310939",
+      "last_seen": "2026-04-01T11:38:57.310939",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "SpeedAppPROD/3.1.35 CFNetwork/3860.300.31 Darwin/25.2.0"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.58.47.21": {
+      "ip": "152.58.47.21",
+      "first_seen": "2026-04-01T11:38:57.310939",
+      "last_seen": "2026-04-01T11:38:57.310939",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.222.231.91": {
+      "ip": "106.222.231.91",
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "total_requests": 3,
+      "requests_by_status": {
+        "200": 3
+      },
+      "unique_uris_accessed": 3,
+      "auth_failures_total": 0,
+      "auth_successes_total": 3,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 3,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "6.1.8.1": {
+      "ip": "6.1.8.1",
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [
+        "sql_injection"
+      ],
+      "attack_categories_seen": [
+        "sql_injection"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "category": "sql_injection",
+          "rule_name": "sql_injection",
+          "evidence": "<150>Dec  17 01:53:15 servernameabc httpd[12345]: 3.4.5.6 6.1.8.1 12345 abc.example.net - - [17/Dec/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.3,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "193.105.74.58": {
+      "ip": "193.105.74.58",
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "total_requests": 4,
+      "requests_by_status": {
+        "200": 4
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 4,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "AHC/2.1"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 4,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "17.233.98.210": {
+      "ip": "17.233.98.210",
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.57.239.99": {
+      "ip": "152.57.239.99",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.312938",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "122.173.34.164": {
+      "ip": "122.173.34.164",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.312938",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.216.206.157": {
+      "ip": "106.216.206.157",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.312938",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "103.249.38.81": {
+      "ip": "103.249.38.81",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.312938",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "223.228.109.229": {
+      "ip": "223.228.109.229",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.312938",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "130.213.32.166": {
+      "ip": "130.213.32.166",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.312938",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "Azure Traffic Manager Endpoint Monitor"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "49.37.147.208": {
+      "ip": "49.37.147.208",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.312938",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "14.143.222.50": {
+      "ip": "14.143.222.50",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.312938",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "52.59.43.236": {
+      "ip": "52.59.43.236",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.312938",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "49.37.240.56": {
+      "ip": "49.37.240.56",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.312938",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "117.240.239.66": {
+      "ip": "117.240.239.66",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.312938",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "157.51.143.16": {
+      "ip": "157.51.143.16",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.342033",
+      "total_requests": 3,
+      "requests_by_status": {
+        "200": 3
+      },
+      "unique_uris_accessed": 3,
+      "auth_failures_total": 0,
+      "auth_successes_total": 3,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.312938",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 3,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "27.59.110.224": {
+      "ip": "27.59.110.224",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.312938",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.312938",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "81.145.56.141": {
+      "ip": "81.145.56.141",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.312938",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.58.181.253": {
+      "ip": "152.58.181.253",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.312938",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "42.111.148.89": {
+      "ip": "42.111.148.89",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.312938",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "Dalvik/2.1.0 (Linux; U; Android 16; SM-A166P Build/BP2A.250605.031.A3)"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "101.0.62.20": {
+      "ip": "101.0.62.20",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.312938",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "165.85.130.112": {
+      "ip": "165.85.130.112",
+      "first_seen": "2026-04-01T11:38:57.313943",
+      "last_seen": "2026-04-01T11:38:57.313943",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "20.225.132.84": {
+      "ip": "20.225.132.84",
+      "first_seen": "2026-04-01T11:38:57.313943",
+      "last_seen": "2026-04-01T11:38:57.315928",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "Azure Traffic Manager Endpoint Monitor"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "3.132.51.213": {
+      "ip": "3.132.51.213",
+      "first_seen": "2026-04-01T11:38:57.313943",
+      "last_seen": "2026-04-01T11:38:57.342033",
+      "total_requests": 3,
+      "requests_by_status": {
+        "200": 3
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 3,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 3,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "103.120.51.122": {
+      "ip": "103.120.51.122",
+      "first_seen": "2026-04-01T11:38:57.313943",
+      "last_seen": "2026-04-01T11:38:57.314926",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.313943",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "130.41.60.166": {
+      "ip": "130.41.60.166",
+      "first_seen": "2026-04-01T11:38:57.313943",
+      "last_seen": "2026-04-01T11:38:57.313943",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "103.80.58.191": {
+      "ip": "103.80.58.191",
+      "first_seen": "2026-04-01T11:38:57.313943",
+      "last_seen": "2026-04-01T11:38:57.341028",
+      "total_requests": 4,
+      "requests_by_status": {
+        "200": 4
+      },
+      "unique_uris_accessed": 4,
+      "auth_failures_total": 0,
+      "auth_successes_total": 4,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.313943",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 4,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "171.79.51.159": {
+      "ip": "171.79.51.159",
+      "first_seen": "2026-04-01T11:38:57.313943",
+      "last_seen": "2026-04-01T11:38:57.313943",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "SpeedAppPROD/3.1.35 CFNetwork/3860.300.31 Darwin/25.2.0"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "103.120.51.70": {
+      "ip": "103.120.51.70",
+      "first_seen": "2026-04-01T11:38:57.313943",
+      "last_seen": "2026-04-01T11:38:57.313943",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "okhttp/4.9.0"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.59.222.51": {
+      "ip": "152.59.222.51",
+      "first_seen": "2026-04-01T11:38:57.313943",
+      "last_seen": "2026-04-01T11:38:57.314926",
+      "total_requests": 3,
+      "requests_by_status": {
+        "200": 3
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 3,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 3,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "110.224.115.37": {
+      "ip": "110.224.115.37",
+      "first_seen": "2026-04-01T11:38:57.314926",
+      "last_seen": "2026-04-01T11:38:57.314926",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "Timesheet/8.1.0 (iPhone; iOS 18.7.1; Scale/3.00)"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.59.222.129": {
+      "ip": "152.59.222.129",
+      "first_seen": "2026-04-01T11:38:57.314926",
+      "last_seen": "2026-04-01T11:38:57.314926",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.314926",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "3.16.33.139": {
+      "ip": "3.16.33.139",
+      "first_seen": "2026-04-01T11:38:57.314926",
+      "last_seen": "2026-04-01T11:38:57.341028",
+      "total_requests": 3,
+      "requests_by_status": {
+        "200": 3
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 3,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 3,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "191.233.197.224": {
+      "ip": "191.233.197.224",
+      "first_seen": "2026-04-01T11:38:57.314926",
+      "last_seen": "2026-04-01T11:38:57.314926",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.59.49.9": {
+      "ip": "152.59.49.9",
+      "first_seen": "2026-04-01T11:38:57.314926",
+      "last_seen": "2026-04-01T11:38:57.314926",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "Timesheet/8.1.0 (iPhone; iOS 18.5; Scale/3.00)"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "157.32.135.24": {
+      "ip": "157.32.135.24",
+      "first_seen": "2026-04-01T11:38:57.314926",
+      "last_seen": "2026-04-01T11:38:57.314926",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.58.178.143": {
+      "ip": "152.58.178.143",
+      "first_seen": "2026-04-01T11:38:57.314926",
+      "last_seen": "2026-04-01T11:38:57.314926",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.592878"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "102.68.115.212": {
+      "ip": "102.68.115.212",
+      "first_seen": "2026-04-01T11:38:57.314926",
+      "last_seen": "2026-04-01T11:38:57.314926",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.58.135.24": {
+      "ip": "152.58.135.24",
+      "first_seen": "2026-04-01T11:38:57.315928",
+      "last_seen": "2026-04-01T11:38:57.315928",
+      "total_requests": 5,
+      "requests_by_status": {
+        "200": 5
+      },
+      "unique_uris_accessed": 5,
+      "auth_failures_total": 0,
+      "auth_successes_total": 5,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.315928",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 5,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "130.41.149.9": {
+      "ip": "130.41.149.9",
+      "first_seen": "2026-04-01T11:38:57.315928",
+      "last_seen": "2026-04-01T11:38:57.315928",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.315928",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "122.171.17.164": {
+      "ip": "122.171.17.164",
+      "first_seen": "2026-04-01T11:38:57.315928",
+      "last_seen": "2026-04-01T11:38:57.343055",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "223.228.58.21": {
+      "ip": "223.228.58.21",
+      "first_seen": "2026-04-01T11:38:57.316931",
+      "last_seen": "2026-04-01T11:38:57.316931",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "170.225.12.33": {
+      "ip": "170.225.12.33",
+      "first_seen": "2026-04-01T11:38:57.316931",
+      "last_seen": "2026-04-01T11:38:57.316931",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.316931",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "17.233.103.151": {
+      "ip": "17.233.103.151",
+      "first_seen": "2026-04-01T11:38:57.316931",
+      "last_seen": "2026-04-01T11:38:57.343055",
+      "total_requests": 7,
+      "requests_by_status": {
+        "200": 7
+      },
+      "unique_uris_accessed": 5,
+      "auth_failures_total": 0,
+      "auth_successes_total": 7,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.317931",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 7,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.58.57.200": {
+      "ip": "152.58.57.200",
+      "first_seen": "2026-04-01T11:38:57.316931",
+      "last_seen": "2026-04-01T11:38:57.317931",
+      "total_requests": 3,
+      "requests_by_status": {
+        "200": 3
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 3,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.317931",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 3,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.58.181.117": {
+      "ip": "152.58.181.117",
+      "first_seen": "2026-04-01T11:38:57.316931",
+      "last_seen": "2026-04-01T11:38:57.316931",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "58.8.179.159": {
+      "ip": "58.8.179.159",
+      "first_seen": "2026-04-01T11:38:57.316931",
+      "last_seen": "2026-04-01T11:38:57.316931",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.316931",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "162.120.184.11": {
+      "ip": "162.120.184.11",
+      "first_seen": "2026-04-01T11:38:57.316931",
+      "last_seen": "2026-04-01T11:38:57.316931",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "198.28.69.5": {
+      "ip": "198.28.69.5",
+      "first_seen": "2026-04-01T11:38:57.316931",
+      "last_seen": "2026-04-01T11:38:57.316931",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.316931",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "223.231.231.142": {
+      "ip": "223.231.231.142",
+      "first_seen": "2026-04-01T11:38:57.317931",
+      "last_seen": "2026-04-01T11:38:57.348054",
+      "total_requests": 5,
+      "requests_by_status": {
+        "200": 5
+      },
+      "unique_uris_accessed": 5,
+      "auth_failures_total": 0,
+      "auth_successes_total": 5,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.317931",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 5,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.215.181.170": {
+      "ip": "106.215.181.170",
+      "first_seen": "2026-04-01T11:38:57.317931",
+      "last_seen": "2026-04-01T11:38:57.317931",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "Timesheet/8.1.0 (iPhone; iOS 26.0.1; Scale/3.00)"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "157.50.144.42": {
+      "ip": "157.50.144.42",
+      "first_seen": "2026-04-01T11:38:57.317931",
+      "last_seen": "2026-04-01T11:38:57.317931",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.57.131.74": {
+      "ip": "152.57.131.74",
+      "first_seen": "2026-04-01T11:38:57.317931",
+      "last_seen": "2026-04-01T11:38:57.317931",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "123.63.241.211": {
+      "ip": "123.63.241.211",
+      "first_seen": "2026-04-01T11:38:57.317931",
+      "last_seen": "2026-04-01T11:38:57.333684",
+      "total_requests": 4,
+      "requests_by_status": {
+        "200": 4
+      },
+      "unique_uris_accessed": 3,
+      "auth_failures_total": 0,
+      "auth_successes_total": 4,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.317931",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 4,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "162.235.194.120": {
+      "ip": "162.235.194.120",
+      "first_seen": "2026-04-01T11:38:57.317931",
+      "last_seen": "2026-04-01T11:38:57.317931",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "171.60.217.4": {
+      "ip": "171.60.217.4",
+      "first_seen": "2026-04-01T11:38:57.317931",
+      "last_seen": "2026-04-01T11:38:57.317931",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.66.39.251": {
+      "ip": "106.66.39.251",
+      "first_seen": "2026-04-01T11:38:57.317931",
+      "last_seen": "2026-04-01T11:38:57.317931",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [
+        "slowloris_indicator"
+      ],
+      "attack_categories_seen": [
+        "denial_of_service"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.317931",
+          "category": "denial_of_service",
+          "rule_name": "slowloris_indicator",
+          "evidence": "Request took 711364ms",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.2,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.219.224.117": {
+      "ip": "106.219.224.117",
+      "first_seen": "2026-04-01T11:38:57.317931",
+      "last_seen": "2026-04-01T11:38:57.317931",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [
+        "slowloris_indicator"
+      ],
+      "attack_categories_seen": [
+        "denial_of_service"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.317931",
+          "category": "denial_of_service",
+          "rule_name": "slowloris_indicator",
+          "evidence": "Request took 1638347ms",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.2,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "36.255.90.29": {
+      "ip": "36.255.90.29",
+      "first_seen": "2026-04-01T11:38:57.319453",
+      "last_seen": "2026-04-01T11:38:57.319453",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.222.222.115": {
+      "ip": "106.222.222.115",
+      "first_seen": "2026-04-01T11:38:57.319453",
+      "last_seen": "2026-04-01T11:38:57.319453",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.76.160.75": {
+      "ip": "106.76.160.75",
+      "first_seen": "2026-04-01T11:38:57.319453",
+      "last_seen": "2026-04-01T11:38:57.319453",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "223.231.166.222": {
+      "ip": "223.231.166.222",
+      "first_seen": "2026-04-01T11:38:57.319453",
+      "last_seen": "2026-04-01T11:38:57.319453",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "20.125.163.192": {
+      "ip": "20.125.163.192",
+      "first_seen": "2026-04-01T11:38:57.320686",
+      "last_seen": "2026-04-01T11:38:57.320686",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "Azure Traffic Manager Endpoint Monitor"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "205.254.185.187": {
+      "ip": "205.254.185.187",
+      "first_seen": "2026-04-01T11:38:57.320686",
+      "last_seen": "2026-04-01T11:38:57.320686",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "135.119.6.36": {
+      "ip": "135.119.6.36",
+      "first_seen": "2026-04-01T11:38:57.320686",
+      "last_seen": "2026-04-01T11:38:57.320686",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "170.85.62.93": {
+      "ip": "170.85.62.93",
+      "first_seen": "2026-04-01T11:38:57.320686",
+      "last_seen": "2026-04-01T11:38:57.320686",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "117.99.195.7": {
+      "ip": "117.99.195.7",
+      "first_seen": "2026-04-01T11:38:57.320686",
+      "last_seen": "2026-04-01T11:38:57.320686",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.220.232.192": {
+      "ip": "106.220.232.192",
+      "first_seen": "2026-04-01T11:38:57.320686",
+      "last_seen": "2026-04-01T11:38:57.320686",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "103.195.202.2": {
+      "ip": "103.195.202.2",
+      "first_seen": "2026-04-01T11:38:57.320686",
+      "last_seen": "2026-04-01T11:38:57.320686",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "Timesheet/8.1.0 (iPhone; iOS 18.6.2; Scale/3.00)"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "117.99.205.104": {
+      "ip": "117.99.205.104",
+      "first_seen": "2026-04-01T11:38:57.320686",
+      "last_seen": "2026-04-01T11:38:57.320686",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "163.120.79.157": {
+      "ip": "163.120.79.157",
+      "first_seen": "2026-04-01T11:38:57.320686",
+      "last_seen": "2026-04-01T11:38:57.320686",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "124.123.132.177": {
+      "ip": "124.123.132.177",
+      "first_seen": "2026-04-01T11:38:57.320686",
+      "last_seen": "2026-04-01T11:38:57.335987",
+      "total_requests": 4,
+      "requests_by_status": {
+        "200": 4
+      },
+      "unique_uris_accessed": 4,
+      "auth_failures_total": 0,
+      "auth_successes_total": 4,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.320686",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 4,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "96.228.33.237": {
+      "ip": "96.228.33.237",
+      "first_seen": "2026-04-01T11:38:57.320686",
+      "last_seen": "2026-04-01T11:38:57.320686",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "74.109.199.155": {
+      "ip": "74.109.199.155",
+      "first_seen": "2026-04-01T11:38:57.321692",
+      "last_seen": "2026-04-01T11:38:57.348054",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.57.15.76": {
+      "ip": "152.57.15.76",
+      "first_seen": "2026-04-01T11:38:57.321692",
+      "last_seen": "2026-04-01T11:38:57.321692",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "42.108.80.58": {
+      "ip": "42.108.80.58",
+      "first_seen": "2026-04-01T11:38:57.321692",
+      "last_seen": "2026-04-01T11:38:57.321692",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "45.119.28.176": {
+      "ip": "45.119.28.176",
+      "first_seen": "2026-04-01T11:38:57.325684",
+      "last_seen": "2026-04-01T11:38:57.325684",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "84.93.232.227": {
+      "ip": "84.93.232.227",
+      "first_seen": "2026-04-01T11:38:57.326683",
+      "last_seen": "2026-04-01T11:38:57.326683",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.326683",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "205.254.169.187": {
+      "ip": "205.254.169.187",
+      "first_seen": "2026-04-01T11:38:57.327685",
+      "last_seen": "2026-04-01T11:38:57.341028",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.219.164.80": {
+      "ip": "106.219.164.80",
+      "first_seen": "2026-04-01T11:38:57.328684",
+      "last_seen": "2026-04-01T11:38:57.330683",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.328684",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "151.186.177.21": {
+      "ip": "151.186.177.21",
+      "first_seen": "2026-04-01T11:38:57.331685",
+      "last_seen": "2026-04-01T11:38:57.331685",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.57.6.190": {
+      "ip": "152.57.6.190",
+      "first_seen": "2026-04-01T11:38:57.333684",
+      "last_seen": "2026-04-01T11:38:57.334681",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.333684",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.195.44.15": {
+      "ip": "106.195.44.15",
+      "first_seen": "2026-04-01T11:38:57.334681",
+      "last_seen": "2026-04-01T11:38:57.334681",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "103.133.65.131": {
+      "ip": "103.133.65.131",
+      "first_seen": "2026-04-01T11:38:57.335464",
+      "last_seen": "2026-04-01T11:38:57.335464",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "122.170.198.121": {
+      "ip": "122.170.198.121",
+      "first_seen": "2026-04-01T11:38:57.335464",
+      "last_seen": "2026-04-01T11:38:57.345052",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "okhttp/4.9.0"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "223.237.169.0": {
+      "ip": "223.237.169.0",
+      "first_seen": "2026-04-01T11:38:57.335464",
+      "last_seen": "2026-04-01T11:38:57.335464",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "157.51.138.98": {
+      "ip": "157.51.138.98",
+      "first_seen": "2026-04-01T11:38:57.340034",
+      "last_seen": "2026-04-01T11:38:57.340034",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "47.11.13.34": {
+      "ip": "47.11.13.34",
+      "first_seen": "2026-04-01T11:38:57.340034",
+      "last_seen": "2026-04-01T11:38:57.341028",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "183.83.129.226": {
+      "ip": "183.83.129.226",
+      "first_seen": "2026-04-01T11:38:57.341028",
+      "last_seen": "2026-04-01T11:38:57.341028",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "SpeedAppPROD/3.1.34 CFNetwork/3860.400.51 Darwin/25.3.0"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "86.127.228.13": {
+      "ip": "86.127.228.13",
+      "first_seen": "2026-04-01T11:38:57.341028",
+      "last_seen": "2026-04-01T11:38:57.341028",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "Dalvik/2.1.0 (Linux; U; Android 11; CPH2009 Build/RKQ1.200903.002)"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.202.99.88": {
+      "ip": "106.202.99.88",
+      "first_seen": "2026-04-01T11:38:57.341028",
+      "last_seen": "2026-04-01T11:38:57.341028",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.341028",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "185.4.165.152": {
+      "ip": "185.4.165.152",
+      "first_seen": "2026-04-01T11:38:57.341028",
+      "last_seen": "2026-04-01T11:38:57.341028",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "168.94.238.47": {
+      "ip": "168.94.238.47",
+      "first_seen": "2026-04-01T11:38:57.341028",
+      "last_seen": "2026-04-01T11:38:57.341028",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "103.233.92.58": {
+      "ip": "103.233.92.58",
+      "first_seen": "2026-04-01T11:38:57.342033",
+      "last_seen": "2026-04-01T11:38:57.342033",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "49.32.195.140": {
+      "ip": "49.32.195.140",
+      "first_seen": "2026-04-01T11:38:57.342033",
+      "last_seen": "2026-04-01T11:38:57.347051",
+      "total_requests": 4,
+      "requests_by_status": {
+        "200": 4
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 4,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 4,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "200.196.152.248": {
+      "ip": "200.196.152.248",
+      "first_seen": "2026-04-01T11:38:57.342033",
+      "last_seen": "2026-04-01T11:38:57.342033",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "157.32.208.135": {
+      "ip": "157.32.208.135",
+      "first_seen": "2026-04-01T11:38:57.343055",
+      "last_seen": "2026-04-01T11:38:57.343055",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "103.59.72.82": {
+      "ip": "103.59.72.82",
+      "first_seen": "2026-04-01T11:38:57.343055",
+      "last_seen": "2026-04-01T11:38:57.343055",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "ToOffice/4.0.9 CFNetwork/3826.600.41 Darwin/24.6.0"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "131.229.221.23": {
+      "ip": "131.229.221.23",
+      "first_seen": "2026-04-01T11:38:57.343055",
+      "last_seen": "2026-04-01T11:38:57.343055",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [
+        "slowloris_indicator"
+      ],
+      "attack_categories_seen": [
+        "denial_of_service"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.343055",
+          "category": "denial_of_service",
+          "rule_name": "slowloris_indicator",
+          "evidence": "Request took 77717ms",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.2,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "157.51.46.46": {
+      "ip": "157.51.46.46",
+      "first_seen": "2026-04-01T11:38:57.343055",
+      "last_seen": "2026-04-01T11:38:57.343055",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "223.225.56.23": {
+      "ip": "223.225.56.23",
+      "first_seen": "2026-04-01T11:38:57.343055",
+      "last_seen": "2026-04-01T11:38:57.343055",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "40.77.83.33": {
+      "ip": "40.77.83.33",
+      "first_seen": "2026-04-01T11:38:57.344057",
+      "last_seen": "2026-04-01T11:38:57.344057",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "49.205.248.122": {
+      "ip": "49.205.248.122",
+      "first_seen": "2026-04-01T11:38:57.344057",
+      "last_seen": "2026-04-01T11:38:57.344057",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "62.208.157.67": {
+      "ip": "62.208.157.67",
+      "first_seen": "2026-04-01T11:38:57.344057",
+      "last_seen": "2026-04-01T11:38:57.344057",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.593885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.192.134.201": {
+      "ip": "106.192.134.201",
+      "first_seen": "2026-04-01T11:38:57.344057",
+      "last_seen": "2026-04-01T11:38:57.344057",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "49.36.65.28": {
+      "ip": "49.36.65.28",
+      "first_seen": "2026-04-01T11:38:57.344057",
+      "last_seen": "2026-04-01T11:38:57.344057",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.192.73.250": {
+      "ip": "106.192.73.250",
+      "first_seen": "2026-04-01T11:38:57.344057",
+      "last_seen": "2026-04-01T11:38:57.344057",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "122.172.83.134": {
+      "ip": "122.172.83.134",
+      "first_seen": "2026-04-01T11:38:57.345052",
+      "last_seen": "2026-04-01T11:38:57.345052",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "SpeedAppPROD/3.1.35 CFNetwork/3860.300.31 Darwin/25.2.0"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "20.241.147.17": {
+      "ip": "20.241.147.17",
+      "first_seen": "2026-04-01T11:38:57.345052",
+      "last_seen": "2026-04-01T11:38:57.345052",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.345052",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "223.228.16.106": {
+      "ip": "223.228.16.106",
+      "first_seen": "2026-04-01T11:38:57.345052",
+      "last_seen": "2026-04-01T11:38:57.345052",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "139.71.212.180": {
+      "ip": "139.71.212.180",
+      "first_seen": "2026-04-01T11:38:57.346062",
+      "last_seen": "2026-04-01T11:38:57.346062",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.346062",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "114.119.141.217": {
+      "ip": "114.119.141.217",
+      "first_seen": "2026-04-01T11:38:57.346062",
+      "last_seen": "2026-04-01T11:38:57.346062",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "52.249.240.64": {
+      "ip": "52.249.240.64",
+      "first_seen": "2026-04-01T11:38:57.346062",
+      "last_seen": "2026-04-01T11:38:57.347051",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.347051",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.58.177.91": {
+      "ip": "152.58.177.91",
+      "first_seen": "2026-04-01T11:38:57.347051",
+      "last_seen": "2026-04-01T11:38:57.347051",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.192.43.217": {
+      "ip": "106.192.43.217",
+      "first_seen": "2026-04-01T11:38:57.347051",
+      "last_seen": "2026-04-01T11:38:57.347051",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "202.148.60.90": {
+      "ip": "202.148.60.90",
+      "first_seen": "2026-04-01T11:38:57.347051",
+      "last_seen": "2026-04-01T11:38:57.347051",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.347051",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "49.206.13.188": {
+      "ip": "49.206.13.188",
+      "first_seen": "2026-04-01T11:38:57.347051",
+      "last_seen": "2026-04-01T11:38:57.347051",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "169.224.170.247": {
+      "ip": "169.224.170.247",
+      "first_seen": "2026-04-01T11:38:57.347051",
+      "last_seen": "2026-04-01T11:38:57.347051",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "157.51.229.166": {
+      "ip": "157.51.229.166",
+      "first_seen": "2026-04-01T11:38:57.347051",
+      "last_seen": "2026-04-01T11:38:57.347051",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "20.204.21.38": {
+      "ip": "20.204.21.38",
+      "first_seen": "2026-04-01T11:38:57.347051",
+      "last_seen": "2026-04-01T11:38:57.347051",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.58.182.143": {
+      "ip": "152.58.182.143",
+      "first_seen": "2026-04-01T11:38:57.347051",
+      "last_seen": "2026-04-01T11:38:57.347051",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "200.196.153.58": {
+      "ip": "200.196.153.58",
+      "first_seen": "2026-04-01T11:38:57.347051",
+      "last_seen": "2026-04-01T11:38:57.347051",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "122.183.33.36": {
+      "ip": "122.183.33.36",
+      "first_seen": "2026-04-01T11:38:57.347051",
+      "last_seen": "2026-04-01T11:38:57.347051",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "171.79.58.151": {
+      "ip": "171.79.58.151",
+      "first_seen": "2026-04-01T11:38:57.347051",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "total_requests": 3,
+      "requests_by_status": {
+        "200": 3
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 3,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 3,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "169.0.82.221": {
+      "ip": "169.0.82.221",
+      "first_seen": "2026-04-01T11:38:57.347051",
+      "last_seen": "2026-04-01T11:38:57.347051",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "54.209.60.63": {
+      "ip": "54.209.60.63",
+      "first_seen": "2026-04-01T11:38:57.347051",
+      "last_seen": "2026-04-01T11:38:57.347051",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.221.206.88": {
+      "ip": "106.221.206.88",
+      "first_seen": "2026-04-01T11:38:57.347051",
+      "last_seen": "2026-04-01T11:38:57.348054",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "160.202.39.139": {
+      "ip": "160.202.39.139",
+      "first_seen": "2026-04-01T11:38:57.347051",
+      "last_seen": "2026-04-01T11:38:57.347051",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "SpeedAppPROD/3.1.35 CFNetwork/3826.600.41 Darwin/24.6.0"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "49.36.183.230": {
+      "ip": "49.36.183.230",
+      "first_seen": "2026-04-01T11:38:57.348054",
+      "last_seen": "2026-04-01T11:38:57.348054",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "122.167.116.223": {
+      "ip": "122.167.116.223",
+      "first_seen": "2026-04-01T11:38:57.348054",
+      "last_seen": "2026-04-01T11:38:57.348054",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "49.15.218.11": {
+      "ip": "49.15.218.11",
+      "first_seen": "2026-04-01T11:38:57.348054",
+      "last_seen": "2026-04-01T11:38:57.348054",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "203.123.65.209": {
+      "ip": "203.123.65.209",
+      "first_seen": "2026-04-01T11:38:57.348054",
+      "last_seen": "2026-04-01T11:38:57.348054",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "223.185.130.35": {
+      "ip": "223.185.130.35",
+      "first_seen": "2026-04-01T11:38:57.348054",
+      "last_seen": "2026-04-01T11:38:57.348054",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "42.104.217.80": {
+      "ip": "42.104.217.80",
+      "first_seen": "2026-04-01T11:38:57.348054",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "115.113.2.42": {
+      "ip": "115.113.2.42",
+      "first_seen": "2026-04-01T11:38:57.348054",
+      "last_seen": "2026-04-01T11:38:57.348054",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "20.198.123.84": {
+      "ip": "20.198.123.84",
+      "first_seen": "2026-04-01T11:38:57.349049",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.221.197.123": {
+      "ip": "106.221.197.123",
+      "first_seen": "2026-04-01T11:38:57.349049",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "122.164.91.246": {
+      "ip": "122.164.91.246",
+      "first_seen": "2026-04-01T11:38:57.349049",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.217.248.181": {
+      "ip": "106.217.248.181",
+      "first_seen": "2026-04-01T11:38:57.349049",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [
+        "SpeedAppPROD/3.1.35 CFNetwork/3860.300.31 Darwin/25.2.0"
+      ],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "49.43.224.94": {
+      "ip": "49.43.224.94",
+      "first_seen": "2026-04-01T11:38:57.349049",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "total_requests": 4,
+      "requests_by_status": {
+        "200": 4
+      },
+      "unique_uris_accessed": 4,
+      "auth_failures_total": 0,
+      "auth_successes_total": 4,
+      "attack_signatures_seen": [
+        "csrf_indicator"
+      ],
+      "attack_categories_seen": [
+        "csrf"
+      ],
+      "attack_timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.349049",
+          "category": "csrf",
+          "rule_name": "csrf_indicator",
+          "evidence": "POST with external referer: https://nextgenghd.ultimatix.net/NextGenGHDUI/",
+          "batch_number": 5
+        }
+      ],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 4,
+          "timestamp": "2026-04-01T11:38:57.594885"
+        }
+      ],
+      "threat_score": 0.1,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "157.50.183.182": {
+      "ip": "157.50.183.182",
+      "first_seen": "2026-04-01T11:38:57.349049",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.595883"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "152.57.154.166": {
+      "ip": "152.57.154.166",
+      "first_seen": "2026-04-01T11:38:57.349049",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 2,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.595883"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "203.200.12.66": {
+      "ip": "203.200.12.66",
+      "first_seen": "2026-04-01T11:38:57.349049",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.595883"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "49.37.116.75": {
+      "ip": "49.37.116.75",
+      "first_seen": "2026-04-01T11:38:57.349049",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "total_requests": 1,
+      "requests_by_status": {
+        "200": 1
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 1,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 1,
+          "timestamp": "2026-04-01T11:38:57.595883"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
+    },
+    "106.192.58.32": {
+      "ip": "106.192.58.32",
+      "first_seen": "2026-04-01T11:38:57.349049",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "total_requests": 2,
+      "requests_by_status": {
+        "200": 2
+      },
+      "unique_uris_accessed": 1,
+      "auth_failures_total": 0,
+      "auth_successes_total": 2,
+      "attack_signatures_seen": [],
+      "attack_categories_seen": [],
+      "attack_timeline": [],
+      "user_agents_seen": [],
+      "request_rate_history": [
+        {
+          "batch": 5,
+          "count": 2,
+          "timestamp": "2026-04-01T11:38:57.595883"
+        }
+      ],
+      "threat_score": 0.0,
+      "escalated_to_ai": false,
+      "associated_incidents": [],
+      "batches_seen_in": 1
     }
   }
 }

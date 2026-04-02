@@ -109,9 +109,17 @@ class NormalizationService:
                 self.normalization_errors += 1
                 return None
             
-            # If src_ip is missing, use dst_ip as primary actor
-            if not src_ip:
+            # If src_ip is missing but dst_ip exists, treat dst_ip as the source (client IP)
+            # Keep dst_ip as None to avoid duplication
+            if not src_ip and dst_ip:
                 src_ip = dst_ip
+                dst_ip = None
+            
+            # Ensure src_ip and dst_ip are never the same
+            if src_ip and dst_ip and src_ip == dst_ip:
+                logger.warning(
+                    f"Source and destination IPs are identical, clearing dst_ip | file_id={parsed.file_id}, ip={src_ip}"
+                )
                 dst_ip = None
 
             # Get or infer timestamp - always normalize to naive UTC
@@ -273,11 +281,15 @@ class NormalizationService:
         return path, query
 
     def _normalize_ip(self, ip_str: str | None) -> str | None:
-        """Normalize and validate IP address."""
+        """Normalize and validate IP address. Treats '-' as missing value."""
         if not ip_str:
             return None
 
         ip_str = str(ip_str).strip()
+        
+        # Treat "-" as missing value (common placeholder in logs)
+        if ip_str == "-":
+            return None
 
         # Remove common prefixes
         for prefix in ["::ffff:", "::FFFF:"]:

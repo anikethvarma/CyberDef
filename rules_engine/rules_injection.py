@@ -95,14 +95,7 @@ class CommandInjectionRule(ThreatRule):
     description = "OS command injection attempt"
     check_fields = ["uri_path", "uri_query", "original_message"]
     patterns = [
-        r";\s*(?:ls|cat|id|whoami|uname|pwd|wget|curl|nc|ncat)\b",
-        r"\|\s*(?:cat|id|whoami|uname|pwd|wget|curl)\b",
-        r"`[^`]*`",
-        r"\$\(\s*(?:id|whoami|uname|cat|ls)\s*\)",
-        r"(?:shell_exec|system|passthru|exec|popen|proc_open)\s*\(",
-        r"/bin/(?:bash|sh|dash|zsh|csh)",
-        r"cmd(?:\.exe)?(?:\s+/c)",
-        r"powershell(?:\.exe)?",
+        r"(?i)((;\s*(whoami|id|uname|cat|ls|bash|sh))|&&|\||`|\$\(|invoke-webrequest|iex|downloadstring|wget|curl|webclient|powershell|\.exe).*powershell(?:\.exe)?",
     ]
 
 

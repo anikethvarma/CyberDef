@@ -217,3 +217,26 @@ async def require_auth(
         raise unauthorized(detail="Invalid or expired token")
 
     return username
+
+
+async def optional_auth(
+    request: Request,
+    credentials: HTTPAuthorizationCredentials | None = Depends(_bearer_scheme),
+) -> str:
+    """
+    Optional authentication dependency for backend testing.
+    
+    Returns authenticated username if token is provided and valid,
+    otherwise returns a default test user for backend testing without login.
+    """
+    token = _get_token_from_request(request, credentials)
+    if not token:
+        # No token provided - return default test user for backend testing
+        return "backend_test_user"
+
+    username = verify_access_token(token)
+    if not username:
+        # Invalid token - return default test user for backend testing
+        return "backend_test_user"
+
+    return username

@@ -112,41 +112,41 @@ class GenericCSVParser(BaseParser):
         timestamp = self._parse_timestamp(data)
         
         # Extract network fields
-        src_ip = self.find_column(data, "src_ip")
-        dst_ip = self.find_column(data, "dst_ip")
-        dst_host = self.find_column(data, "dst_host")
+        src_ip = self._clean_ip(self.find_column(data, "src_ip"))
+        dst_ip = self._clean_ip(self.find_column(data, "dst_ip"))
+        dst_host = self._clean_value(self.find_column(data, "dst_host"))
         src_port = self._parse_port(self.find_column(data, "src_port"))
         dst_port = self._parse_port(self.find_column(data, "dst_port"))
         
         # Extract action and protocol
-        action = self.find_column(data, "action")
-        protocol = self.find_column(data, "protocol")
+        action = self._clean_value(self.find_column(data, "action"))
+        protocol = self._clean_value(self.find_column(data, "protocol"))
         
         # Extract identity
-        username = self.find_column(data, "username")
+        username = self._clean_value(self.find_column(data, "username"))
         
         # Extract traffic data
         bytes_sent = self._parse_int(self.find_column(data, "bytes_sent"))
         bytes_received = self._parse_int(self.find_column(data, "bytes_received"))
         
         # Extract message
-        message = self.find_column(data, "message")
+        message = self._clean_value(self.find_column(data, "message"))
         
         return ParsedEvent(
             file_id=raw_row.file_id,
             row_hash=raw_row.row_hash,
             timestamp=timestamp,
-            source_address=str(src_ip) if src_ip else None,
-            destination_address=str(dst_ip) if dst_ip else None,
-            destination_hostname=str(dst_host) if dst_host else None,
+            source_address=src_ip,
+            destination_address=dst_ip,
+            destination_hostname=dst_host,
             source_port=src_port,
             destination_port=dst_port,
-            action=str(action) if action else None,
-            protocol=str(protocol) if protocol else None,
-            username=str(username) if username else None,
+            action=action,
+            protocol=protocol,
+            username=username,
             bytes_sent=bytes_sent,
             bytes_received=bytes_received,
-            raw_message=str(message) if message else None,
+            raw_message=message,
             vendor_specific={
                 k: v for k, v in data.items()
                 if v is not None and str(v).strip()

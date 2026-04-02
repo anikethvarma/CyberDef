@@ -22682,7 +22682,1649 @@
       "created_at": "2026-04-01T07:20:18.767699",
       "updated_at": "2026-04-01T07:20:18.767699",
       "resolved_at": null
+    },
+    {
+      "incident_id": "8d2712f9-c779-43ff-8b21-f17170020a83",
+      "title": "[BLIND_SQL_INJECTION] Blind SQL injection attempt detected from 0.1.0.1",
+      "description": "Deterministic detection: Blind SQL injection attempt detected\nRule: blind_sql_injection\nMatches: 3\nEvidence: eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&dqohnhch=../../etc/passwd; kowuoxxn=<script>alert(\"XSS\");</script>&gfqfjree=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&gxbvyjem=../../etc/passwd; do=inforum&listforum",
+      "status": "new",
+      "priority": "critical",
+      "source": "deterministic",
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "chunk_ids": [],
+      "agent_output_ids": [],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": "0.1.0.1",
+      "actor_ips": [
+        "0.1.0.1"
+      ],
+      "affected_hosts": [],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1190",
+          "technique_name": "Exploit Public-Facing Application",
+          "tactic": "Initial Access",
+          "confidence": 0.82,
+          "justification": "Rule indicates web application exploitation behavior."
+        }
+      ],
+      "primary_tactic": "Initial Access",
+      "overall_confidence": 0.92,
+      "executive_summary": "Blind SQL injection attempt detected (3 occurrences)",
+      "technical_summary": "",
+      "recommended_actions": [
+        "Investigate blind_sql_injection from 0.1.0.1"
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&dqohnhch=../../etc/passwd",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "payload",
+      "attack_name": "blind_sql_injection",
+      "brief_description": "Blind SQL injection attempt detected",
+      "recommended_action": "Investigate blind_sql_injection from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "event_type": "detection",
+          "description": "Deterministic rule matched: blind_sql_injection",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": "deterministic",
+      "detection_rule": "blind_sql_injection",
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T11:38:57.657357",
+      "updated_at": "2026-04-01T11:38:57.657357",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "aab9a7ab-a23e-4fcd-b3e3-1a89f3f6610d",
+      "title": "[LOCAL_FILE_INCLUSION] Local file inclusion attempt from 0.1.0.1",
+      "description": "Deterministic detection: Local file inclusion attempt\nRule: local_file_inclusion\nMatches: 2\nEvidence: eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&dqohnhch=../../etc/passwd; kowuoxxn=<script>alert(\"XSS\");</script>&gfqfjree=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&gxbvyjem=../../etc/passwd",
+      "status": "new",
+      "priority": "critical",
+      "source": "deterministic",
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "chunk_ids": [],
+      "agent_output_ids": [],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": "0.1.0.1",
+      "actor_ips": [
+        "0.1.0.1"
+      ],
+      "affected_hosts": [],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1190",
+          "technique_name": "Exploit Public-Facing Application",
+          "tactic": "Initial Access",
+          "confidence": 0.8,
+          "justification": "Local file inclusion indicates web exploit attempts."
+        }
+      ],
+      "primary_tactic": "Initial Access",
+      "overall_confidence": 0.9,
+      "executive_summary": "Local file inclusion attempt (2 occurrences)",
+      "technical_summary": "",
+      "recommended_actions": [
+        "Investigate local_file_inclusion from 0.1.0.1"
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&dqohnhch=../../etc/passwd",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "source ip",
+      "attack_name": "local_file_inclusion",
+      "brief_description": "Local file inclusion attempt",
+      "recommended_action": "Investigate local_file_inclusion from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "event_type": "detection",
+          "description": "Deterministic rule matched: local_file_inclusion",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": "deterministic",
+      "detection_rule": "local_file_inclusion",
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T11:38:57.702692",
+      "updated_at": "2026-04-01T11:38:57.702692",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "ab3f5f6a-9276-400f-a2f3-2242ff5d9213",
+      "title": "[LOCAL_FILE_INCLUSION] Local file inclusion attempt from 0.0.0.0",
+      "description": "Deterministic detection: Local file inclusion attempt\nRule: local_file_inclusion\nMatches: 2\nEvidence: ../../../../../../../etc/passwd; attributes.id=test&attributes.file=../../administrator/mail/download.cfm&filename=../lib/password.properties&attributes.locale=it&attributes.var=it&attributes.jscript=false&attributes.type=text/html&a",
+      "status": "new",
+      "priority": "critical",
+      "source": "deterministic",
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "chunk_ids": [],
+      "agent_output_ids": [],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": "0.0.0.0",
+      "actor_ips": [
+        "0.0.0.0"
+      ],
+      "affected_hosts": [],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1190",
+          "technique_name": "Exploit Public-Facing Application",
+          "tactic": "Initial Access",
+          "confidence": 0.8,
+          "justification": "Local file inclusion indicates web exploit attempts."
+        }
+      ],
+      "primary_tactic": "Initial Access",
+      "overall_confidence": 0.9,
+      "executive_summary": "Local file inclusion attempt (2 occurrences)",
+      "technical_summary": "",
+      "recommended_actions": [
+        "Investigate local_file_inclusion from 0.0.0.0"
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "../../../../../../../etc/passwd",
+      "source_ip": "0.0.0.0",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "source ip",
+      "attack_name": "local_file_inclusion",
+      "brief_description": "Local file inclusion attempt",
+      "recommended_action": "Investigate local_file_inclusion from 0.0.0.0",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "event_type": "detection",
+          "description": "Deterministic rule matched: local_file_inclusion",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": "deterministic",
+      "detection_rule": "local_file_inclusion",
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T11:38:57.769999",
+      "updated_at": "2026-04-01T11:38:57.769999",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "a21e6b2a-3da9-4a25-a095-1896de143538",
+      "title": "[SQL_INJECTION] SQL injection attempt detected from 6.1.8.1",
+      "description": "Deterministic detection: SQL injection attempt detected\nRule: sql_injection\nMatches: 1\nEvidence: <150>Dec  17 01:53:15 servernameabc httpd[12345]: 3.4.5.6 6.1.8.1 12345 abc.example.net - - [17/Dec/2025:01:53:15 +0530] \"GET /uxportal/uxportalhome.html/home' UNION SELECT@@version-- HTTP/1.1\" 200 24",
+      "status": "new",
+      "priority": "critical",
+      "source": "deterministic",
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "chunk_ids": [],
+      "agent_output_ids": [],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": "6.1.8.1",
+      "actor_ips": [
+        "6.1.8.1"
+      ],
+      "affected_hosts": [],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1190",
+          "technique_name": "Exploit Public-Facing Application",
+          "tactic": "Initial Access",
+          "confidence": 0.82,
+          "justification": "Rule indicates web application exploitation behavior."
+        }
+      ],
+      "primary_tactic": "Initial Access",
+      "overall_confidence": 0.9,
+      "executive_summary": "SQL injection attempt detected (1 occurrences)",
+      "technical_summary": "",
+      "recommended_actions": [
+        "Investigate sql_injection from 6.1.8.1"
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "<150>Dec  17 01:53:15 servernameabc httpd[12345]: 3.4.5.6 6.1.8.1 12345 abc.example.net - - [17/Dec/2025:01:53:15 +0530] \"GET /uxportal/uxportalhome.html/home' UNION SELECT@@version-- HTTP/1.1\" 200 24",
+      "source_ip": "6.1.8.1",
+      "destination_ip": "6.1.8.1",
+      "suspicious": true,
+      "suspicious_indicator": "payload",
+      "attack_name": "sql_injection",
+      "brief_description": "SQL injection attempt detected",
+      "recommended_action": "Investigate sql_injection from 6.1.8.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "event_type": "detection",
+          "description": "Deterministic rule matched: sql_injection",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": "deterministic",
+      "detection_rule": "sql_injection",
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T11:38:57.825076",
+      "updated_at": "2026-04-01T11:38:57.825076",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "7580cbac-7490-4790-846a-3c1b3387a79a",
+      "title": "[SQL_INJECTION] SQL injection attempt detected from 0.1.0.1",
+      "description": "Deterministic detection: SQL injection attempt detected\nRule: sql_injection\nMatches: 1\nEvidence: do=inforum&listforumid=(select(0)from(select(sleep(6)))v)/*'+(select(0)from(select(sleep(6)))v)+'\"+(select(0)from(select(sleep(6)))v)+\"*/&result=10",
+      "status": "new",
+      "priority": "critical",
+      "source": "deterministic",
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "chunk_ids": [],
+      "agent_output_ids": [],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": "0.1.0.1",
+      "actor_ips": [
+        "0.1.0.1"
+      ],
+      "affected_hosts": [],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1190",
+          "technique_name": "Exploit Public-Facing Application",
+          "tactic": "Initial Access",
+          "confidence": 0.82,
+          "justification": "Rule indicates web application exploitation behavior."
+        }
+      ],
+      "primary_tactic": "Initial Access",
+      "overall_confidence": 0.9,
+      "executive_summary": "SQL injection attempt detected (1 occurrences)",
+      "technical_summary": "",
+      "recommended_actions": [
+        "Investigate sql_injection from 0.1.0.1"
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "do=inforum&listforumid=(select(0)from(select(sleep(6)))v)/*'+(select(0)from(select(sleep(6)))v)+'\"+(select(0)from(select(sleep(6)))v)+\"*/&result=10",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "payload",
+      "attack_name": "sql_injection",
+      "brief_description": "SQL injection attempt detected",
+      "recommended_action": "Investigate sql_injection from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "event_type": "detection",
+          "description": "Deterministic rule matched: sql_injection",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": "deterministic",
+      "detection_rule": "sql_injection",
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T11:38:57.884406",
+      "updated_at": "2026-04-01T11:38:57.884406",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "ed6fb210-8efc-4da5-a617-8d062224b883",
+      "title": "[CROSS_SITE_SCRIPTING] Cross-site scripting attempt from 0.1.0.1",
+      "description": "Deterministic detection: Cross-site scripting attempt\nRule: xss\nMatches: 2\nEvidence: eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&dqohnhch=../../etc/passwd; kowuoxxn=<script>alert(\"XSS\");</script>&gfqfjree=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&gxbvyjem=../../etc/passwd",
+      "status": "new",
+      "priority": "high",
+      "source": "deterministic",
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "chunk_ids": [],
+      "agent_output_ids": [],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": "0.1.0.1",
+      "actor_ips": [
+        "0.1.0.1"
+      ],
+      "affected_hosts": [],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1190",
+          "technique_name": "Exploit Public-Facing Application",
+          "tactic": "Initial Access",
+          "confidence": 0.7,
+          "justification": "Cross-site scripting indicates abuse of exposed application functionality."
+        }
+      ],
+      "primary_tactic": "Initial Access",
+      "overall_confidence": 0.9,
+      "executive_summary": "Cross-site scripting attempt (2 occurrences)",
+      "technical_summary": "",
+      "recommended_actions": [
+        "Investigate cross_site_scripting from 0.1.0.1"
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&dqohnhch=../../etc/passwd",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "source ip",
+      "attack_name": "xss",
+      "brief_description": "Cross-site scripting attempt",
+      "recommended_action": "Investigate cross_site_scripting from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "event_type": "detection",
+          "description": "Deterministic rule matched: xss",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": "deterministic",
+      "detection_rule": "xss",
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T11:38:57.961622",
+      "updated_at": "2026-04-01T11:38:57.961622",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "f99f28be-e7f0-4070-8969-685f095b688c",
+      "title": "[PATH_TRAVERSAL] Path traversal attempt from 0.1.0.1",
+      "description": "Deterministic detection: Path traversal attempt\nRule: path_traversal\nMatches: 2\nEvidence: eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&dqohnhch=../../etc/passwd; kowuoxxn=<script>alert(\"XSS\");</script>&gfqfjree=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&gxbvyjem=../../etc/passwd",
+      "status": "new",
+      "priority": "high",
+      "source": "deterministic",
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "chunk_ids": [],
+      "agent_output_ids": [],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": "0.1.0.1",
+      "actor_ips": [
+        "0.1.0.1"
+      ],
+      "affected_hosts": [],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1190",
+          "technique_name": "Exploit Public-Facing Application",
+          "tactic": "Initial Access",
+          "confidence": 0.8,
+          "justification": "Traversal indicators imply exploitation of input handling."
+        }
+      ],
+      "primary_tactic": "Initial Access",
+      "overall_confidence": 0.9,
+      "executive_summary": "Path traversal attempt (2 occurrences)",
+      "technical_summary": "",
+      "recommended_actions": [
+        "Investigate path_traversal from 0.1.0.1"
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "eqbzeyas=<script>alert(\"XSS\");</script>&ygocslug=UNION+SELECT+ALL+FROM+information_schema+AND+\"+or+SLEEP(5)+or+\"&dqohnhch=../../etc/passwd",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "path_traversal",
+      "brief_description": "Path traversal attempt",
+      "recommended_action": "Investigate path_traversal from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "event_type": "detection",
+          "description": "Deterministic rule matched: path_traversal",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": "deterministic",
+      "detection_rule": "path_traversal",
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T11:38:58.017509",
+      "updated_at": "2026-04-01T11:38:58.017509",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "9d456873-1ff0-497f-af07-ce4742cd7e8e",
+      "title": "[PATH_TRAVERSAL] Path traversal attempt from 0.0.0.0",
+      "description": "Deterministic detection: Path traversal attempt\nRule: path_traversal\nMatches: 2\nEvidence: ../../../../../../../etc/passwd; attributes.id=test&attributes.file=../../administrator/mail/download.cfm&filename=../lib/password.properties&attributes.locale=it&attributes.var=it&attributes.jscript=false&attributes.type=text/html&a",
+      "status": "new",
+      "priority": "high",
+      "source": "deterministic",
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "chunk_ids": [],
+      "agent_output_ids": [],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": "0.0.0.0",
+      "actor_ips": [
+        "0.0.0.0"
+      ],
+      "affected_hosts": [],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1190",
+          "technique_name": "Exploit Public-Facing Application",
+          "tactic": "Initial Access",
+          "confidence": 0.8,
+          "justification": "Traversal indicators imply exploitation of input handling."
+        }
+      ],
+      "primary_tactic": "Initial Access",
+      "overall_confidence": 0.9,
+      "executive_summary": "Path traversal attempt (2 occurrences)",
+      "technical_summary": "",
+      "recommended_actions": [
+        "Investigate path_traversal from 0.0.0.0"
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "../../../../../../../etc/passwd",
+      "source_ip": "0.0.0.0",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "path_traversal",
+      "brief_description": "Path traversal attempt",
+      "recommended_action": "Investigate path_traversal from 0.0.0.0",
+      "confidence_score": 9,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "event_type": "detection",
+          "description": "Deterministic rule matched: path_traversal",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": "deterministic",
+      "detection_rule": "path_traversal",
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T11:38:58.075758",
+      "updated_at": "2026-04-01T11:38:58.075758",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "a3c59fbe-32ad-418f-83b8-60c714878849",
+      "title": "[ARBITRARY_FILE_READ] Arbitrary file read via parameter manipulation from 0.0.0.0",
+      "description": "Deterministic detection: Arbitrary file read via parameter manipulation\nRule: arbitrary_file_read\nMatches: 1\nEvidence: attributes.id=test&attributes.file=../../administrator/mail/download.cfm&filename=../lib/password.properties&attributes.locale=it&attributes.var=it&attributes.jscript=false&attributes.type=text/html&a",
+      "status": "new",
+      "priority": "high",
+      "source": "deterministic",
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.311935",
+      "chunk_ids": [],
+      "agent_output_ids": [],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": "0.0.0.0",
+      "actor_ips": [
+        "0.0.0.0"
+      ],
+      "affected_hosts": [],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1190",
+          "technique_name": "Exploit Public-Facing Application",
+          "tactic": "Initial Access",
+          "confidence": 0.8,
+          "justification": "Arbitrary file read indicates exploit behavior."
+        }
+      ],
+      "primary_tactic": "Initial Access",
+      "overall_confidence": 0.75,
+      "executive_summary": "Arbitrary file read via parameter manipulation (1 occurrences)",
+      "technical_summary": "",
+      "recommended_actions": [
+        "Investigate arbitrary_file_read from 0.0.0.0"
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "attributes.id=test&attributes.file=../../administrator/mail/download.cfm&filename=../lib/password.properties&attributes.locale=it&attributes.var=it&attributes.jscript=false&attributes.type=text/html&a",
+      "source_ip": "0.0.0.0",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "source ip",
+      "attack_name": "arbitrary_file_read",
+      "brief_description": "Arbitrary file read via parameter manipulation",
+      "recommended_action": "Investigate arbitrary_file_read from 0.0.0.0",
+      "confidence_score": 8,
+      "mitre_tactic": "Initial Access",
+      "mitre_technique": "T1190",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "event_type": "detection",
+          "description": "Deterministic rule matched: arbitrary_file_read",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": "deterministic",
+      "detection_rule": "arbitrary_file_read",
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T11:38:58.127020",
+      "updated_at": "2026-04-01T11:38:58.127020",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "2ceaad4e-7bd0-4011-b50c-719aecb7b16e",
+      "title": "[CORRELATION] Multi-vector: 6 attack types (sql_injection, blind_sql_injection, os_command_inj",
+      "description": "Day-level correlation: Multi-vector: 6 attack types (sql_injection, blind_sql_injection, os_command_injection, path_traversal, local_file_inclusion)\nRule: multi_vector_attacker\nEvidence: {'categories': ['sql_injection', 'blind_sql_injection', 'os_command_injection', 'path_traversal', 'local_file_inclusion', 'cross_site_scripting']}",
+      "status": "new",
+      "priority": "critical",
+      "source": "correlation",
+      "first_seen": "2026-04-01T11:38:58.214510",
+      "last_seen": "2026-04-01T11:38:58.214510",
+      "chunk_ids": [],
+      "agent_output_ids": [],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": "0.1.0.1",
+      "actor_ips": [
+        "0.1.0.1"
+      ],
+      "affected_hosts": [],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1595",
+          "technique_name": "Active Scanning",
+          "tactic": "Reconnaissance",
+          "confidence": 0.68,
+          "justification": "Multi-vector profile commonly begins with broad reconnaissance."
+        }
+      ],
+      "primary_tactic": "Reconnaissance",
+      "overall_confidence": 0.9,
+      "executive_summary": "Multi-vector: 6 attack types (sql_injection, blind_sql_injection, os_command_injection, path_traversal, local_file_inclusion)",
+      "technical_summary": "",
+      "recommended_actions": [
+        "Investigate correlated activity from 0.1.0.1"
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "{'categories': ['sql_injection', 'blind_sql_injection', 'os_command_injection', 'path_traversal', 'local_file_inclusion', 'cross_site_scripting']}",
+      "source_ip": "0.1.0.1",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "multi_vector_attacker",
+      "brief_description": "Multi-vector: 6 attack types (sql_injection, blind_sql_injection, os_command_injection, path_traversal, local_file_inclusion)",
+      "recommended_action": "Investigate correlated activity from 0.1.0.1",
+      "confidence_score": 9,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1595",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:58.215511",
+          "event_type": "correlation",
+          "description": "Day-level correlation: multi_vector_attacker",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": "correlation",
+      "detection_rule": "multi_vector_attacker",
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T11:38:58.215511",
+      "updated_at": "2026-04-01T11:38:58.215511",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "73bbc067-3fe9-4350-b141-9674497eda72",
+      "title": "[CORRELATION] Multi-vector: 6 attack types (local_file_inclusion, path_traversal, arbitrary_fi",
+      "description": "Day-level correlation: Multi-vector: 6 attack types (local_file_inclusion, path_traversal, arbitrary_file_read, evasion, cross_site_scripting)\nRule: multi_vector_attacker\nEvidence: {'categories': ['local_file_inclusion', 'path_traversal', 'arbitrary_file_read', 'evasion', 'cross_site_scripting', 'insecure_input_validation']}",
+      "status": "new",
+      "priority": "critical",
+      "source": "correlation",
+      "first_seen": "2026-04-01T11:38:58.308747",
+      "last_seen": "2026-04-01T11:38:58.308747",
+      "chunk_ids": [],
+      "agent_output_ids": [],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": "0.0.0.0",
+      "actor_ips": [
+        "0.0.0.0"
+      ],
+      "affected_hosts": [],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1595",
+          "technique_name": "Active Scanning",
+          "tactic": "Reconnaissance",
+          "confidence": 0.68,
+          "justification": "Multi-vector profile commonly begins with broad reconnaissance."
+        }
+      ],
+      "primary_tactic": "Reconnaissance",
+      "overall_confidence": 0.9,
+      "executive_summary": "Multi-vector: 6 attack types (local_file_inclusion, path_traversal, arbitrary_file_read, evasion, cross_site_scripting)",
+      "technical_summary": "",
+      "recommended_actions": [
+        "Investigate correlated activity from 0.0.0.0"
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "{'categories': ['local_file_inclusion', 'path_traversal', 'arbitrary_file_read', 'evasion', 'cross_site_scripting', 'insecure_input_validation']}",
+      "source_ip": "0.0.0.0",
+      "destination_ip": null,
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "multi_vector_attacker",
+      "brief_description": "Multi-vector: 6 attack types (local_file_inclusion, path_traversal, arbitrary_file_read, evasion, cross_site_scripting)",
+      "recommended_action": "Investigate correlated activity from 0.0.0.0",
+      "confidence_score": 9,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1595",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:58.308747",
+          "event_type": "correlation",
+          "description": "Day-level correlation: multi_vector_attacker",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": "correlation",
+      "detection_rule": "multi_vector_attacker",
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T11:38:58.308747",
+      "updated_at": "2026-04-01T11:38:58.308747",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "8836c655-2d78-4078-879a-fed5275936ab",
+      "title": "[CORRELATION] Campaign: 25 IPs using csrf_indicator",
+      "description": "Day-level correlation: Campaign: 25 IPs using csrf_indicator\nRule: campaign_detection\nEvidence: {'signature': 'csrf_indicator', 'ips': ['106.222.231.91', '157.51.143.16', '27.59.110.224', '103.120.51.122', '103.80.58.191', '152.59.222.129', '152.58.135.24', '130.41.149.9', '170.225.12.33', '17.233.103.151']}",
+      "status": "new",
+      "priority": "critical",
+      "source": "correlation",
+      "first_seen": "2026-04-01T11:38:58.402023",
+      "last_seen": "2026-04-01T11:38:58.402023",
+      "chunk_ids": [],
+      "agent_output_ids": [],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": "106.222.231.91",
+      "actor_ips": [
+        "106.222.231.91"
+      ],
+      "affected_hosts": [],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1595",
+          "technique_name": "Active Scanning",
+          "tactic": "Reconnaissance",
+          "confidence": 0.74,
+          "justification": "Shared signatures across multiple actors indicate coordinated recon campaign."
+        }
+      ],
+      "primary_tactic": "Reconnaissance",
+      "overall_confidence": 0.8,
+      "executive_summary": "Campaign: 25 IPs using csrf_indicator",
+      "technical_summary": "",
+      "recommended_actions": [
+        "Investigate correlated activity from 106.222.231.91"
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "{'signature': 'csrf_indicator', 'ips': ['106.222.231.91', '157.51.143.16', '27.59.110.224', '103.120.51.122', '103.80.58.191', '152.59.222.129', '152.58.135.24', '130.41.149.9', '170.225.12.33', '17.233.103.151']}",
+      "source_ip": "106.222.231.91",
+      "destination_ip": "157.51.143.16",
+      "suspicious": true,
+      "suspicious_indicator": "source ip",
+      "attack_name": "campaign_detection",
+      "brief_description": "Campaign: 25 IPs using csrf_indicator",
+      "recommended_action": "Investigate correlated activity from 106.222.231.91",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1595",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:58.402023",
+          "event_type": "correlation",
+          "description": "Day-level correlation: campaign_detection",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": "correlation",
+      "detection_rule": "campaign_detection",
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T11:38:58.402023",
+      "updated_at": "2026-04-01T11:38:58.402023",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "75573ac9-551f-4826-99c8-46162faa312b",
+      "title": "[CORRELATION] Campaign: 3 IPs using slowloris_indicator",
+      "description": "Day-level correlation: Campaign: 3 IPs using slowloris_indicator\nRule: campaign_detection\nEvidence: {'signature': 'slowloris_indicator', 'ips': ['106.66.39.251', '106.219.224.117', '131.229.221.23']}",
+      "status": "new",
+      "priority": "critical",
+      "source": "correlation",
+      "first_seen": "2026-04-01T11:38:58.470557",
+      "last_seen": "2026-04-01T11:38:58.470557",
+      "chunk_ids": [],
+      "agent_output_ids": [],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": "106.66.39.251",
+      "actor_ips": [
+        "106.66.39.251"
+      ],
+      "affected_hosts": [],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1595",
+          "technique_name": "Active Scanning",
+          "tactic": "Reconnaissance",
+          "confidence": 0.74,
+          "justification": "Shared signatures across multiple actors indicate coordinated recon campaign."
+        }
+      ],
+      "primary_tactic": "Reconnaissance",
+      "overall_confidence": 0.8,
+      "executive_summary": "Campaign: 3 IPs using slowloris_indicator",
+      "technical_summary": "",
+      "recommended_actions": [
+        "Investigate correlated activity from 106.66.39.251"
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "{'signature': 'slowloris_indicator', 'ips': ['106.66.39.251', '106.219.224.117', '131.229.221.23']}",
+      "source_ip": "106.66.39.251",
+      "destination_ip": "106.219.224.117",
+      "suspicious": true,
+      "suspicious_indicator": "source ip",
+      "attack_name": "campaign_detection",
+      "brief_description": "Campaign: 3 IPs using slowloris_indicator",
+      "recommended_action": "Investigate correlated activity from 106.66.39.251",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1595",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:58.470557",
+          "event_type": "correlation",
+          "description": "Day-level correlation: campaign_detection",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": "correlation",
+      "detection_rule": "campaign_detection",
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T11:38:58.470557",
+      "updated_at": "2026-04-01T11:38:58.470557",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "bc2d1e72-78e3-41fd-a9a4-23668a75ae34",
+      "title": "A brief, high-intensity burst of activity from an  from Unknown actor",
+      "description": "Behavior: A brief, high-intensity burst of activity from an external actor with scanning behavior targeting 9 hosts.\nSuspected intent: Potential reconnaissance or scanning activity\nMITRE mapping: Network Service Discovery (T1046)\nRisk: Scanning behavior detected on 9 targets, indicating potential malicious activity.",
+      "status": "new",
+      "priority": "high",
+      "source": "ai_detection",
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "chunk_ids": [
+        "616cbcfc-800e-4091-af6b-090c3746e537"
+      ],
+      "agent_output_ids": [
+        "9bf0fc8c-e8e7-4089-bf68-5764bf92a2bd"
+      ],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": null,
+      "actor_ips": [
+        "106.222.231.91",
+        "124.123.132.177",
+        "17.233.103.151",
+        "49.43.224.94",
+        "84.93.232.227"
+      ],
+      "affected_hosts": [
+        "CDCUPGHDLSG01"
+      ],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1046",
+          "technique_name": "Network Service Discovery",
+          "tactic": "Reconnaissance",
+          "confidence": 0.8,
+          "justification": "The behavioral summary indicates 'Scanning behavior: 9 targets' in the red_flags section, which suggests an attempt to discover network services."
+        }
+      ],
+      "primary_tactic": "Reconnaissance",
+      "overall_confidence": 0.7749999999999999,
+      "executive_summary": "Potential security threat detected, may impact business operations if left unchecked.",
+      "technical_summary": "Scanning behavior on 9 targets was observed within a brief time window (11:38-11:38 UTC). The actor is external and no specific ports or processes were involved. Further investigation is required to determine the intent behind this activity.",
+      "recommended_actions": [
+        "Investigate the source IP and review network logs for further evidence of scanning behavior."
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "event_id=UUID('fbfcf337-91f3-453b-9ee5-919078a06170') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='ff0e78b8ebdf19fb' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 311935) src_ip='106.222.231.91' src_port=None dst_ip='10.40.54.114' dst_port=None dst_host='CDCUPGHDLSG01' action",
+      "source_ip": null,
+      "destination_ip": "10.40.54.10",
+      "suspicious": true,
+      "suspicious_indicator": "scanning behavior",
+      "attack_name": "Port Scanning",
+      "brief_description": "External actor engaged in scanning behavior on 9 targets.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "event_type": "detection",
+          "description": "Behavioral anomaly detected",
+          "actor": null,
+          "evidence_refs": []
+        },
+        {
+          "timestamp": "2026-04-01T13:13:57.941612",
+          "event_type": "analysis",
+          "description": "AI agent analysis completed",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": null,
+      "detection_rule": null,
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T13:13:57.941612",
+      "updated_at": "2026-04-01T13:13:57.941612",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "766a2b8e-16d2-4827-bc45-39d09bc64721",
+      "title": "The observed network activity exhibits scanning be from Unknown actor",
+      "description": "Behavior: The observed network activity exhibits scanning behavior and a high number of GET requests, which may indicate reconnaissance or information gathering.\nSuspected intent: Potential reconnaissance or scanning activity\nMITRE mapping: Network Service Discovery (T1046)\nRisk: The observed scanning behavior indicates a potential malicious activity targeting 15 internal systems.",
+      "status": "new",
+      "priority": "high",
+      "source": "ai_detection",
+      "first_seen": "2026-04-01T11:38:57.310939",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "chunk_ids": [
+        "ebb46a92-9a1d-4f37-a8fb-31b1dc0aaade"
+      ],
+      "agent_output_ids": [
+        "3869a4e9-4e09-4627-b982-4e1d9c946b9a"
+      ],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": null,
+      "actor_ips": [
+        "103.203.172.242",
+        "103.249.38.81",
+        "106.192.43.217",
+        "106.215.181.170",
+        "106.217.248.181",
+        "106.222.222.115",
+        "106.76.160.75",
+        "110.224.115.37",
+        "117.99.205.104",
+        "152.56.156.138",
+        "152.58.177.91",
+        "152.59.222.51",
+        "157.32.208.135",
+        "157.50.144.42",
+        "162.235.194.120",
+        "171.79.58.151",
+        "223.225.56.23",
+        "223.228.109.229",
+        "223.231.166.222"
+      ],
+      "affected_hosts": [
+        "CDCDRUXPUAMW05"
+      ],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1046",
+          "technique_name": "Network Service Discovery",
+          "tactic": "Reconnaissance",
+          "confidence": 0.8,
+          "justification": "The behavioral summary indicates 'Scanning behavior: 15 targets' in the red_flags field, which suggests an attempt to discover network services."
+        }
+      ],
+      "primary_tactic": "Reconnaissance",
+      "overall_confidence": 0.75,
+      "executive_summary": "Potential security breach detected, may impact business operations.",
+      "technical_summary": "The actor is exhibiting scanning behavior targeting internal systems, with a high rate of GET and POST requests. The user agents seen are unusual and may indicate a malicious activity.",
+      "recommended_actions": [
+        "Investigate the source IP and review network logs for further details on the scanning activity."
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "event_id=UUID('861a0682-954e-4dc3-afe9-672526b5b626') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='5a110d6e5689aa70' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 310939) src_ip='152.56.156.138' src_port=None dst_ip='10.16.189.24' dst_port=None dst_host='CDCDRUXPUAMW05' actio",
+      "source_ip": null,
+      "destination_ip": "10.16.189.10",
+      "suspicious": true,
+      "suspicious_indicator": "user_agent",
+      "attack_name": "Port Scanning",
+      "brief_description": "Scanning behavior targeting internal systems.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.310939",
+          "event_type": "detection",
+          "description": "Behavioral anomaly detected",
+          "actor": null,
+          "evidence_refs": []
+        },
+        {
+          "timestamp": "2026-04-01T13:13:58.033032",
+          "event_type": "analysis",
+          "description": "AI agent analysis completed",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": null,
+      "detection_rule": null,
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T13:13:58.033032",
+      "updated_at": "2026-04-01T13:13:58.033032",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "a680b1f4-8261-4e36-a18b-6e435e1195be",
+      "title": "A brief, high-intensity burst of activity from an  from Unknown actor",
+      "description": "Behavior: A brief, high-intensity burst of activity from an external actor with scanning behavior targeting 13 hosts.\nSuspected intent: Potential reconnaissance or scanning activity\nMITRE mapping: Network Service Discovery (T1046)\nRisk: The actor has exhibited scanning behavior targeting 13 systems, indicating a potential reconnaissance phase of an attack.",
+      "status": "new",
+      "priority": "high",
+      "source": "ai_detection",
+      "first_seen": "2026-04-01T11:38:57.310939",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "chunk_ids": [
+        "41531a52-629d-4702-8b40-5cf652fdb5ab"
+      ],
+      "agent_output_ids": [
+        "f9736dbe-18ad-435e-a8f1-a233c9363793"
+      ],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": null,
+      "actor_ips": [
+        "102.68.115.212",
+        "106.192.73.250",
+        "115.113.2.42",
+        "122.164.91.246",
+        "152.57.15.76",
+        "152.58.177.235",
+        "157.51.46.46",
+        "163.120.79.157",
+        "169.0.82.221",
+        "171.60.217.4",
+        "191.233.197.224",
+        "40.77.83.33",
+        "42.108.80.58",
+        "52.59.43.236",
+        "54.209.60.63",
+        "74.109.199.155"
+      ],
+      "affected_hosts": [
+        "CDCDRUXPUAMW02"
+      ],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1046",
+          "technique_name": "Network Service Discovery",
+          "tactic": "Reconnaissance",
+          "confidence": 0.8,
+          "justification": "The behavioral summary indicates 'Scanning behavior: 13 targets' in the red_flags section, which suggests an attempt to discover network services."
+        }
+      ],
+      "primary_tactic": "Reconnaissance",
+      "overall_confidence": 0.7749999999999999,
+      "executive_summary": "Potential security threat detected, may impact business operations if left unchecked.",
+      "technical_summary": "The actor's scanning behavior targeting 13 systems suggests a reconnaissance phase of an attack. Further investigation is required to determine the scope and intent of this activity.",
+      "recommended_actions": [
+        "Investigate the source IP and review network logs for further activity."
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "event_id=UUID('e81e3959-30a4-4fff-8a4d-fc75d4e2db7b') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='9592e40b2b2b08ea' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 310939) src_ip='152.58.177.235' src_port=None dst_ip='10.16.189.19' dst_port=None dst_host='CDCDRUXPUAMW02' actio",
+      "source_ip": null,
+      "destination_ip": "10.16.189.11",
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "Reconnaissance",
+      "brief_description": "Actor exhibiting scanning behavior targeting multiple systems.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.310939",
+          "event_type": "detection",
+          "description": "Behavioral anomaly detected",
+          "actor": null,
+          "evidence_refs": []
+        },
+        {
+          "timestamp": "2026-04-01T13:13:58.090240",
+          "event_type": "analysis",
+          "description": "AI agent analysis completed",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": null,
+      "detection_rule": null,
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T13:13:58.090240",
+      "updated_at": "2026-04-01T13:13:58.090240",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "7d88804d-8c63-4e84-b34f-499aeef3f615",
+      "title": "A remote actor with scanning behavior targeting 12 from Unknown actor",
+      "description": "Behavior: A remote actor with scanning behavior targeting 12 hosts within a brief time window.\nSuspected intent: Potential reconnaissance or scanning activity\nMITRE mapping: Network Service Discovery (T1046)\nRisk: Scanning behavior detected on 12 targets, indicating potential malicious activity.",
+      "status": "new",
+      "priority": "high",
+      "source": "ai_detection",
+      "first_seen": "2026-04-01T11:38:57.311935",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "chunk_ids": [
+        "6f5cdfe4-5429-4ea3-a0bb-b1942d93f113"
+      ],
+      "agent_output_ids": [
+        "6ac028f8-c6cb-4e06-9e1e-20ef95f82c7c"
+      ],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": null,
+      "actor_ips": [
+        "106.192.58.32",
+        "130.41.60.166",
+        "152.58.181.253",
+        "157.51.229.166",
+        "168.94.238.47",
+        "17.233.98.210",
+        "170.85.62.93",
+        "185.4.165.152",
+        "193.105.74.58",
+        "20.198.123.84",
+        "20.225.132.84",
+        "49.36.65.28",
+        "49.37.116.75"
+      ],
+      "affected_hosts": [
+        "CDCDRUXPUAMW03"
+      ],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1046",
+          "technique_name": "Network Service Discovery",
+          "tactic": "Reconnaissance",
+          "confidence": 0.8,
+          "justification": "The behavioral summary indicates 'Scanning behavior: 12 targets' in the red_flags section, which suggests an attempt to discover network services."
+        }
+      ],
+      "primary_tactic": "Reconnaissance",
+      "overall_confidence": 0.7749999999999999,
+      "executive_summary": "Potential security threat detected, may impact business operations if left unchecked.",
+      "technical_summary": "Scanning behavior on 12 targets was observed within a brief time window (11:38-11:38 UTC). The actor is external and no specific user agent or payload was identified. Further investigation is required to determine the intent behind this activity.",
+      "recommended_actions": [
+        "Investigate the source IP and review network logs for further evidence of scanning behavior."
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "event_id=UUID('e9186677-b23c-42a7-94d4-fb0765347d22') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='e391b9872c58c1cf' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 311935) src_ip='193.105.74.58' src_port=None dst_ip='10.16.189.21' dst_port=None dst_host='CDCDRUXPUAMW03' action",
+      "source_ip": null,
+      "destination_ip": "10.16.189.11",
+      "suspicious": true,
+      "suspicious_indicator": "url",
+      "attack_name": "Port Scanning",
+      "brief_description": "External actor engaged in scanning behavior on 12 targets.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.311935",
+          "event_type": "detection",
+          "description": "Behavioral anomaly detected",
+          "actor": null,
+          "evidence_refs": []
+        },
+        {
+          "timestamp": "2026-04-01T13:13:58.150834",
+          "event_type": "analysis",
+          "description": "AI agent analysis completed",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": null,
+      "detection_rule": null,
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T13:13:58.150834",
+      "updated_at": "2026-04-01T13:13:58.150834",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "4d5ccd70-dd0f-4cf8-bfd8-3d6d3a5e3602",
+      "title": "A brief, high-intensity burst of activity was obse from Unknown actor",
+      "description": "Behavior: A brief, high-intensity burst of activity was observed from an external actor with scanning behavior targeting 10 hosts.\nSuspected intent: Potential reconnaissance or scanning activity\nMITRE mapping: Network Service Discovery (T1046)\nRisk: Scanning behavior detected on 10 targets, indicating potential malicious activity.",
+      "status": "new",
+      "priority": "high",
+      "source": "ai_detection",
+      "first_seen": "2026-04-01T11:38:57.310939",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "chunk_ids": [
+        "68166071-f40f-47ca-8fb2-75e053daf792"
+      ],
+      "agent_output_ids": [
+        "41d8d2c5-21df-4a6d-8e3c-fcb68e02bd1a"
+      ],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": null,
+      "actor_ips": [
+        "106.219.224.117",
+        "114.119.141.217",
+        "122.171.20.147",
+        "14.143.222.50",
+        "152.57.154.166",
+        "169.224.170.247",
+        "200.196.153.58",
+        "203.200.12.66",
+        "3.132.51.213",
+        "49.32.195.140",
+        "49.42.48.204",
+        "62.208.157.67",
+        "96.228.33.237"
+      ],
+      "affected_hosts": [
+        "CDCDRCCSSMW62"
+      ],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1046",
+          "technique_name": "Network Service Discovery",
+          "tactic": "Reconnaissance",
+          "confidence": 0.8,
+          "justification": "The behavioral summary indicates 'Scanning behavior: 10 targets' under red_flags, suggesting the actor is actively discovering network services."
+        }
+      ],
+      "primary_tactic": "Reconnaissance",
+      "overall_confidence": 0.7749999999999999,
+      "executive_summary": "Potential security threat detected, may impact business operations if left unchecked.",
+      "technical_summary": "Scanning behavior on 10 targets was observed within a brief time window (11:38 UTC). The source IP is unknown and has not been seen before in our network. Further investigation is required to determine the intent behind this activity.",
+      "recommended_actions": [
+        "Investigate the source IP and review network logs for further evidence of scanning behavior."
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "event_id=UUID('8c397d7d-fee9-4e22-b543-8d61b8f3472d') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='24b12e04a9fc038e' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 310939) src_ip='122.171.20.147' src_port=None dst_ip='10.16.189.19' dst_port=None dst_host='CDCDRCCSSMW62' action",
+      "source_ip": null,
+      "destination_ip": "10.16.189.10",
+      "suspicious": true,
+      "suspicious_indicator": "scanning behavior",
+      "attack_name": "Port Scanning",
+      "brief_description": "Potential port scanning activity detected on 10 targets.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.310939",
+          "event_type": "detection",
+          "description": "Behavioral anomaly detected",
+          "actor": null,
+          "evidence_refs": []
+        },
+        {
+          "timestamp": "2026-04-01T13:13:58.206710",
+          "event_type": "analysis",
+          "description": "AI agent analysis completed",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": null,
+      "detection_rule": null,
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T13:13:58.206710",
+      "updated_at": "2026-04-01T13:13:58.206710",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "63869743-407e-48e9-81ed-fbbb5ccaadbf",
+      "title": "A brief, high-intensity burst of activity was obse from Unknown actor",
+      "description": "Behavior: A brief, high-intensity burst of activity was observed from an external actor with scanning behavior targeting 10 hosts.\nSuspected intent: Potential reconnaissance or scanning activity\nMITRE mapping: Network Service Discovery (T1046)\nRisk: The actor exhibited scanning behavior targeting 10 different entities within a brief period.",
+      "status": "new",
+      "priority": "high",
+      "source": "ai_detection",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.348054",
+      "chunk_ids": [
+        "50870724-6593-48e3-8b33-da594a5a6908"
+      ],
+      "agent_output_ids": [
+        "6d3ed6d2-16f2-4938-bf68-882fe708c23b"
+      ],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": null,
+      "actor_ips": [
+        "106.219.164.80",
+        "152.58.135.24",
+        "152.59.222.129",
+        "157.51.143.16",
+        "223.231.231.142",
+        "81.145.56.141"
+      ],
+      "affected_hosts": [
+        "CDCUPGHDLSG03"
+      ],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1046",
+          "technique_name": "Network Service Discovery",
+          "tactic": "Reconnaissance",
+          "confidence": 0.8,
+          "justification": "The behavioral summary indicates 'Scanning behavior: 10 targets' in the red_flags section, which suggests an attempt to discover network services."
+        }
+      ],
+      "primary_tactic": "Reconnaissance",
+      "overall_confidence": 0.7749999999999999,
+      "executive_summary": "Potential security threat detected, may impact business operations.",
+      "technical_summary": "The actor's scanning behavior indicates potential malicious intent. Reviewing network logs and investigating the source IP will help determine the scope of the threat.",
+      "recommended_actions": [
+        "Investigate the source IP and review network logs for further activity."
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "event_id=UUID('c07caea9-435d-44cf-8847-a2ebb21b3a09') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='aa87826e5b191510' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 312938) src_ip='157.51.143.16' src_port=None dst_ip='10.40.54.10' dst_port=None dst_host='CDCUPGHDLSG03' action=<",
+      "source_ip": null,
+      "destination_ip": "10.40.54.10",
+      "suspicious": true,
+      "suspicious_indicator": "scanning behavior",
+      "attack_name": "Port Scanning",
+      "brief_description": "Actor exhibited scanning behavior targeting 10 entities.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.312938",
+          "event_type": "detection",
+          "description": "Behavioral anomaly detected",
+          "actor": null,
+          "evidence_refs": []
+        },
+        {
+          "timestamp": "2026-04-01T13:13:58.259802",
+          "event_type": "analysis",
+          "description": "AI agent analysis completed",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": null,
+      "detection_rule": null,
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T13:13:58.260803",
+      "updated_at": "2026-04-01T13:13:58.260803",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "6d6d187c-484b-4600-9d80-6d06e24708ed",
+      "title": "A brief, high-intensity burst of activity from an  from Unknown actor",
+      "description": "Behavior: A brief, high-intensity burst of activity from an external actor with scanning behavior targeting 10 hosts.\nSuspected intent: Potential reconnaissance or scanning activity\nMITRE mapping: Network Service Discovery (T1046)\nRisk: Scanning behavior detected on 10 targets, indicating potential malicious activity.",
+      "status": "new",
+      "priority": "high",
+      "source": "ai_detection",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "chunk_ids": [
+        "04a4a826-75cb-4f9c-a143-d16cc354650a"
+      ],
+      "agent_output_ids": [
+        "655a573e-2184-4884-933b-8d4c2b061a74"
+      ],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": null,
+      "actor_ips": [
+        "101.0.62.20",
+        "106.195.44.15",
+        "106.66.39.251",
+        "130.213.32.166",
+        "131.229.221.23",
+        "151.186.177.21",
+        "152.58.181.117",
+        "157.50.183.182",
+        "162.120.184.11",
+        "223.185.130.35",
+        "3.16.33.139"
+      ],
+      "affected_hosts": [
+        "CDCDRCCSSMW63"
+      ],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1046",
+          "technique_name": "Network Service Discovery",
+          "tactic": "Reconnaissance",
+          "confidence": 0.8,
+          "justification": "The behavioral summary indicates 'Scanning behavior: 10 targets' in the red_flags section, which suggests an attempt to discover network services."
+        }
+      ],
+      "primary_tactic": "Reconnaissance",
+      "overall_confidence": 0.7749999999999999,
+      "executive_summary": "Potential security threat detected, may impact business operations if not addressed promptly.",
+      "technical_summary": "Scanning behavior on 10 targets was observed within a brief time window (11:38 UTC). The source IP is unknown and no other suspicious activity was detected. Further investigation is required to determine the nature of this activity.",
+      "recommended_actions": [
+        "Investigate the source IP and review network logs for further evidence of scanning behavior."
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "event_id=UUID('bf8d6a2c-0086-492f-bd79-9bb859f2df28') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='270093308aea5d1b' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 312938) src_ip='130.213.32.166' src_port=None dst_ip='10.16.189.14' dst_port=None dst_host='CDCDRCCSSMW63' action",
+      "source_ip": null,
+      "destination_ip": "10.16.189.11",
+      "suspicious": true,
+      "suspicious_indicator": "scanning behavior",
+      "attack_name": "Port Scan",
+      "brief_description": "Brief, high-intensity bursts of scanning activity detected.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.312938",
+          "event_type": "detection",
+          "description": "Behavioral anomaly detected",
+          "actor": null,
+          "evidence_refs": []
+        },
+        {
+          "timestamp": "2026-04-01T13:13:58.315216",
+          "event_type": "analysis",
+          "description": "AI agent analysis completed",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": null,
+      "detection_rule": null,
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T13:13:58.315216",
+      "updated_at": "2026-04-01T13:13:58.315216",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "5bcb54cd-894a-4971-8a19-13a8dcabd0d6",
+      "title": "A remote actor with scanning behavior targeting 9  from Unknown actor",
+      "description": "Behavior: A remote actor with scanning behavior targeting 9 hosts within a brief time window.\nSuspected intent: Potential reconnaissance or scanning activity\nMITRE mapping: Network Service Discovery (T1046)\nRisk: Scanning behavior detected on 9 targets, indicating potential malicious activity.",
+      "status": "new",
+      "priority": "high",
+      "source": "ai_detection",
+      "first_seen": "2026-04-01T11:38:57.312938",
+      "last_seen": "2026-04-01T11:38:57.349049",
+      "chunk_ids": [
+        "a9abe00c-220e-4d01-bdec-e50f011eb775"
+      ],
+      "agent_output_ids": [
+        "19535ce4-f920-4e71-b7a7-e1b0fcbc2acc"
+      ],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": null,
+      "actor_ips": [
+        "106.221.197.123",
+        "106.221.206.88",
+        "117.240.239.66",
+        "122.167.116.223",
+        "135.119.6.36",
+        "165.85.130.112",
+        "20.204.21.38",
+        "200.196.152.248",
+        "36.255.90.29",
+        "49.205.248.122",
+        "49.37.147.208"
+      ],
+      "affected_hosts": [
+        "CDCDRUXPUAMW01"
+      ],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1046",
+          "technique_name": "Network Service Discovery",
+          "tactic": "Reconnaissance",
+          "confidence": 0.8,
+          "justification": "The behavioral summary indicates 'Scanning behavior: 9 targets' under red_flags, suggesting the actor is actively discovering network services."
+        }
+      ],
+      "primary_tactic": "Reconnaissance",
+      "overall_confidence": 0.7749999999999999,
+      "executive_summary": "Potential security threat detected, may impact business operations if not addressed promptly.",
+      "technical_summary": "Scanning behavior on 9 targets was observed within a brief time window (11:38-11:38 UTC). The source IP is external and no specific user agent or payload was identified. Further investigation is required to determine the intent behind this activity.",
+      "recommended_actions": [
+        "Investigate the source IP and review network logs for further evidence of scanning behavior."
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "event_id=UUID('b0fd0267-abfc-49ce-84dd-7558c9a58edd') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='a8dcaf0904ae7e4d' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 312938) src_ip='49.37.147.208' src_port=None dst_ip='10.16.189.19' dst_port=None dst_host='CDCDRUXPUAMW01' action",
+      "source_ip": "null",
+      "destination_ip": "null",
+      "suspicious": true,
+      "suspicious_indicator": "scanning behavior",
+      "attack_name": "Port Scanning",
+      "brief_description": "External scanning activity detected on 9 targets.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.312938",
+          "event_type": "detection",
+          "description": "Behavioral anomaly detected",
+          "actor": null,
+          "evidence_refs": []
+        },
+        {
+          "timestamp": "2026-04-01T13:13:58.370266",
+          "event_type": "analysis",
+          "description": "AI agent analysis completed",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": null,
+      "detection_rule": null,
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T13:13:58.370266",
+      "updated_at": "2026-04-01T13:13:58.370266",
+      "resolved_at": null
+    },
+    {
+      "incident_id": "40fb1150-df1b-4e92-99c9-6176cf39d2ea",
+      "title": "A brief, high-intensity burst of activity was obse from Unknown actor",
+      "description": "Behavior: A brief, high-intensity burst of activity was observed from an external actor with scanning behavior targeting 8 hosts.\nSuspected intent: Potential reconnaissance or scanning activity\nMITRE mapping: Network Service Discovery (T1046)\nRisk: Scanning behavior detected on 8 targets, indicating potential malicious activity.",
+      "status": "new",
+      "priority": "high",
+      "source": "ai_detection",
+      "first_seen": "2026-04-01T11:38:57.310939",
+      "last_seen": "2026-04-01T11:38:57.348054",
+      "chunk_ids": [
+        "3293fcd6-4154-4e1d-a89f-5b60e84168ce"
+      ],
+      "agent_output_ids": [
+        "cc956810-2d33-4ba5-ab79-63e618207323"
+      ],
+      "file_ids": [
+        "4ad48111-f50b-4f8f-8964-d6180af4b048"
+      ],
+      "primary_actor_ip": null,
+      "actor_ips": [
+        "103.120.51.70",
+        "152.57.131.74",
+        "152.57.92.88",
+        "152.58.47.21",
+        "171.79.51.159",
+        "20.125.163.192",
+        "203.123.65.209",
+        "205.254.185.187",
+        "223.237.169.0",
+        "45.119.28.176"
+      ],
+      "affected_hosts": [
+        "CDCDRUXPUAMW06"
+      ],
+      "mitre_techniques": [
+        {
+          "technique_id": "T1046",
+          "technique_name": "Network Service Discovery",
+          "tactic": "Discovery",
+          "confidence": 0.9,
+          "justification": "The behavioral summary indicates 'Scanning behavior: 8 targets' in the red_flags section, which suggests an attempt to discover network services."
+        }
+      ],
+      "primary_tactic": "Discovery",
+      "overall_confidence": 0.7875,
+      "executive_summary": "Potential security threat detected, may impact business operations.",
+      "technical_summary": "Scanning behavior was observed on 8 targets within a brief time window (11:38 UTC). The user agents seen include 'Azure Traffic Manager Endpoint Monitor' and 'okhttp/4.9.0', which could be indicative of malicious activity. Further investigation is required to confirm the threat.",
+      "recommended_actions": [
+        "Investigate the source IP and review network logs for further details."
+      ],
+      "$MI_ID": "GenAI_SOC",
+      "raw_log": "event_id=UUID('1fbe47c3-37ed-436d-9e0d-f36bc59690c2') file_id=UUID('4ad48111-f50b-4f8f-8964-d6180af4b048') row_hash='8185218b922353fe' timestamp=datetime.datetime(2026, 4, 1, 11, 38, 57, 310939) src_ip='152.57.92.88' src_port=None dst_ip='10.16.189.10' dst_port=None dst_host='CDCDRUXPUAMW06' action=",
+      "source_ip": null,
+      "destination_ip": "10.16.189.10",
+      "suspicious": true,
+      "suspicious_indicator": "user_agent",
+      "attack_name": "Port Scan",
+      "brief_description": "Scanning behavior detected on 8 targets.",
+      "recommended_action": "Investigate source IP and network logs.",
+      "confidence_score": 8,
+      "mitre_tactic": "Reconnaissance",
+      "mitre_technique": "T1046",
+      "timeline": [
+        {
+          "timestamp": "2026-04-01T11:38:57.310939",
+          "event_type": "detection",
+          "description": "Behavioral anomaly detected",
+          "actor": null,
+          "evidence_refs": []
+        },
+        {
+          "timestamp": "2026-04-01T13:13:58.424165",
+          "event_type": "analysis",
+          "description": "AI agent analysis completed",
+          "actor": null,
+          "evidence_refs": []
+        }
+      ],
+      "detection_tier": null,
+      "detection_rule": null,
+      "assigned_to": null,
+      "tags": [],
+      "notes": [],
+      "created_at": "2026-04-01T13:13:58.424165",
+      "updated_at": "2026-04-01T13:13:58.424165",
+      "resolved_at": null
     }
   ],
-  "saved_at": "2026-04-01T07:20:18.776663"
+  "saved_at": "2026-04-01T13:13:58.429321"
 }

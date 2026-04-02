@@ -13,11 +13,12 @@ import re
 
 from datetime import datetime
 
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile, status
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile, status, Depends
 from fastapi.responses import FileResponse
 
 from core.config import get_settings
 from core.logging import get_logger
+from core.auth import require_auth, optional_auth
 from shared_models.files import (
     FileMetadata,
     FileSource,
@@ -374,14 +375,24 @@ async def get_file_report(file_id: str, download: bool = True) -> FileResponse:
     summary="Download incident JSON report",
     description="Download machine-readable incident JSON report for a processed file.",
 )
-async def get_file_incidents_json(file_id: str, download: bool = True) -> FileResponse:
-    """Get incident JSON report as downloadable or inline file."""
+async def get_file_incidents_json(
+    file_id: str, 
+    download: bool = True,
+    current_user: str = Depends(optional_auth),
+) -> FileResponse:
+    """
+    Get incident JSON report as downloadable or inline file.
+    
+    Note: Authentication is optional for backend testing. If no token is provided,
+    a default test user will be used.
+    """
     report_path = _find_incident_json_path(file_id)
     if not report_path:
         # Backfill on-demand for older analyses where JSON report did not exist yet.
         try:
             from incidents.service import IncidentService
             from reports.writer import ReportWriter
+            from core.auth import resolve_user_identity
 
             incident_service = IncidentService()
             incidents = incident_service.list_incidents_for_file(file_id)
@@ -394,11 +405,17 @@ async def get_file_incidents_json(file_id: str, download: bool = True) -> FileRe
                     if metadata and metadata.original_filename
                     else f"{file_id}.csv"
                 )
+                
+                # Extract emp_id from current user
+                user_identity = resolve_user_identity(current_user)
+                emp_id = user_identity.get("emp_id")
+                
                 writer = ReportWriter()
                 report_path = writer.generate_incident_json_report(
                     file_id=file_id,
                     filename=filename,
                     incidents=incidents,
+                    emp_id=emp_id,
                 )
         except Exception as exc:
             logger.error(f"Failed to backfill incident JSON report | file_id={file_id}, error={exc}")

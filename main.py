@@ -14,7 +14,7 @@ from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from core.auth import require_auth
+from core.auth import require_auth, optional_auth
 from core.auth_routes import router as auth_router
 from core.config import get_settings
 from core.logging import setup_logging, get_logger
@@ -128,6 +128,7 @@ async def root() -> dict[str, str]:
 @app.post("/api/v1/analyze", tags=["Analysis"])
 async def analyze_file(
     file_id: str,
+    current_user: str = Depends(optional_auth),
 ) -> dict[str, Any]:
     """
     Three-tier analysis pipeline:
@@ -138,11 +139,15 @@ async def analyze_file(
     5. Create incidents from Tiers 1 & 2
     6. TIER 3: AI agent ensemble (only for ambiguous/flagged traffic)
     7. Create remaining incidents from AI
+    
+    Note: Authentication is optional for backend testing. If no token is provided,
+    a default test user will be used.
     """
     import csv
     import io
     from datetime import date
     from uuid import UUID
+    from core.auth import resolve_user_identity
 
     from file_intake.service import FileIntakeService
     from log_parser.base import ParserRegistry
@@ -383,12 +388,18 @@ async def analyze_file(
         incidents=all_incidents,
     )
     logger.info(f"Report saved | path={report_path}")
+    
+    # Extract emp_id from current user for JSON report
+    user_identity = resolve_user_identity(current_user)
+    emp_id = user_identity.get("emp_id")
+    
     incidents_json_path = report_writer.generate_incident_json_report(
         file_id=file_id,
         filename=file_metadata.original_filename,
         incidents=all_incidents,
+        emp_id=emp_id,
     )
-    logger.info(f"Incident JSON report saved | path={incidents_json_path}")
+    logger.info(f"Incident JSON report saved | path={incidents_json_path}, emp_id={emp_id}")
 
     # Update file metadata
     await file_service.update_analysis_stats(
@@ -436,7 +447,7 @@ async def analyze_file(
 # Day-level Threat Summary endpoint
 @app.get("/api/v1/threat-summary/today", tags=["Analysis"])
 async def get_today_threat_summary(
-    _current_user: str = Depends(require_auth),
+    _current_user: str = Depends(optional_auth),
 ) -> dict[str, Any]:
     """
     Get accumulated threat intelligence for today.
@@ -453,7 +464,7 @@ async def get_today_threat_summary(
 @app.get("/api/v1/agent-outputs/{file_id}", tags=["Analysis"])
 async def get_agent_outputs(
     file_id: str,
-    _current_user: str = Depends(require_auth),
+    _current_user: str = Depends(optional_auth),
 ) -> dict[str, Any]:
     """
     Get actual agent analysis outputs for a file.
@@ -475,7 +486,7 @@ async def get_agent_outputs(
 # Rollup Analysis endpoint - long-horizon cross-file correlation
 @app.get("/api/v1/rollups", tags=["Analysis"])
 async def get_rollup_analysis(
-    _current_user: str = Depends(require_auth),
+    _current_user: str = Depends(optional_auth),
 ) -> dict[str, Any]:
     """
     Get long-horizon rollup analysis across all analyzed files.
@@ -542,7 +553,7 @@ async def get_rollup_analysis(
 # Validation endpoint - shows reproducibility metrics
 @app.get("/api/v1/validation", tags=["Validation"])
 async def get_validation_stats(
-    _current_user: str = Depends(require_auth),
+    _current_user: str = Depends(optional_auth),
 ) -> dict[str, Any]:
     """
     Get reproducibility validation metrics.
@@ -640,7 +651,7 @@ async def get_validation_stats(
 # â”€â”€ Clear All Data endpoint (for fresh testing) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.delete("/api/v1/system/clear-all", tags=["System"])
 async def clear_all_data(
-    _current_user: str = Depends(require_auth),
+    _current_user: str = Depends(optional_auth),
 ) -> dict[str, Any]:
     """
     Clear ALL analysis data for fresh testing.

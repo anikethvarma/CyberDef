@@ -262,5 +262,413 @@
         ]
       }
     }
+  ],
+  "4ad48111-f50b-4f8f-8964-d6180af4b048": [
+    {
+      "analysis_id": "9bf0fc8c-e8e7-4089-bf68-5764bf92a2bd",
+      "chunk_id": "616cbcfc-800e-4091-af6b-090c3746e537",
+      "overall_confidence": 0.7749999999999999,
+      "requires_human_review": true,
+      "total_processing_time_ms": 1083243,
+      "created_at": "2026-04-01T11:38:59.536367",
+      "behavioral": {
+        "interpretation": "A brief, high-intensity burst of activity from an external actor with scanning behavior targeting 9 hosts.",
+        "is_suspicious": true,
+        "confidence": 0.8,
+        "reasoning": "The presence of a 'bursty' temporal pattern and scanning behavior from an external actor are indicative of potential malicious activity.",
+        "key_indicators": [
+          "Scanning behavior: 9 targets",
+          "External actor"
+        ]
+      },
+      "intent": {
+        "suspected_intent": "Potential reconnaissance or scanning activity",
+        "kill_chain_stage": "Reconnaissance",
+        "confidence": 0.7,
+        "alternative_intents": [
+          "Normal system maintenance",
+          "Legitimate network scanning"
+        ],
+        "reasoning": "The presence of brief, high-intensity bursts of activity (bursty temporal pattern) and the fact that 9 targets were scanned suggest reconnaissance or scanning behavior. However, this could also be normal system maintenance or legitimate network scanning, hence lower confidence."
+      },
+      "mitre": {
+        "technique_id": "T1046",
+        "technique_name": "Network Service Discovery",
+        "tactic": "Reconnaissance",
+        "justification": "The behavioral summary indicates 'Scanning behavior: 9 targets' in the red_flags section, which suggests an attempt to discover network services.",
+        "confidence": 0.8
+      },
+      "triage": {
+        "priority": "High",
+        "risk_reason": "Scanning behavior detected on 9 targets, indicating potential malicious activity.",
+        "recommended_action": "Investigate the source IP and review network logs for further evidence of scanning behavior.",
+        "confidence": 0.8,
+        "executive_summary": "Potential security threat detected, may impact business operations if left unchecked.",
+        "technical_summary": "Scanning behavior on 9 targets was observed within a brief time window (11:38-11:38 UTC). The actor is external and no specific ports or processes were involved. Further investigation is required to determine the intent behind this activity."
+      }
+    },
+    {
+      "analysis_id": "3869a4e9-4e09-4627-b982-4e1d9c946b9a",
+      "chunk_id": "ebb46a92-9a1d-4f37-a8fb-31b1dc0aaade",
+      "overall_confidence": 0.75,
+      "requires_human_review": true,
+      "total_processing_time_ms": 1272456,
+      "created_at": "2026-04-01T11:38:59.540916",
+      "behavioral": {
+        "interpretation": "The observed network activity exhibits scanning behavior and a high number of GET requests, which may indicate reconnaissance or information gathering.",
+        "is_suspicious": true,
+        "confidence": 0.7,
+        "reasoning": "The presence of port scanning behavior (15 targets) and the temporal pattern of brief, high-intensity bursts of activity are indicative of suspicious activity.",
+        "key_indicators": [
+          "Scanning behavior: 15 targets",
+          "Temporal pattern: bursty"
+        ]
+      },
+      "intent": {
+        "suspected_intent": "Potential reconnaissance or scanning activity",
+        "kill_chain_stage": "Reconnaissance",
+        "confidence": 0.7,
+        "alternative_intents": [
+          "Normal system maintenance",
+          "Legitimate user activity"
+        ],
+        "reasoning": "The presence of brief, high-intensity bursts of activity (bursty temporal pattern) and the scanning behavior targeting 15 targets suggest reconnaissance or scanning activity. However, the lack of other indicators and the possibility of normal system maintenance or legitimate user activity make this classification less certain."
+      },
+      "mitre": {
+        "technique_id": "T1046",
+        "technique_name": "Network Service Discovery",
+        "tactic": "Reconnaissance",
+        "justification": "The behavioral summary indicates 'Scanning behavior: 15 targets' in the red_flags field, which suggests an attempt to discover network services.",
+        "confidence": 0.8
+      },
+      "triage": {
+        "priority": "High",
+        "risk_reason": "The observed scanning behavior indicates a potential malicious activity targeting 15 internal systems.",
+        "recommended_action": "Investigate the source IP and review network logs for further details on the scanning activity.",
+        "confidence": 0.8,
+        "executive_summary": "Potential security breach detected, may impact business operations.",
+        "technical_summary": "The actor is exhibiting scanning behavior targeting internal systems, with a high rate of GET and POST requests. The user agents seen are unusual and may indicate a malicious activity."
+      }
+    },
+    {
+      "analysis_id": "e4266195-e254-48bf-855a-52608a443fcb",
+      "chunk_id": "29db9cc3-9543-44c2-9e43-901698520750",
+      "overall_confidence": 0.0,
+      "requires_human_review": false,
+      "total_processing_time_ms": 355730,
+      "created_at": "2026-04-01T11:57:02.839579",
+      "behavioral": {
+        "interpretation": "The observed network activity exhibits a high volume of GET and POST requests with no indication of malicious intent.",
+        "is_suspicious": false,
+        "confidence": 0.6,
+        "reasoning": "While the number of events is extremely high, it's within a very short time window, which could be indicative of legitimate activity or a misconfigured system.",
+        "key_indicators": [
+          "high_event_volume",
+          "short_time_window"
+        ]
+      }
+    },
+    {
+      "analysis_id": "f9736dbe-18ad-435e-a8f1-a233c9363793",
+      "chunk_id": "41531a52-629d-4702-8b40-5cf652fdb5ab",
+      "overall_confidence": 0.7749999999999999,
+      "requires_human_review": true,
+      "total_processing_time_ms": 1163450,
+      "created_at": "2026-04-01T12:00:12.004429",
+      "behavioral": {
+        "interpretation": "A brief, high-intensity burst of activity from an external actor with scanning behavior targeting 13 hosts.",
+        "is_suspicious": true,
+        "confidence": 0.8,
+        "reasoning": "The presence of scanning behavior and a high number of GET/HEAD requests in a short time window suggests potential reconnaissance or exploitation attempts.",
+        "key_indicators": [
+          "Scanning behavior: 13 targets",
+          "External actor with brief, high-intensity burst of activity"
+        ]
+      },
+      "intent": {
+        "suspected_intent": "Potential reconnaissance or scanning activity",
+        "kill_chain_stage": "Reconnaissance",
+        "confidence": 0.7,
+        "alternative_intents": [
+          "Normal system maintenance",
+          "Legitimate network scanning"
+        ],
+        "reasoning": "The presence of brief, high-intensity bursts of activity (bursty temporal pattern) and the fact that 13 targets were scanned suggest reconnaissance or scanning behavior. However, this could also be normal system maintenance or legitimate network scanning, which is why we have lower confidence."
+      },
+      "mitre": {
+        "technique_id": "T1046",
+        "technique_name": "Network Service Discovery",
+        "tactic": "Reconnaissance",
+        "justification": "The behavioral summary indicates 'Scanning behavior: 13 targets' in the red_flags section, which suggests an attempt to discover network services.",
+        "confidence": 0.8
+      },
+      "triage": {
+        "priority": "High",
+        "risk_reason": "The actor has exhibited scanning behavior targeting 13 systems, indicating a potential reconnaissance phase of an attack.",
+        "recommended_action": "Investigate the source IP and review network logs for further activity.",
+        "confidence": 0.8,
+        "executive_summary": "Potential security threat detected, may impact business operations if left unchecked.",
+        "technical_summary": "The actor's scanning behavior targeting 13 systems suggests a reconnaissance phase of an attack. Further investigation is required to determine the scope and intent of this activity."
+      }
+    },
+    {
+      "analysis_id": "6ac028f8-c6cb-4e06-9e1e-20ef95f82c7c",
+      "chunk_id": "6f5cdfe4-5429-4ea3-a0bb-b1942d93f113",
+      "overall_confidence": 0.7749999999999999,
+      "requires_human_review": true,
+      "total_processing_time_ms": 1175722,
+      "created_at": "2026-04-01T12:02:58.571567",
+      "behavioral": {
+        "interpretation": "A remote actor with scanning behavior targeting 12 hosts within a brief time window.",
+        "is_suspicious": true,
+        "confidence": 0.8,
+        "reasoning": "The presence of scanning behavior and the high number of targets within a short time frame suggests malicious activity.",
+        "key_indicators": [
+          "Scanning behavior: 12 targets",
+          "temporal_pattern: bursty"
+        ]
+      },
+      "intent": {
+        "suspected_intent": "Potential reconnaissance or scanning activity",
+        "kill_chain_stage": "Reconnaissance",
+        "confidence": 0.7,
+        "alternative_intents": [
+          "Normal system maintenance",
+          "Legitimate network scanning"
+        ],
+        "reasoning": "The presence of brief, high-intensity bursts of activity (bursty temporal pattern) and the fact that 12 targets were scanned suggest reconnaissance or scanning behavior. However, without further evidence, it's possible this is normal system maintenance or legitimate network scanning."
+      },
+      "mitre": {
+        "technique_id": "T1046",
+        "technique_name": "Network Service Discovery",
+        "tactic": "Reconnaissance",
+        "justification": "The behavioral summary indicates 'Scanning behavior: 12 targets' in the red_flags section, which suggests an attempt to discover network services.",
+        "confidence": 0.8
+      },
+      "triage": {
+        "priority": "High",
+        "risk_reason": "Scanning behavior detected on 12 targets, indicating potential malicious activity.",
+        "recommended_action": "Investigate the source IP and review network logs for further evidence of scanning behavior.",
+        "confidence": 0.8,
+        "executive_summary": "Potential security threat detected, may impact business operations if left unchecked.",
+        "technical_summary": "Scanning behavior on 12 targets was observed within a brief time window (11:38-11:38 UTC). The actor is external and no specific user agent or payload was identified. Further investigation is required to determine the intent behind this activity."
+      }
+    },
+    {
+      "analysis_id": "41d8d2c5-21df-4a6d-8e3c-fcb68e02bd1a",
+      "chunk_id": "68166071-f40f-47ca-8fb2-75e053daf792",
+      "overall_confidence": 0.7749999999999999,
+      "requires_human_review": true,
+      "total_processing_time_ms": 1193012,
+      "created_at": "2026-04-01T12:19:35.517237",
+      "behavioral": {
+        "interpretation": "A brief, high-intensity burst of activity was observed from an external actor with scanning behavior targeting 10 hosts.",
+        "is_suspicious": true,
+        "confidence": 0.8,
+        "reasoning": "The presence of scanning behavior and a high number of GET requests in a short time frame suggests potential reconnaissance or exploitation attempts.",
+        "key_indicators": [
+          "Scanning behavior: 10 targets",
+          "temporal_pattern: bursty",
+          "http_methods_seen: GET"
+        ]
+      },
+      "intent": {
+        "suspected_intent": "Potential reconnaissance or scanning activity",
+        "kill_chain_stage": "Reconnaissance",
+        "confidence": 0.7,
+        "alternative_intents": [
+          "Normal system maintenance",
+          "Legitimate network scanning"
+        ],
+        "reasoning": "The presence of brief, high-intensity bursts of activity (bursty temporal pattern) and the fact that 10 targets were scanned suggest reconnaissance or scanning behavior. However, it's possible this is normal system maintenance or legitimate network scanning."
+      },
+      "mitre": {
+        "technique_id": "T1046",
+        "technique_name": "Network Service Discovery",
+        "tactic": "Reconnaissance",
+        "justification": "The behavioral summary indicates 'Scanning behavior: 10 targets' under red_flags, suggesting the actor is actively discovering network services.",
+        "confidence": 0.8
+      },
+      "triage": {
+        "priority": "High",
+        "risk_reason": "Scanning behavior detected on 10 targets, indicating potential malicious activity.",
+        "recommended_action": "Investigate the source IP and review network logs for further evidence of scanning behavior.",
+        "confidence": 0.8,
+        "executive_summary": "Potential security threat detected, may impact business operations if left unchecked.",
+        "technical_summary": "Scanning behavior on 10 targets was observed within a brief time window (11:38 UTC). The source IP is unknown and has not been seen before in our network. Further investigation is required to determine the intent behind this activity."
+      }
+    },
+    {
+      "analysis_id": "6d3ed6d2-16f2-4938-bf68-882fe708c23b",
+      "chunk_id": "50870724-6593-48e3-8b33-da594a5a6908",
+      "overall_confidence": 0.7749999999999999,
+      "requires_human_review": true,
+      "total_processing_time_ms": 1193110,
+      "created_at": "2026-04-01T12:22:34.300997",
+      "behavioral": {
+        "interpretation": "A brief, high-intensity burst of activity was observed from an external actor with scanning behavior targeting 10 hosts.",
+        "is_suspicious": true,
+        "confidence": 0.8,
+        "reasoning": "The presence of a 'bursty' temporal pattern and scanning behavior from an external actor are indicative of potential reconnaissance or attack activity.",
+        "key_indicators": [
+          "Scanning behavior: 10 targets",
+          "External actor"
+        ]
+      },
+      "intent": {
+        "suspected_intent": "Potential reconnaissance or scanning activity",
+        "kill_chain_stage": "Reconnaissance",
+        "confidence": 0.7,
+        "alternative_intents": [
+          "Normal system maintenance",
+          "Legitimate network scanning"
+        ],
+        "reasoning": "The presence of brief, high-intensity bursts of activity (bursty temporal pattern) and scanning behavior targeting 10 targets suggests reconnaissance or scanning activity. However, the confidence is not high due to the lack of other indicators and the possibility that this could be normal system maintenance."
+      },
+      "mitre": {
+        "technique_id": "T1046",
+        "technique_name": "Network Service Discovery",
+        "tactic": "Reconnaissance",
+        "justification": "The behavioral summary indicates 'Scanning behavior: 10 targets' in the red_flags section, which suggests an attempt to discover network services.",
+        "confidence": 0.8
+      },
+      "triage": {
+        "priority": "High",
+        "risk_reason": "The actor exhibited scanning behavior targeting 10 different entities within a brief period.",
+        "recommended_action": "Investigate the source IP and review network logs for further activity.",
+        "confidence": 0.8,
+        "executive_summary": "Potential security threat detected, may impact business operations.",
+        "technical_summary": "The actor's scanning behavior indicates potential malicious intent. Reviewing network logs and investigating the source IP will help determine the scope of the threat."
+      }
+    },
+    {
+      "analysis_id": "655a573e-2184-4884-933b-8d4c2b061a74",
+      "chunk_id": "04a4a826-75cb-4f9c-a143-d16cc354650a",
+      "overall_confidence": 0.7749999999999999,
+      "requires_human_review": true,
+      "total_processing_time_ms": 1198940,
+      "created_at": "2026-04-01T12:39:28.540412",
+      "behavioral": {
+        "interpretation": "A brief, high-intensity burst of activity from an external actor with scanning behavior targeting 10 hosts.",
+        "is_suspicious": true,
+        "confidence": 0.8,
+        "reasoning": "The presence of scanning behavior and a brief, high-intensity burst of activity from an external actor suggests potential malicious intent.",
+        "key_indicators": [
+          "Scanning behavior: 10 targets",
+          "temporal_pattern: bursty"
+        ]
+      },
+      "intent": {
+        "suspected_intent": "Potential reconnaissance or scanning activity",
+        "kill_chain_stage": "Reconnaissance",
+        "confidence": 0.7,
+        "alternative_intents": [
+          "Normal system maintenance",
+          "Legitimate network scanning"
+        ],
+        "reasoning": "The presence of brief, high-intensity bursts of activity (bursty temporal pattern) and the actor's external origin suggest potential reconnaissance or scanning activity. The fact that 10 targets were scanned also supports this interpretation. However, it is possible that this behavior could be attributed to normal system maintenance or legitimate network scanning."
+      },
+      "mitre": {
+        "technique_id": "T1046",
+        "technique_name": "Network Service Discovery",
+        "tactic": "Reconnaissance",
+        "justification": "The behavioral summary indicates 'Scanning behavior: 10 targets' in the red_flags section, which suggests an attempt to discover network services.",
+        "confidence": 0.8
+      },
+      "triage": {
+        "priority": "High",
+        "risk_reason": "Scanning behavior detected on 10 targets, indicating potential malicious activity.",
+        "recommended_action": "Investigate the source IP and review network logs for further evidence of scanning behavior.",
+        "confidence": 0.8,
+        "executive_summary": "Potential security threat detected, may impact business operations if not addressed promptly.",
+        "technical_summary": "Scanning behavior on 10 targets was observed within a brief time window (11:38 UTC). The source IP is unknown and no other suspicious activity was detected. Further investigation is required to determine the nature of this activity."
+      }
+    },
+    {
+      "analysis_id": "19535ce4-f920-4e71-b7a7-e1b0fcbc2acc",
+      "chunk_id": "a9abe00c-220e-4d01-bdec-e50f011eb775",
+      "overall_confidence": 0.7749999999999999,
+      "requires_human_review": true,
+      "total_processing_time_ms": 1208136,
+      "created_at": "2026-04-01T12:42:27.422746",
+      "behavioral": {
+        "interpretation": "A remote actor with scanning behavior targeting 9 hosts within a brief time window.",
+        "is_suspicious": true,
+        "confidence": 0.8,
+        "reasoning": "The presence of scanning behavior and the temporal pattern of brief, high-intensity bursts of activity are indicative of potential malicious activity.",
+        "key_indicators": [
+          "Scanning behavior: 9 targets",
+          "temporal_pattern: bursty"
+        ]
+      },
+      "intent": {
+        "suspected_intent": "Potential reconnaissance or scanning activity",
+        "kill_chain_stage": "Reconnaissance",
+        "confidence": 0.7,
+        "alternative_intents": [
+          "Normal system maintenance",
+          "Legitimate network scanning"
+        ],
+        "reasoning": "The presence of brief, high-intensity bursts of activity (bursty temporal pattern) and the fact that 9 targets were scanned suggest reconnaissance or scanning behavior. However, it's possible that this is normal system maintenance or legitimate network scanning."
+      },
+      "mitre": {
+        "technique_id": "T1046",
+        "technique_name": "Network Service Discovery",
+        "tactic": "Reconnaissance",
+        "justification": "The behavioral summary indicates 'Scanning behavior: 9 targets' under red_flags, suggesting the actor is actively discovering network services.",
+        "confidence": 0.8
+      },
+      "triage": {
+        "priority": "High",
+        "risk_reason": "Scanning behavior detected on 9 targets, indicating potential malicious activity.",
+        "recommended_action": "Investigate the source IP and review network logs for further evidence of scanning behavior.",
+        "confidence": 0.8,
+        "executive_summary": "Potential security threat detected, may impact business operations if not addressed promptly.",
+        "technical_summary": "Scanning behavior on 9 targets was observed within a brief time window (11:38-11:38 UTC). The source IP is external and no specific user agent or payload was identified. Further investigation is required to determine the intent behind this activity."
+      }
+    },
+    {
+      "analysis_id": "cc956810-2d33-4ba5-ab79-63e618207323",
+      "chunk_id": "3293fcd6-4154-4e1d-a89f-5b60e84168ce",
+      "overall_confidence": 0.7875,
+      "requires_human_review": true,
+      "total_processing_time_ms": 870427,
+      "created_at": "2026-04-01T12:59:27.489275",
+      "behavioral": {
+        "interpretation": "A brief, high-intensity burst of activity was observed from an external actor with scanning behavior targeting 8 hosts.",
+        "is_suspicious": true,
+        "confidence": 0.7,
+        "reasoning": "The presence of a 'bursty' temporal pattern and scanning behavior from an external actor are indicators of potential malicious activity.",
+        "key_indicators": [
+          "Scanning behavior: 8 targets",
+          "External actor"
+        ]
+      },
+      "intent": {
+        "suspected_intent": "Potential reconnaissance or scanning activity",
+        "kill_chain_stage": "Reconnaissance",
+        "confidence": 0.7,
+        "alternative_intents": [
+          "Normal system maintenance",
+          "Legitimate monitoring activity"
+        ],
+        "reasoning": "The presence of brief, high-intensity bursts of activity (bursty temporal pattern) and scanning behavior targeting 8 systems suggests reconnaissance or scanning activity. However, the lack of other indicators and the presence of legitimate user agents (e.g., Azure Traffic Manager Endpoint Monitor) reduces confidence."
+      },
+      "mitre": {
+        "technique_id": "T1046",
+        "technique_name": "Network Service Discovery",
+        "tactic": "Discovery",
+        "justification": "The behavioral summary indicates 'Scanning behavior: 8 targets' in the red_flags section, which suggests an attempt to discover network services.",
+        "confidence": 0.9
+      },
+      "triage": {
+        "priority": "High",
+        "risk_reason": "Scanning behavior detected on 8 targets, indicating potential malicious activity.",
+        "recommended_action": "Investigate the source IP and review network logs for further details.",
+        "confidence": 0.85,
+        "executive_summary": "Potential security threat detected, may impact business operations.",
+        "technical_summary": "Scanning behavior was observed on 8 targets within a brief time window (11:38 UTC). The user agents seen include 'Azure Traffic Manager Endpoint Monitor' and 'okhttp/4.9.0', which could be indicative of malicious activity. Further investigation is required to confirm the threat."
+      }
+    }
   ]
 }

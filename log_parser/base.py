@@ -116,6 +116,41 @@ class BaseParser(ABC):
         
         return None
     
+    def _clean_value(self, value: Any, placeholders: list[str] = None) -> str | None:
+        """
+        Clean a value by treating common placeholders as None.
+        
+        Args:
+            value: The value to clean
+            placeholders: List of placeholder strings to treat as None (default: ["-", ""])
+            
+        Returns:
+            Cleaned string value or None if it's a placeholder
+        """
+        if value is None:
+            return None
+        
+        if placeholders is None:
+            placeholders = ["-", ""]
+        
+        s = str(value).strip()
+        if s in placeholders:
+            return None
+        
+        return s
+    
+    def _clean_ip(self, value: Any) -> str | None:
+        """
+        Clean an IP address value, treating "-" and other placeholders as None.
+        
+        Args:
+            value: The IP address value to clean
+            
+        Returns:
+            Cleaned IP string or None if it's a placeholder
+        """
+        return self._clean_value(value, placeholders=["-", "", "0.0.0.0"])
+    
     def get_stats(self) -> dict[str, Any]:
         """Get parsing statistics."""
         return {

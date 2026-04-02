@@ -301,6 +301,7 @@ class ReportWriter:
         file_id: str,
         filename: str,
         incidents: list[Any],
+        emp_id: str | None = None,
     ) -> Path:
         """Generate a machine-readable incident JSON report for a file."""
         ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
@@ -310,15 +311,17 @@ class ReportWriter:
 
         incident_rows = [self._incident_to_json(incident) for incident in incidents]
         payload = {
+            "MI_ID": "GenAI_SOC",  # Static key-value pair
             "file_id": file_id,
             "filename": filename,
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "incident_count": len(incident_rows),
+            "emp_id": emp_id,  # Employee ID from authentication context
             "incidents": incident_rows,
         }
 
         report_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-        logger.info(f"Incident JSON report generated | path={report_path}, incidents={len(incident_rows)}")
+        logger.info(f"Incident JSON report generated | path={report_path}, incidents={len(incident_rows)}, emp_id={emp_id}")
         return report_path
 
     def _incident_to_json(self, incident: Any) -> dict[str, Any]:
@@ -338,6 +341,45 @@ class ReportWriter:
 
         mitre_techniques = data.get("mitre_techniques") or []
         top_mitre = mitre_techniques[0] if mitre_techniques else {}
+        
+        # Extract source IP (primary actor)
+        source_ip = data.get("source_ip") or data.get("primary_actor_ip")
+        
+        # Extract destination IP (affected host)
+        destination_ip = data.get("destination_ip")
+        if not destination_ip:
+            affected_hosts = data.get("affected_hosts", [])
+            if affected_hosts:
+                destination_ip = affected_hosts[0]
+        
+        # Extract hostname from destination or affected hosts
+        hostname = None
+        if destination_ip:
+            hostname = destination_ip
+        elif data.get("affected_hosts"):
+            hostname = data.get("affected_hosts")[0]
+        
+        # Extract raw log for correlation analysis
+        raw_log = data.get("raw_log", "")
+        
+        # Build correlation context with proper signature attacks, IPs, hostname, and raw logs
+        correlation_context = {
+            "signature_attacks": [],
+            "src_ip": source_ip,
+            "dst_ip": destination_ip,
+            "hostname": hostname,
+            "raw_logs": [raw_log] if raw_log else [],
+            "correlation_reason": self._build_correlation_reason(data),
+        }
+        
+        # Extract signature attacks from detection rule and MITRE techniques
+        if data.get("detection_rule"):
+            correlation_context["signature_attacks"].append(data.get("detection_rule"))
+        if data.get("attack_name"):
+            correlation_context["signature_attacks"].append(data.get("attack_name"))
+        for tech in mitre_techniques:
+            if isinstance(tech, dict) and tech.get("technique_name"):
+                correlation_context["signature_attacks"].append(tech.get("technique_name"))
 
         return {
             "incident_id": data.get("incident_id"),
@@ -347,9 +389,10 @@ class ReportWriter:
             "file_ids": data.get("file_ids", []),
             "first_seen": data.get("first_seen"),
             "last_seen": data.get("last_seen"),
-            "raw_log": data.get("raw_log"),
-            "source_ip": data.get("source_ip") or data.get("primary_actor_ip"),
-            "destination_ip": data.get("destination_ip"),
+            "raw_log": raw_log,
+            "source_ip": source_ip,
+            "destination_ip": destination_ip,
+            "hostname": hostname,
             "suspicious": data.get("suspicious", True),
             "suspicious_indicator": data.get("suspicious_indicator"),
             "attack_name": data.get("attack_name") or data.get("detection_rule") or data.get("title"),
@@ -358,7 +401,44 @@ class ReportWriter:
             "confidence_score": confidence_score,
             "mitre_tactic": data.get("mitre_tactic") or data.get("primary_tactic") or top_mitre.get("tactic"),
             "mitre_technique": data.get("mitre_technique") or top_mitre.get("technique_id"),
+            "correlation": correlation_context,
         }
+    
+    def _build_correlation_reason(self, data: dict[str, Any]) -> str:
+        """Build a strong reason for correlation based on incident data."""
+        reasons = []
+        
+        # Detection tier and source
+        detection_tier = data.get("detection_tier", "unknown")
+        source = data.get("source", "unknown")
+        
+        if detection_tier == "correlation":
+            reasons.append(f"Cross-batch correlation detected via {data.get('detection_rule', 'unknown rule')}")
+        elif detection_tier == "deterministic":
+            reasons.append(f"Deterministic rule match: {data.get('detection_rule', 'unknown')}")
+        elif source == "AI_DETECTION":
+            reasons.append("AI-based behavioral analysis detected suspicious activity")
+        
+        # MITRE ATT&CK context
+        mitre_tactic = data.get("mitre_tactic") or data.get("primary_tactic")
+        mitre_technique = data.get("mitre_technique")
+        if mitre_tactic and mitre_technique:
+            reasons.append(f"MITRE ATT&CK: {mitre_tactic} - {mitre_technique}")
+        
+        # Attack patterns
+        attack_categories = data.get("attack_categories_seen", [])
+        if attack_categories:
+            reasons.append(f"Attack categories: {', '.join(attack_categories[:3])}")
+        
+        # Confidence and priority
+        confidence = data.get("overall_confidence", 0.0)
+        priority = data.get("priority", "unknown")
+        if confidence >= 0.8:
+            reasons.append(f"High confidence detection ({confidence:.2f})")
+        if priority in ["CRITICAL", "HIGH"]:
+            reasons.append(f"{priority} priority incident")
+        
+        return " | ".join(reasons) if reasons else "Incident detected through automated analysis"
 
     def _get_recommendation(self, category: str, severity: str) -> str:
         """Get specific recommendation based on threat category."""

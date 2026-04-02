@@ -140,8 +140,8 @@ class FirewallLogParser(BaseParser):
         timestamp = self._parse_timestamp(data)
         
         # Parse network tuple
-        src_ip = self.find_column(data, "src_ip")
-        dst_ip = self.find_column(data, "dst_ip")
+        src_ip = self._clean_ip(self.find_column(data, "src_ip"))
+        dst_ip = self._clean_ip(self.find_column(data, "dst_ip"))
         src_port = self._parse_port(self.find_column(data, "src_port"))
         dst_port = self._parse_port(self.find_column(data, "dst_port"))
         
@@ -150,7 +150,7 @@ class FirewallLogParser(BaseParser):
         protocol = self._normalize_protocol(self.find_column(data, "protocol"))
         
         # Parse application
-        application = self.find_column(data, "application")
+        application = self._clean_value(self.find_column(data, "application"))
         
         # Parse traffic metrics
         bytes_sent = self._parse_int(self.find_column(data, "bytes_sent"))
@@ -187,13 +187,13 @@ class FirewallLogParser(BaseParser):
             file_id=raw_row.file_id,
             row_hash=raw_row.row_hash,
             timestamp=timestamp,
-            source_address=str(src_ip) if src_ip else None,
-            destination_address=str(dst_ip) if dst_ip else None,
+            source_address=src_ip,
+            destination_address=dst_ip,
             source_port=src_port,
             destination_port=dst_port,
             action=action,
             protocol=protocol,
-            application=str(application) if application else None,
+            application=application,
             bytes_sent=bytes_sent,
             bytes_received=bytes_received,
             vendor_specific=vendor_fields,
