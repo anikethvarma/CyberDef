@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from typing import Any
+from typing import Any, Optional
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field
@@ -42,8 +42,8 @@ class ThreatMatch(BaseModel):
     confidence: float = Field(ge=0.0, le=1.0)
     evidence: str
     matched_field: str
-    timestamp: datetime | None = None
-    src_ip: str | None = None
+    timestamp: Optional[datetime] = None
+    src_ip: Optional[str] = None
 
 
 class DeterministicThreat(BaseModel):
@@ -58,10 +58,10 @@ class DeterministicThreat(BaseModel):
     match_count: int
     sample_evidence: list[str] = Field(default_factory=list)
     affected_event_ids: list[UUID] = Field(default_factory=list)
-    src_ip: str | None = None
+    src_ip: Optional[str] = None
     src_ips: list[str] = Field(default_factory=list)
-    first_seen: datetime | None = None
-    last_seen: datetime | None = None
+    first_seen: Optional[datetime] = None
+    last_seen: Optional[datetime] = None
     detection_tier: str = "deterministic"
 
 

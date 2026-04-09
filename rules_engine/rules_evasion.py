@@ -1,3 +1,4 @@
+from typing import Optional
 """Family 6: Evasion, Cache & Redirect Rules"""
 
 from __future__ import annotations
@@ -53,7 +54,7 @@ class OpenRedirectRule(ThreatRule):
 
         return True
 
-    def match(self, event: NormalizedEvent) -> ThreatMatch | None:
+    def match(self, event: NormalizedEvent) -> Optional[ThreatMatch]:
         search_surface = " ".join(filter(None, [event.uri_query, event.original_message]))
         if not search_surface:
             return None
@@ -109,46 +110,8 @@ class CachePoisoningRule(ThreatRule):
     ]
 
 
-class ClickjackingVectorRule(ThreatRule):
-    name = "clickjacking_vector"
-    category = "clickjacking"
-    family = ThreatFamily.CACHE_REDIRECT
-    severity = ThreatSeverity.LOW
-    confidence = 0.4
-    description = "Potential clickjacking vector"
-    check_fields = []
-
-    def match(self, event: NormalizedEvent) -> ThreatMatch | None:
-        # Only flag if it's a sensitive endpoint without X-Frame-Options
-        uri = (event.uri_path or "").lower()
-        sensitive = any(
-            keyword in uri
-            for keyword in ["/login", "/payment", "/transfer", "/account", "/admin"]
-        )
-        if not sensitive:
-            return None
-
-        # Check if X-Frame-Options header is missing (we'd need to check response headers)
-        # For now, just flag sensitive endpoints as potential vectors
-        return ThreatMatch(
-            event_id=event.event_id,
-            rule_name=self.name,
-            category=self.category,
-            family=self.family,
-            severity=self.severity,
-            confidence=self.confidence,
-            evidence=f"Sensitive endpoint without frame protection: {uri[:100]}",
-            matched_field="uri_path",
-            timestamp=event.timestamp,
-            src_ip=event.src_ip,
-        )
-
-
-EVASION_RULES = []
-
 CACHE_REDIRECT_RULES = [
     OpenRedirectRule,
     CacheDeceptionRule,
     CachePoisoningRule,
-    ClickjackingVectorRule,
 ]

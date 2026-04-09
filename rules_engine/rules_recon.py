@@ -1,3 +1,4 @@
+from typing import Optional
 """Families 3 & 4: Information Leakage & Recon (11) + Path & File Access (5)"""
 
 from __future__ import annotations
@@ -84,7 +85,7 @@ class ErrorDetailDisclosureRule(ThreatRule):
     description = "Large 5xx response possibly containing error details"
     check_fields = []
 
-    def match(self, event: NormalizedEvent) -> ThreatMatch | None:
+    def match(self, event: NormalizedEvent) -> Optional[ThreatMatch]:
         if event.http_status and event.http_status >= 500:
             resp_size = event.response_size or event.bytes_sent or 0
             if resp_size > 5000:
@@ -181,7 +182,7 @@ class DataExfiltrationPatternRule(ThreatRule):
     check_fields = []
     _SENSITIVE = ["/export", "/download", "/dump", "/backup", "/api/users", "/api/data"]
 
-    def match(self, event: NormalizedEvent) -> ThreatMatch | None:
+    def match(self, event: NormalizedEvent) -> Optional[ThreatMatch]:
         uri = (event.uri_path or "").lower()
         resp_size = event.response_size or event.bytes_sent or 0
         if resp_size > 100000:

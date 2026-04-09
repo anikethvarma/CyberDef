@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import time
 from collections import defaultdict
-from typing import Any
+from typing import Any, Optional
 from uuid import UUID
 
 from core.logging import get_logger

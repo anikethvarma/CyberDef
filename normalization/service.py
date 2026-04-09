@@ -1,4 +1,4 @@
-﻿"""
+"""
 Normalization Service
 
 Transforms parsed events into the normalized internal schema.
@@ -109,9 +109,8 @@ class NormalizationService:
                 self.normalization_errors += 1
                 return None
             
-            # If src_ip is missing but dst_ip exists, treat dst_ip as the source (client IP)
-            # Keep dst_ip as None to avoid duplication
-            if not src_ip and dst_ip:
+            # If dst_ip is available, prioritize it as the source (per requirement)
+            if dst_ip:
                 src_ip = dst_ip
                 dst_ip = None
             

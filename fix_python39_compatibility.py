@@ -17,12 +17,26 @@ def fix_union_types(file_path):
     original_content = content
     
     # Add Optional import if not present
-    if 'from typing import' in content and 'Optional' not in content:
-        content = re.sub(
-            r'from typing import ([^)]+)',
-            r'from typing import \1, Optional',
-            content
-        )
+    if 'Optional[' in content:
+        if not re.search(r'from typing import .*?\bOptional\b', content):
+            if 'from typing import' in content:
+                # Handle from typing import (A, B)
+                if re.search(r'from typing import \([^)]+\)', content):
+                    content = re.sub(
+                        r'from typing import \(([^)]+)\)',
+                        r'from typing import (\1, Optional)',
+                        content
+                    )
+                else:
+                    # Handle from typing import A, B
+                    content = re.sub(
+                        r'from typing import ([^\n]+)',
+                        r'from typing import \1, Optional',
+                        content
+                    )
+            else:
+                # Add import line if none exists
+                content = "from typing import Optional\n" + content
     
     # Replace union types with Optional
     # Pattern: type | None = value
@@ -47,23 +61,21 @@ def main():
     """Fix Python 3.9 compatibility in shared models."""
     print("Fixing Python 3.9 compatibility...")
     
-    # Files to fix
-    files_to_fix = [
-        'shared_models/events.py',
-        'shared_models/files.py', 
-        'shared_models/incidents.py',
-        'shared_models/chunks.py',
-        'shared_models/agents.py'
-    ]
+    # Scans for all files in specified directories
+    directories = ['shared_models', 'rules_engine', 'rollups', 'raw_storage', 'log_parser']
     
     fixed_count = 0
-    for file_path in files_to_fix:
-        path = Path(file_path)
-        if path.exists():
-            if fix_union_types(path):
-                fixed_count += 1
-        else:
-            print(f"  ! File not found: {file_path}")
+    for directory in directories:
+        dir_path = Path(directory)
+        if dir_path.exists():
+            for path in dir_path.glob('*.py'):
+                if fix_union_types(path):
+                    fixed_count += 1
+    
+    # Also fix main.py
+    if Path('main.py').exists():
+        if fix_union_types(Path('main.py')):
+            fixed_count += 1
     
     print(f"\nFixed {fixed_count} files for Python 3.9 compatibility")
     

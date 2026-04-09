@@ -11,7 +11,7 @@ import hashlib
 import shutil
 from datetime import datetime
 from pathlib import Path
-from typing import AsyncIterator
+from typing import AsyncIterator, Optional
 from uuid import UUID
 
 import aiofiles
@@ -176,7 +176,7 @@ class RawStorageService:
     
     async def list_files(
         self,
-        date: datetime | None = None,
+        date: Optional[datetime] = None,
     ) -> list[Path]:
         """
         List stored files.

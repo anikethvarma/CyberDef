@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import re
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Optional
 
 from rules_engine.models import ThreatMatch, ThreatSeverity, ThreatFamily
 from shared_models.events import NormalizedEvent
@@ -40,7 +40,7 @@ class ThreatRule(ABC):
     # Override patterns in subclasses
     patterns: list[str] = []
 
-    def match(self, event: NormalizedEvent) -> ThreatMatch | None:
+    def match(self, event: NormalizedEvent) -> Optional[ThreatMatch]:
         """
         Check if an event matches this rule.
         Returns ThreatMatch if matched, None otherwise.
@@ -87,13 +87,13 @@ class RateBasedRule(ThreatRule):
     threshold: int = 10
     window_field: str = "src_ip"  # Group by this field
 
-    def match(self, event: NormalizedEvent) -> ThreatMatch | None:
+    def match(self, event: NormalizedEvent) -> Optional[ThreatMatch]:
         """Rate-based rules don't match individual events — handled by engine."""
         return None
 
     @abstractmethod
     def check_group(
         self, events: list[NormalizedEvent], group_key: str
-    ) -> ThreatMatch | None:
+    ) -> Optional[ThreatMatch]:
         """Check a group of events for rate-based threats."""
         pass

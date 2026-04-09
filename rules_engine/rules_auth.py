@@ -5,6 +5,7 @@ Family 2: Authentication, Session & Access Control Rules (9 rules)
 from __future__ import annotations
 import re
 from urllib.parse import urlparse
+from typing import Any, Optional
 
 from rules_engine.base_rule import ThreatRule, RateBasedRule
 from rules_engine.models import ThreatMatch, ThreatSeverity, ThreatFamily
@@ -32,7 +33,7 @@ class BruteForceLoginRule(RateBasedRule):
         "/oauth/token",
     }
 
-    def check_group(self, events: list[NormalizedEvent], group_key: str) -> ThreatMatch | None:
+    def check_group(self, events: list[NormalizedEvent], group_key: str) -> Optional[ThreatMatch]:
         auth_failures = 0
         last_event = None
         for ev in events:
@@ -66,7 +67,7 @@ class CredentialStuffingRule(RateBasedRule):
     description = "Credential stuffing: many distinct login attempts from same IP"
     threshold = 20
 
-    def check_group(self, events: list[NormalizedEvent], group_key: str) -> ThreatMatch | None:
+    def check_group(self, events: list[NormalizedEvent], group_key: str) -> Optional[ThreatMatch]:
         login_401s = [ev for ev in events if ev.http_status == 401]
         if len(login_401s) >= self.threshold:
             return ThreatMatch(
@@ -103,7 +104,7 @@ class AuthenticationFailuresRule(RateBasedRule):
         "/password",
     }
 
-    def check_group(self, events: list[NormalizedEvent], group_key: str) -> ThreatMatch | None:
+    def check_group(self, events: list[NormalizedEvent], group_key: str) -> Optional[ThreatMatch]:
         failures: list[NormalizedEvent] = []
         for ev in events:
             if ev.http_status not in (401, 403):
@@ -151,7 +152,7 @@ class JWTManipulationRule(ThreatRule):
     confidence = 0.75
     description = "JWT token manipulation attempt"
     check_fields = ["uri_path", "uri_query", "original_message"]
-    def match(self, event: NormalizedEvent) -> ThreatMatch | None:
+    def match(self, event: NormalizedEvent) -> Optional[ThreatMatch]:
         checkfields = [event.uri_path, event.uri_query, event.original_message]
         #jwt_exclude = r"(?i)ScormEngineInterface"
         if not any(re.search( r"(?i)ScormEngineInterface", f or "") for f in checkfields):
@@ -196,7 +197,7 @@ class CSRFIndicatorRule(ThreatRule):
     
     BASE_DOMAIN = "ultimatix.net"
 
-    def match(self, event: NormalizedEvent) -> ThreatMatch | None:
+    def match(self, event: NormalizedEvent) -> Optional[ThreatMatch]:
         if event.http_method not in ("POST", "PUT", "DELETE", "PATCH"):
             return None
 
@@ -209,6 +210,14 @@ class CSRFIndicatorRule(ThreatRule):
             return None
             
         ref_host = ref_host.lower()
+        
+        # Domain exclusions
+        if (ref_host.endswith("tcsapps.com") or 
+            "microsoftonline.com" in ref_host or 
+            "s1-eu.ariba.com" in ref_host or 
+            ref_host == "t.mediassist.in"):
+            return None
+
         base_domain = self.BASE_DOMAIN.lower()
         
         is_same_site = ref_host == base_domain or ref_host.endswith(f".{base_domain}")
@@ -254,7 +263,7 @@ class BrokenFunctionAuthRule(ThreatRule):
         "/wp-admin/admin-ajax",
     ]
 
-    def match(self, event: NormalizedEvent) -> ThreatMatch | None:
+    def match(self, event: NormalizedEvent) -> Optional[ThreatMatch]:
         uri = (event.uri_path or "").lower()
         if event.http_status and 200 <= event.http_status < 300:
             for path in self._ADMIN_PATHS:

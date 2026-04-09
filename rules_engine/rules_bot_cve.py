@@ -1,7 +1,8 @@
-﻿"""Families 7, 8, 9: Bot/Scanner (6) + Rate/DoS (6) + CVE (5)"""
+"""Families 7, 8, 9: Bot/Scanner (6) + Rate/DoS (6) + CVE (5)"""
 
 from __future__ import annotations
 
+from typing import Any, Optional
 from rules_engine.base_rule import ThreatRule, RateBasedRule
 from rules_engine.models import ThreatMatch, ThreatSeverity, ThreatFamily
 from shared_models.events import NormalizedEvent
@@ -52,9 +53,24 @@ class Rapid404Rule(RateBasedRule):
     description = "Rapid 404 generation (directory brute-forcing)"
     threshold = 50
 
-    def check_group(self, events: list[NormalizedEvent], group_key: str) -> ThreatMatch | None:
+    def check_group(self, events: list[NormalizedEvent], group_key: str) -> Optional[ThreatMatch]:
+        # Check for Public IP only
+        try:
+            ip = ipaddress.ip_address(group_key)
+            if ip.is_private or ip.is_loopback or ip.is_link_local:
+                return None
+        except ValueError:
+            pass
+
         not_found = [ev for ev in events if ev.http_status == 404]
-        if len(not_found) >= self.threshold:
+        successes = [ev for ev in events if ev.http_status == 200]
+
+        # Should contain only 404 and zero (or <= 1 200 return code)
+        if len(successes) > 1:
+            return None
+
+        unique_uris = {ev.uri_path for ev in not_found if ev.uri_path}
+        if len(unique_uris) >= self.threshold:
             last = not_found[-1]
             return ThreatMatch(
                 event_id=last.event_id,
@@ -63,7 +79,7 @@ class Rapid404Rule(RateBasedRule):
                 family=self.family,
                 severity=self.severity,
                 confidence=self.confidence,
-                evidence=f"{len(not_found)} 404s from {group_key}",
+                evidence=f"{len(unique_uris)} unique 404s from {group_key} (successes: {len(successes)})",
                 matched_field="http_status",
                 timestamp=last.timestamp,
                 src_ip=last.src_ip,
@@ -80,7 +96,7 @@ class ContentScrapingRule(RateBasedRule):
     description = "Systematic content scraping"
     threshold = 200
 
-    def check_group(self, events: list[NormalizedEvent], group_key: str) -> ThreatMatch | None:
+    def check_group(self, events: list[NormalizedEvent], group_key: str) -> Optional[ThreatMatch]:
         # Skip private/internal IPs
         ip = group_key
         try:
@@ -146,7 +162,7 @@ class HTTPFloodRule(RateBasedRule):
     description = "HTTP flood: extremely high request rate"
     threshold = 500
 
-    def check_group(self, events: list[NormalizedEvent], group_key: str) -> ThreatMatch | None:
+    def check_group(self, events: list[NormalizedEvent], group_key: str) -> Optional[ThreatMatch]:
         if len(events) >= self.threshold:
             return ThreatMatch(
                 event_id=events[-1].event_id,
@@ -187,7 +203,7 @@ class RateLimitBypassAfterThrottleRule(RateBasedRule):
     description = "Sustained request bursts despite repeated HTTP 429 throttling"
     threshold = 60
 
-    def check_group(self, events: list[NormalizedEvent], group_key: str) -> ThreatMatch | None:
+    def check_group(self, events: list[NormalizedEvent], group_key: str) -> Optional[ThreatMatch]:
         if len(events) < self.threshold:
             return None
 
@@ -214,28 +230,58 @@ class RateLimitBypassAfterThrottleRule(RateBasedRule):
         )
 
 
-class SlowlorisRule(ThreatRule):
-    name = "slowloris_indicator"
+class SlowlorisRule(RateBasedRule):
+    name = "slowloris_suspected"
     category = "denial_of_service"
     family = ThreatFamily.RATE_DOS
     severity = ThreatSeverity.HIGH
-    confidence = 0.5
-    description = "Slowloris indicator: very long request"
-    check_fields = []
+    confidence = 0.7
+    description = "Slowloris attack suspected: multi-factor scoring"
+    threshold = 100
 
-    def match(self, event: NormalizedEvent) -> ThreatMatch | None:
-        if event.duration_ms and event.duration_ms > 30000:
+    def check_group(self, events: list[NormalizedEvent], group_key: str) -> Optional[ThreatMatch]:
+        if not events:
+            return None
+            
+        score = 0
+        count = len(events)
+        
+        # 1. request_count_from_srcip > 100
+        if count > 100:
+            score += 1
+            
+        # 2. avg(event.bytes_sent) < 500
+        bytes_sent_values = [ev.bytes_sent for ev in events if ev.bytes_sent is not None]
+        if bytes_sent_values:
+            avg_bytes = sum(bytes_sent_values) / len(bytes_sent_values)
+            if avg_bytes < 500:
+                score += 1
+        
+        # 3. len(unique_urls) <= 3
+        unique_urls = {ev.uri_path for ev in events if ev.uri_path}
+        if len(unique_urls) <= 3:
+            score += 1
+            
+        # 4. event.duration_ms > 0 and avg(event.duration_ms) > 30000
+        durations = [ev.duration_ms for ev in events if ev.duration_ms and ev.duration_ms > 0]
+        if durations:
+            avg_duration = sum(durations) / len(durations)
+            if avg_duration > 30000:
+                score += 1
+                
+        if score >= 3:
+            last = events[-1]
             return ThreatMatch(
-                event_id=event.event_id,
+                event_id=last.event_id,
                 rule_name=self.name,
                 category=self.category,
                 family=self.family,
                 severity=self.severity,
                 confidence=self.confidence,
-                evidence=f"Request took {event.duration_ms}ms",
-                matched_field="duration_ms",
-                timestamp=event.timestamp,
-                src_ip=event.src_ip,
+                evidence=f"Slowloris score {score}/4 (requests: {count}, unique_urls: {len(unique_urls)})",
+                matched_field="multi",
+                timestamp=last.timestamp,
+                src_ip=last.src_ip,
             )
         return None
 
@@ -249,7 +295,7 @@ class APIRateAbuseRule(RateBasedRule):
     description = "API rate abuse"
     threshold = 300
 
-    def check_group(self, events: list[NormalizedEvent], group_key: str) -> ThreatMatch | None:
+    def check_group(self, events: list[NormalizedEvent], group_key: str) -> Optional[ThreatMatch]:
         api_evts = [ev for ev in events if ev.uri_path and "/api/" in ev.uri_path.lower()]
         if len(api_evts) >= self.threshold:
             return ThreatMatch(
@@ -275,14 +321,22 @@ class ResourceExhaustionRule(RateBasedRule):
     confidence = 0.5
     description = "Repeated hits to expensive endpoints"
     threshold = 30
-    _EXPENSIVE = ["/search", "/export", "/report", "/download", "/generate", "/process"]
+    _EXPENSIVE = [
+        r"^/search(/|$)",
+        r"^/export(/|$)",
+        r"^/report(/|$)",
+        r"^/download(/|$)",
+        r"^/generate(/|$)",
+        r"^/process(/|$)"
+    ]
 
-    def check_group(self, events: list[NormalizedEvent], group_key: str) -> ThreatMatch | None:
+    def check_group(self, events: list[NormalizedEvent], group_key: str) -> Optional[ThreatMatch]:
+        import re
         hits = 0
         last = None
         for ev in events:
             uri = (ev.uri_path or "").lower()
-            if any(ep in uri for ep in self._EXPENSIVE):
+            if any(re.search(ep, uri) for ep in self._EXPENSIVE):
                 hits += 1
                 last = ev
         if hits >= self.threshold and last:
