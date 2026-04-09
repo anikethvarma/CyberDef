@@ -1,4 +1,4 @@
-﻿"""
+"""
 Day-Level Correlator
 
 Tier 2: Cross-batch correlation rules that detect threats invisible in
@@ -69,8 +69,6 @@ class DayLevelCorrelator:
             all_findings.extend(self._check_off_hours(actor))
             all_findings.extend(self._check_data_exfil(actor))
 
-        # Campaign detection (requires cross-actor analysis)
-        all_findings.extend(self._check_campaign())
 
         # Filter to only NEW findings (not previously reported)
         new = []
@@ -247,28 +245,4 @@ class DayLevelCorrelator:
                 )]
         return []
 
-    # â”€â”€ C9: Campaign detection (cross-actor) â”€â”€
-    def _check_campaign(self) -> list[CorrelationFinding]:
-        """Multiple IPs using same exploit in same timeframe."""
-        # Group actors by attack signature
-        sig_actors: dict[str, list[str]] = {}
-        for actor in self.store.actors.values():
-            for sig in actor.attack_signatures_seen:
-                if sig not in sig_actors:
-                    sig_actors[sig] = []
-                sig_actors[sig].append(actor.ip)
-
-        findings = []
-        for sig, ips in sig_actors.items():
-            if len(ips) >= 3:
-                findings.append(CorrelationFinding(
-                    correlation_rule="campaign_detection",
-                    category="coordinated_attack",
-                    severity="critical",
-                    confidence=0.8,
-                    description=f"Campaign: {len(ips)} IPs using {sig}",
-                    src_ip=ips[0],
-                    evidence={"signature": sig, "ips": ips[:10]},
-                ))
-        return findings
 

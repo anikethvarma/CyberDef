@@ -12,6 +12,7 @@ import hmac
 import json
 import secrets
 import time
+from typing import Optional
 
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -53,7 +54,7 @@ def create_access_token(username: str) -> tuple[str, int]:
     return f"{payload_b64}.{signature}", expires_in_seconds
 
 
-def verify_access_token(token: str) -> str | None:
+def verify_access_token(token: str) -> Optional[str]:
     """Return username from token if valid and unexpired; otherwise None."""
     settings = get_settings()
     try:
@@ -121,7 +122,7 @@ def verify_user_credentials(username: str, password: str) -> bool:
     )
 
 
-def _extract_emp_id(username: str) -> str | None:
+def _extract_emp_id(username: str) -> Optional[str]:
     """Extract employee id from configured username format."""
     settings = get_settings()
     prefix = settings.auth_username_prefix or "soc."
@@ -156,7 +157,7 @@ def _parse_emp_name_map(raw_map: str) -> dict[str, str]:
     return mapping
 
 
-def resolve_user_identity(username: str) -> dict[str, str | None]:
+def resolve_user_identity(username: str) -> dict[str, Optional[str]]:
     """
     Resolve identity details for UI display.
 
@@ -185,8 +186,8 @@ def resolve_user_identity(username: str) -> dict[str, str | None]:
 
 def _get_token_from_request(
     request: Request,
-    credentials: HTTPAuthorizationCredentials | None,
-) -> str | None:
+    credentials: Optional[HTTPAuthorizationCredentials],
+) -> Optional[str]:
     if credentials and credentials.scheme.lower() == "bearer":
         return credentials.credentials
     query_token = request.query_params.get("access_token")
@@ -205,7 +206,7 @@ def unauthorized(detail: str = "Authentication required") -> HTTPException:
 
 async def require_auth(
     request: Request,
-    credentials: HTTPAuthorizationCredentials | None = Depends(_bearer_scheme),
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(_bearer_scheme),
 ) -> str:
     """Dependency for protecting endpoints with bearer auth."""
     token = _get_token_from_request(request, credentials)
@@ -221,7 +222,7 @@ async def require_auth(
 
 async def optional_auth(
     request: Request,
-    credentials: HTTPAuthorizationCredentials | None = Depends(_bearer_scheme),
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(_bearer_scheme),
 ) -> str:
     """
     Optional authentication dependency for backend testing.

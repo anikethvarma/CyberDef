@@ -22,9 +22,11 @@ class LoginRequest(BaseModel):
     password: str = Field(min_length=1, max_length=256)
 
 
+from typing import Optional
+
 class UserIdentityResponse(BaseModel):
     username: str
-    emp_id: str | None = None
+    emp_id: Optional[str] = None
     name: str
 
 

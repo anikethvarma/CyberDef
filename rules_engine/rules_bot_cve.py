@@ -6,6 +6,7 @@ from typing import Any, Optional
 from rules_engine.base_rule import ThreatRule, RateBasedRule
 from rules_engine.models import ThreatMatch, ThreatSeverity, ThreatFamily
 from shared_models.events import NormalizedEvent
+from collections import defaultdict
 import ipaddress
 
 # Family 7: Bot & Scanner
@@ -79,8 +80,9 @@ class Rapid404Rule(RateBasedRule):
                 family=self.family,
                 severity=self.severity,
                 confidence=self.confidence,
-                evidence=f"{len(unique_uris)} unique 404s from {group_key} (successes: {len(successes)})",
+                evidence=f"{len(unique_uris)} unique 404s from {group_key} on {last.uri_path} (successes: {len(successes)})",
                 matched_field="http_status",
+                uri=last.uri_path,
                 timestamp=last.timestamp,
                 src_ip=last.src_ip,
             )
@@ -117,8 +119,9 @@ class ContentScrapingRule(RateBasedRule):
                 family=self.family,
                 severity=self.severity,
                 confidence=self.confidence,
-                evidence=f"{len(uris)} unique URIs from {group_key}",
+                evidence=f"{len(uris)} unique URIs from {group_key} (sample: {last.uri_path})",
                 matched_field="uri_path",
+                uri=last.uri_path,
                 timestamp=last.timestamp,
                 src_ip=last.src_ip,
             )
@@ -171,8 +174,9 @@ class HTTPFloodRule(RateBasedRule):
                 family=self.family,
                 severity=self.severity,
                 confidence=self.confidence,
-                evidence=f"{len(events)} requests from {group_key} in batch",
+                evidence=f"{len(events)} requests from {group_key} in batch (target: {events[-1].uri_path})",
                 matched_field="rate",
+                uri=events[-1].uri_path,
                 timestamp=events[-1].timestamp,
                 src_ip=events[-1].src_ip,
             )
@@ -223,8 +227,9 @@ class RateLimitBypassAfterThrottleRule(RateBasedRule):
             family=self.family,
             severity=self.severity,
             confidence=self.confidence,
-            evidence=f"{len(events)} requests with {len(throttled)} HTTP 429 responses from {group_key}",
+            evidence=f"{len(events)} requests with {len(throttled)} HTTP 429 responses from {group_key} (target: {last.uri_path})",
             matched_field="http_status",
+            uri=last.uri_path,
             timestamp=last.timestamp,
             src_ip=last.src_ip,
         )
@@ -243,33 +248,17 @@ class SlowlorisRule(RateBasedRule):
         if not events:
             return None
             
-        score = 0
-        count = len(events)
+        # Consider only public IPs
+        try:
+            ip = ipaddress.ip_address(group_key)
+            if not ip.is_global:
+                return None
+        except ValueError:
+            return None
+
+        unique_uris = {ev.uri_path for ev in events if ev.uri_path}
         
-        # 1. request_count_from_srcip > 100
-        if count > 100:
-            score += 1
-            
-        # 2. avg(event.bytes_sent) < 500
-        bytes_sent_values = [ev.bytes_sent for ev in events if ev.bytes_sent is not None]
-        if bytes_sent_values:
-            avg_bytes = sum(bytes_sent_values) / len(bytes_sent_values)
-            if avg_bytes < 500:
-                score += 1
-        
-        # 3. len(unique_urls) <= 3
-        unique_urls = {ev.uri_path for ev in events if ev.uri_path}
-        if len(unique_urls) <= 3:
-            score += 1
-            
-        # 4. event.duration_ms > 0 and avg(event.duration_ms) > 30000
-        durations = [ev.duration_ms for ev in events if ev.duration_ms and ev.duration_ms > 0]
-        if durations:
-            avg_duration = sum(durations) / len(durations)
-            if avg_duration > 30000:
-                score += 1
-                
-        if score >= 3:
+        if len(unique_uris) >= self.threshold:
             last = events[-1]
             return ThreatMatch(
                 event_id=last.event_id,
@@ -278,8 +267,9 @@ class SlowlorisRule(RateBasedRule):
                 family=self.family,
                 severity=self.severity,
                 confidence=self.confidence,
-                evidence=f"Slowloris score {score}/4 (requests: {count}, unique_urls: {len(unique_urls)})",
-                matched_field="multi",
+                evidence=f"Slowloris suspected: {len(unique_uris)} unique URIs hit from public IP {group_key}",
+                matched_field="uri_path",
+                uri=last.uri_path,
                 timestamp=last.timestamp,
                 src_ip=last.src_ip,
             )
@@ -296,20 +286,35 @@ class APIRateAbuseRule(RateBasedRule):
     threshold = 300
 
     def check_group(self, events: list[NormalizedEvent], group_key: str) -> Optional[ThreatMatch]:
-        api_evts = [ev for ev in events if ev.uri_path and "/api/" in ev.uri_path.lower()]
-        if len(api_evts) >= self.threshold:
-            return ThreatMatch(
-                event_id=api_evts[-1].event_id,
-                rule_name=self.name,
-                category=self.category,
-                family=self.family,
-                severity=self.severity,
-                confidence=self.confidence,
-                evidence=f"{len(api_evts)} API requests from {group_key}",
-                matched_field="rate",
-                timestamp=api_evts[-1].timestamp,
-                src_ip=api_evts[-1].src_ip,
-            )
+        uri_counts = defaultdict(int)
+        last_ev_by_uri = {}
+        
+        for ev in events:
+            uri = (ev.uri_path or "").lower()
+            if "/api/" in uri:
+                uri_counts[uri] += 1
+                last_ev_by_uri[uri] = ev
+        
+        if not uri_counts:
+            return None
+            
+        # Check if same src hits SAME uri >= threshold
+        for uri, count in uri_counts.items():
+            if count >= self.threshold:
+                last = last_ev_by_uri[uri]
+                return ThreatMatch(
+                    event_id=last.event_id,
+                    rule_name=self.name,
+                    category=self.category,
+                    family=self.family,
+                    severity=self.severity,
+                    confidence=self.confidence,
+                    evidence=f"API rate abuse from {group_key} targeting {uri} ({count} requests)",
+                    matched_field="uri_path",
+                    uri=last.uri_path,
+                    timestamp=last.timestamp,
+                    src_ip=last.src_ip,
+                )
         return None
 
 
@@ -347,8 +352,9 @@ class ResourceExhaustionRule(RateBasedRule):
                 family=self.family,
                 severity=self.severity,
                 confidence=self.confidence,
-                evidence=f"{hits} expensive endpoint hits from {group_key}",
+                evidence=f"{hits} expensive endpoint hits from {group_key} (last: {last.uri_path})",
                 matched_field="uri_path",
+                uri=last.uri_path,
                 timestamp=last.timestamp,
                 src_ip=last.src_ip,
             )

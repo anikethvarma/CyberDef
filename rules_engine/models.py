@@ -42,6 +42,7 @@ class ThreatMatch(BaseModel):
     confidence: float = Field(ge=0.0, le=1.0)
     evidence: str
     matched_field: str
+    uri: Optional[str] = None
     timestamp: Optional[datetime] = None
     src_ip: Optional[str] = None
 
