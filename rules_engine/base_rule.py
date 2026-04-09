@@ -72,6 +72,7 @@ class ThreatRule(ABC):
                         confidence=self.confidence,
                         evidence=value_str[:200],
                         matched_field=field_name,
+                        uri=event.uri_path,
                         timestamp=event.timestamp,
                         src_ip=event.src_ip,
                     )

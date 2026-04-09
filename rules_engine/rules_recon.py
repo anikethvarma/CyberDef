@@ -1,11 +1,38 @@
-from typing import Optional
 """Families 3 & 4: Information Leakage & Recon (11) + Path & File Access (5)"""
 
 from __future__ import annotations
 
+from typing import Optional
+
 from rules_engine.base_rule import ThreatRule
 from rules_engine.models import ThreatMatch, ThreatSeverity, ThreatFamily
 from shared_models.events import NormalizedEvent
+import re
+from urllib.parse import unquote, urlparse
+from collections import defaultdict
+
+SENSITIVE_PATHS = [
+    r"^/export(/|$)",
+    r"^/download(/|$)",
+    r"^/dump(/|$)",
+    r"^/api/users(/|$)",
+    r"^/api/data(/|$)"
+]
+
+SINGLE_THRESHOLD = 500000       # 500 KB
+AGGREGATE_THRESHOLD = 2000000  # 2 MB
+
+
+def normalize_uri(uri: str) -> str:
+    if not uri:
+        return ""
+    uri = unquote(uri).lower()
+    return urlparse(uri).path
+
+
+def is_sensitive_path(uri: str) -> bool:
+    path = normalize_uri(uri)
+    return any(re.search(p, path) for p in SENSITIVE_PATHS)
 
 
 class SensitiveFileExposureRule(ThreatRule):

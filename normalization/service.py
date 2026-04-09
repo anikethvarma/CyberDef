@@ -97,25 +97,16 @@ class NormalizationService:
             Normalized event or None if normalization fails
         """
         try:
-            # Extract and validate IPs (require at least one)
+            # Extract and validate IPs
             src_ip = self._normalize_ip(parsed.source_address)
             dst_ip = self._normalize_ip(parsed.destination_address)
             
-            # Reject only if BOTH IPs are missing (false positive)
-            if not src_ip and not dst_ip:
-                logger.warning(
-                    f"Missing both source and destination IPs | file_id={parsed.file_id}, row_hash={parsed.row_hash}"
-                )
-                self.normalization_errors += 1
-                return None
-            
-            # If dst_ip is available, prioritize it as the source (per requirement)
-            if dst_ip:
-                src_ip = dst_ip
-                dst_ip = None
+            # If src_ip is missing, keep it as "-" (do NOT fallback to dst_ip)
+            if not src_ip:
+                src_ip = "-"
             
             # Ensure src_ip and dst_ip are never the same
-            if src_ip and dst_ip and src_ip == dst_ip:
+            if src_ip != "-" and dst_ip and src_ip == dst_ip:
                 logger.warning(
                     f"Source and destination IPs are identical, clearing dst_ip | file_id={parsed.file_id}, ip={src_ip}"
                 )

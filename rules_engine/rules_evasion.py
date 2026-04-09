@@ -1,7 +1,7 @@
-from typing import Optional
 """Family 6: Evasion, Cache & Redirect Rules"""
-
 from __future__ import annotations
+
+from typing import Optional
 
 import re
 import ipaddress
@@ -115,3 +115,5 @@ CACHE_REDIRECT_RULES = [
     CacheDeceptionRule,
     CachePoisoningRule,
 ]
+
+EVASION_RULES = []
