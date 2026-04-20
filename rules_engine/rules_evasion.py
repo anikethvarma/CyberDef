@@ -1,8 +1,7 @@
 """Family 6: Evasion, Cache & Redirect Rules"""
+
 from __future__ import annotations
-
 from typing import Optional
-
 import re
 import ipaddress
 from urllib.parse import urlsplit, unquote
@@ -109,6 +108,93 @@ class CachePoisoningRule(ThreatRule):
         r"X-Rewrite-URL\s*:",
     ]
 
+class DoubleURLEncodingRule(ThreatRule):
+    name = "double_url_encoding"
+    category = "evasion"
+    family = ThreatFamily.EVASION
+    severity = ThreatSeverity.HIGH
+    confidence = 0.8
+    description = "Double URL encoding to bypass WAF/filters"
+    check_fields = ["uri_path", "uri_query", "original_message"]
+    patterns = [r"%25[0-9a-fA-F]{2}", r"%252[fFcCeE]", r"%2527"]
+
+
+class NullByteInjectionRule(ThreatRule):
+    name = "null_byte_injection"
+    category = "insecure_input_validation"
+    family = ThreatFamily.EVASION
+    severity = ThreatSeverity.HIGH
+    confidence = 0.85
+    description = "Null byte injection"
+    check_fields = ["uri_path", "uri_query", "original_message"]
+    patterns = [r"%00", r"\\x00"]
+
+
+class CRLFInjectionRule(ThreatRule):
+    name = "crlf_injection"
+    category = "insecure_input_validation"
+    family = ThreatFamily.EVASION
+    severity = ThreatSeverity.HIGH
+    confidence = 0.85
+    description = "CRLF injection for header manipulation"
+    check_fields = ["uri_path", "uri_query", "original_message"]
+    patterns = [r"%0[dD]%0[aA]", r"\\r\\n", r"%0[aA](?:Set-Cookie|Location|Content-Type):"]
+
+
+class UnicodeAbuseRule(ThreatRule):
+    name = "unicode_abuse"
+    category = "insecure_input_validation"
+    family = ThreatFamily.EVASION
+    severity = ThreatSeverity.MEDIUM
+    confidence = 0.7
+    description = "Unicode/UTF-8 overlong sequences"
+    check_fields = ["uri_path", "uri_query"]
+    patterns = [r"%c0%af", r"%c1%9c", r"%e0%80%af", r"%u00[0-9a-fA-F]{2}"]
+
+
+class HTTPVerbTamperingRule(ThreatRule):
+    name = "http_verb_tampering"
+    category = "evasion"
+    family = ThreatFamily.EVASION
+    severity = ThreatSeverity.MEDIUM
+    confidence = 0.6
+    description = "Unusual HTTP methods"
+    check_fields = []
+    _UNUSUAL = {"TRACE", "CONNECT", "PROPFIND", "MOVE", "COPY", "MKCOL", "LOCK", "UNLOCK"}
+
+    def match(self, event: NormalizedEvent) -> ThreatMatch | None:
+        method = (event.http_method or "").upper()
+        if method in self._UNUSUAL:
+            return ThreatMatch(
+                event_id=event.event_id, rule_name=self.name,
+                category=self.category, family=self.family,
+                severity=self.severity, confidence=self.confidence,
+                evidence=f"Unusual HTTP method: {method}",
+                matched_field="http_method", timestamp=event.timestamp,
+                src_ip=event.src_ip,
+            )
+        return None
+
+
+class PathNormalizationBypassRule(ThreatRule):
+    name = "path_normalization_bypass"
+    category = "evasion"
+    family = ThreatFamily.EVASION
+    severity = ThreatSeverity.MEDIUM
+    confidence = 0.7
+    description = "Path normalization bypass"
+    check_fields = ["uri_path"]
+    patterns = [r"//+", r"/\./", r"/;/", r"\\\\"]
+
+
+class WAFBypassRule(ThreatRule):
+    name = "waf_bypass"
+    category = "evasion"
+    family = ThreatFamily.EVASION
+    severity = ThreatSeverity.HIGH
+    confidence = 0.8
+    description = "WAF bypass via comment/case tricks"
+    check_fields = ["uri_path", "uri_query", "original_message"]
 
 CACHE_REDIRECT_RULES = [
     OpenRedirectRule,
@@ -116,4 +202,7 @@ CACHE_REDIRECT_RULES = [
     CachePoisoningRule,
 ]
 
-EVASION_RULES = []
+EVASION_RULES = [
+    DoubleURLEncodingRule, NullByteInjectionRule, CRLFInjectionRule,
+    UnicodeAbuseRule, HTTPVerbTamperingRule, PathNormalizationBypassRule, WAFBypassRule,
+]

@@ -13,13 +13,23 @@ from shared_models.events import NormalizedEvent
 
 
 class BruteForceLoginRule(RateBasedRule):
+    """
+    Brute force login detection with dual threshold based on IP scope.
+
+    Public IP  (is_private=False): >=20 failures, 0 successes → HIGH
+    Private IP (is_private=True):  >=50 failures, 0 successes → MEDIUM
+
+    Zero-success gate: if any 200 OK was seen on an auth URI within
+    the group, the rule does not fire to avoid false positives on
+    legitimate slow credential rotation or account unlock flows.
+    """
     name = "brute_force_login"
     category = "broken_authentication"
     family = ThreatFamily.AUTH_ACCESS
-    severity = ThreatSeverity.HIGH
+    severity = ThreatSeverity.HIGH  # overridden per IP scope below
     confidence = 0.85
-    description = "Brute force login: >10 auth failures from same IP in batch"
-    threshold = 10
+    description = "Brute force login: repeated auth failures with zero success from same IP"
+    threshold = 20  # public IP default; private uses 50
 
     _AUTH_PATHS = {
         "/login",
@@ -34,23 +44,49 @@ class BruteForceLoginRule(RateBasedRule):
     }
 
     def check_group(self, events: list[NormalizedEvent], group_key: str) -> Optional[ThreatMatch]:
+        import ipaddress
+
+        # --- Determine IP scope ---
+        try:
+            is_private = ipaddress.ip_address(group_key).is_private
+        except ValueError:
+            is_private = False
+
+        threshold = 50 if is_private else 20
+        severity  = ThreatSeverity.MEDIUM if is_private else ThreatSeverity.HIGH
+
         auth_failures = 0
+        success_count = 0
         last_event = None
+
         for ev in events:
             if ev.http_status and ev.http_status in (401, 403):
                 uri = (ev.uri_path or "").lower()
                 if any(p in uri for p in self._AUTH_PATHS) or ev.http_status == 401:
                     auth_failures += 1
                     last_event = ev
-        if auth_failures >= self.threshold and last_event:
+            elif ev.http_status == 200:
+                # Track successful logins on auth URIs — used as zero-success gate
+                uri = (ev.uri_path or "").lower()
+                if any(p in uri for p in self._AUTH_PATHS):
+                    success_count += 1
+
+        # Hard gate: any successful auth in this batch → do not flag as brute force
+        if success_count > 0:
+            return None
+
+        if auth_failures >= threshold and last_event:
             return ThreatMatch(
                 event_id=last_event.event_id,
                 rule_name=self.name,
                 category=self.category,
                 family=self.family,
-                severity=self.severity,
+                severity=severity,
                 confidence=self.confidence,
-                evidence=f"{auth_failures} auth failures from {group_key}",
+                evidence=(
+                    f"{auth_failures} auth failures from {group_key} "
+                    f"({'private' if is_private else 'public'} IP, threshold={threshold})"
+                ),
                 matched_field="http_status",
                 timestamp=last_event.timestamp,
                 src_ip=last_event.src_ip,

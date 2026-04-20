@@ -117,46 +117,69 @@ class BaseChunkStrategy(ABC):
         events: list[NormalizedEvent],
         file_id: UUID,
     ) -> list[BehavioralChunk]:
-        """Create time-windowed chunks from a group of events."""
+        """
+        Create time-windowed chunks from a group of events using a fixed grid.
+
+        The window boundary advances by exactly window_delta on a fixed grid
+        anchored to the first event's timestamp. This prevents the 'floating
+        anchor' bug where each out-of-window event resets the window start to
+        its own timestamp, fragmenting events that are only seconds apart across
+        a boundary into separate isolated chunks.
+
+        Fixed-grid behaviour example (window=15min):
+            E1@12:00  E2@12:07  E3@12:14:59  E4@12:15:01
+            Grid:  12:00 → 12:15 → 12:30 → ...
+            → Chunk 1: [E1, E2, E3]   window 12:00–12:15
+            → Chunk 2: [E4]           window 12:15–12:30
+        """
         if not events:
             return []
-        
-        chunks = []
+
+        chunks: list[BehavioralChunk] = []
         window_delta = timedelta(minutes=self.window_minutes)
-        
-        # Sort by timestamp
+
+        # Sort by timestamp (callers may pass pre-sorted, but guard here for safety)
         sorted_events = sorted(events, key=lambda e: e.timestamp)
-        
+
+        # ── Fixed grid anchor ────────────────────────────────────────────
+        # current_window_start is the LEFT edge of the current bucket.
+        # current_window_end   is the RIGHT edge (exclusive).
+        # Both advance by window_delta — they NEVER reset to an event timestamp.
         current_window_start = sorted_events[0].timestamp
-        current_window_events = []
-        
+        current_window_end   = current_window_start + window_delta
+        current_window_events: list[NormalizedEvent] = []
+
         for event in sorted_events:
-            # Check if event is within current window
-            if event.timestamp <= current_window_start + window_delta:
+            if event.timestamp < current_window_end:
+                # Event fits inside the current window — normal case
                 current_window_events.append(event)
             else:
-                # Create chunk for current window
+                # Flush the current window as a completed chunk
                 if current_window_events:
-                    chunk = self._build_chunk(
+                    chunks.append(self._build_chunk(
                         current_window_events,
                         file_id,
                         current_window_start,
-                    )
-                    chunks.append(chunk)
-                
-                # Start new window
-                current_window_start = event.timestamp
+                    ))
+
+                # ── Advance the grid forward ─────────────────────────────
+                # Use a while loop so we skip over any completely empty
+                # windows (e.g. a 45-minute gap skips 3 × 15-min buckets).
+                while event.timestamp >= current_window_end:
+                    current_window_start = current_window_end
+                    current_window_end   = current_window_start + window_delta
+
+                # Start the new window with this event
                 current_window_events = [event]
-        
-        # Don't forget the last window
+
+        # Flush the final (possibly only) window
         if current_window_events:
-            chunk = self._build_chunk(
+            chunks.append(self._build_chunk(
                 current_window_events,
                 file_id,
                 current_window_start,
-            )
-            chunks.append(chunk)
-        
+            ))
+
         return chunks
     
     def _build_chunk(

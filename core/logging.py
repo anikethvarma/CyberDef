@@ -7,6 +7,7 @@ Logging configuration using Python's built-in logging module.
 from __future__ import annotations
 
 import logging
+import logging.handlers
 import json
 import sys
 from typing import Any
@@ -52,10 +53,26 @@ def setup_logging() -> None:
     # Remove existing handlers to avoid duplicates on re-init
     root.handlers.clear()
 
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setLevel(log_level)
-    handler.setFormatter(formatter)
-    root.addHandler(handler)
+    # 1. Standard Output Handler (Console)
+    stdout_handler = logging.StreamHandler(sys.stdout)
+    stdout_handler.setLevel(log_level)
+    stdout_handler.setFormatter(formatter)
+    root.addHandler(stdout_handler)
+
+    # 2. Rotating File Handler (Archive logs gracefully)
+    log_dir = settings.data_dir / "logs"
+    log_dir.mkdir(parents=True, exist_ok=True)
+    log_file = log_dir / "cyberdef_pipeline.log"
+    
+    # Rotate when file hits the MB limit defined in settings
+    file_handler = logging.handlers.RotatingFileHandler(
+        filename=log_file,
+        maxBytes=settings.log_max_size_mb * 1024 * 1024,
+        backupCount=5                # e.g. cyberdef_pipeline.log.1, .log.2
+    )
+    file_handler.setLevel(log_level)
+    file_handler.setFormatter(formatter)
+    root.addHandler(file_handler)
 
 
 def get_logger(name: str | None = None, **context: Any) -> logging.Logger:

@@ -34,7 +34,7 @@ class MultiIndexChunkStrategy:
     
     def __init__(
         self,
-        src_ip_window_min: int = 15,
+        src_ip_window_min: int = 20,   # 5-min buffer above 15-min log collection interval
         dst_host_window_min: int = 30,
         user_window_min: int = 120,
     ):
@@ -50,99 +50,62 @@ class MultiIndexChunkStrategy:
         file_id: UUID,
     ) -> list[BehavioralChunk]:
         """
-        Chunk events using all strategies in a single pass.
-        
+        Chunk events using src_ip as the sole primary grouping axis.
+
+        Each unique source IP gets its own set of time-windowed chunks.
+        dst_host and user data remain embedded inside every NormalizedEvent
+        and are available to downstream consumers — creating separate chunks
+        per destination would multiply chunk count by N destinations, causing
+        the '9 events → 10 chunks' inflation bug.
+
         Args:
             events: List of normalized events
             file_id: Source file ID
-            
+
         Returns:
-            List of behavioral chunks from all strategies
+            List of behavioral chunks, one per (src_ip, time-window) pair
         """
         if not events:
             return []
-        
+
         logger.info(
-            f"Multi-index chunking started | total_events={len(events)}, strategies={list(self.strategies.keys())}"
+            f"Chunking started | total_events={len(events)}, axis=src_ip"
         )
-        
-        # Sort once
+
+        # Sort once — _create_time_windows expects pre-sorted input
         sorted_events = sorted(events, key=lambda e: e.timestamp)
-        
-        # Build all indices in a single pass
-        indices = {
-            'src_ip': defaultdict(list),
-            'dst_host': defaultdict(list),  
-            'user': defaultdict(list),
-        }
-        
+
+        # ── Single-axis grouping: src_ip only ────────────────────────────
+        # dst_host and user strategies are INTENTIONALLY excluded here.
+        # Running all three strategies produced N_dst_hosts + N_users extra chunks
+        # for the same underlying events (triple-counting bug).
+        src_ip_groups: dict[str, list[NormalizedEvent]] = defaultdict(list)
         for event in sorted_events:
-            # Source IP grouping
             if event.src_ip:
-                indices['src_ip'][event.src_ip].append(event)
-            
-            # Destination host grouping
-            key = event.dst_host or event.dst_ip
-            if key:
-                indices['dst_host'][key].append(event)
-            
-            # User grouping
-            if event.username:
-                indices['user'][event.username].append(event)
-        
+                src_ip_groups[event.src_ip].append(event)
+
         logger.info(
-            f"Index building complete | src_ip_groups={len(indices['src_ip'])}, dst_host_groups={len(indices['dst_host'])}, user_groups={len(indices['user'])}"
+            f"Grouping complete | unique_src_ips={len(src_ip_groups)}"
         )
-        
-        # Create chunks for each strategy in parallel
-        chunk_tasks = []
-        
-        for strategy_name, strategy in self.strategies.items():
-            groups = indices[strategy_name]
-            if groups:
-                task = self._create_chunks_for_groups(
-                    strategy,
-                    groups,
-                    file_id,
-                    strategy_name,
-                )
-                chunk_tasks.append(task)
-        
-        # Run all strategies in parallel
-        chunk_results = await asyncio.gather(*chunk_tasks)
-        
-        # Flatten results
-        all_chunks = []
-        for chunks in chunk_results:
-            all_chunks.extend(chunks)
-        
-        # Sort by time
-        all_chunks.sort(key=lambda c: c.time_window.start)
-        
-        logger.info(
-            f"Multi-index chunking complete | total_chunks={len(all_chunks)}, strategies_processed={len(chunk_tasks)}"
-        )
-        
-        return all_chunks
-    
-    async def _create_chunks_for_groups(
-        self,
-        strategy: Any,
-        groups: dict[str, list[NormalizedEvent]],
-        file_id: UUID,
-        strategy_name: str,
-    ) -> list[BehavioralChunk]:
-        """Create time-windowed chunks for all groups in a strategy."""
-        chunks = []
-        
-        for group_key, group_events in groups.items():
+
+        # ── Time-window chunking per source IP ───────────────────────────
+        strategy = self.strategies['src_ip']
+        chunks: list[BehavioralChunk] = []
+
+        for group_key, group_events in src_ip_groups.items():
             window_chunks = strategy._create_time_windows(group_events, file_id)
             chunks.extend(window_chunks)
-        
-        logger.debug(
-            f"{strategy_name} chunking complete | groups={len(groups)}, chunks={len(chunks)}"
+            logger.debug(
+                f"src_ip={group_key} | events={len(group_events)}, chunks={len(window_chunks)}"
+            )
+
+        # Sort final output chronologically
+        chunks.sort(key=lambda c: c.time_window.start)
+
+        logger.info(
+            f"Chunking complete | total_chunks={len(chunks)}, unique_src_ips={len(src_ip_groups)}"
         )
-        
+
         return chunks
     
     def get_stats(self) -> dict[str, Any]:

@@ -46,10 +46,16 @@ async def lifespan(app: FastAPI):
     watcher = FileWatcher(on_new_file=handle_new_csv, watch_dir=settings.data_dir)
     await watcher.start()
     
+    # Start high-throughput Flush Buffer
+    from core.flush_buffer import get_flush_worker
+    flush_worker = get_flush_worker()
+    await flush_worker.start()
+    
     yield
     
     # Cleanup on shutdown
     await watcher.stop()
+    await flush_worker.stop()
     from database import close_db
     close_db()
     logger.info("AegisNet shutting down")
@@ -231,9 +237,9 @@ async def analyze_file(
 
     parsed_events = parser.parse_batch(raw_rows)
 
-    # Normalize
+    # Normalize (CPU-parallel for large batches, auto-fallback for small)
     normalizer = NormalizationService()
-    event_batch = normalizer.normalize_batch(parsed_events)
+    event_batch = normalizer.normalize_batch_parallel(parsed_events)
 
     # Use normalized events directly (GeoIP removed for performance)
     enriched_events = event_batch.events
@@ -242,7 +248,7 @@ async def analyze_file(
 
     # â”€â”€ TIER 1: Deterministic Rules Engine â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     engine = DeterministicEngine()
-    tier1_result = engine.scan(enriched_events)
+    tier1_result = engine.scan_parallel(enriched_events)
 
     logger.info(f"Tier 1 complete | threats={len(tier1_result.threats)}, matches={len(tier1_result.matches)}, time_ms={tier1_result.processing_time_ms}")
 
@@ -291,10 +297,12 @@ async def analyze_file(
         min_unique_targets=3,    # original threshold
     )
 
-    # Store chunks for rollup
-    from rollups.chunk_storage import get_chunk_storage
-    chunk_storage = get_chunk_storage()
-    chunk_storage.store_chunks(file_id, chunks)
+    # Store chunks for rollup via Async Flush Buffer
+    from core.flush_buffer import get_flush_worker
+    flush_worker = get_flush_worker()
+    for chunk in chunks:
+        await flush_worker.submit_chunk(chunk)
+        
 
     ai_outputs = []
     needs_ai = tier1_result.needs_ai_review or tier2_result.needs_ai_review
@@ -508,21 +516,30 @@ async def get_rollup_analysis(
     from rollups.chunk_storage import get_chunk_storage
     from rollups import RollupService
     
-    # Get all stored chunks
+    # Get storage and initialize service
     chunk_storage = get_chunk_storage()
-    all_chunks = chunk_storage.get_all_chunks()
+    rollup_service = RollupService()
     
-    if not all_chunks:
+    # Check if GPU acceleration is available
+    if rollup_service.get_stats().get("gpu_available", False):
+        # Run GPU-accelerated rollup directly from the chunks directory
+        chunks_dir = str(chunk_storage.chunks_dir)
+        result = rollup_service.create_rollup_gpu(chunks_dir, min_actor_chunks=1)
+        used_gpu = True
+    else:
+        # Run CPU streaming aggregation
+        all_chunks = chunk_storage.get_all_chunks()
+        result = rollup_service.create_rollup(all_chunks, min_actor_chunks=1)
+        used_gpu = False
+    
+    # Check if any data was actually processed
+    if result.chunks_analyzed == 0:
         return {
             "status": "no_data",
             "message": "No chunks available for rollup analysis. Analyze some files first.",
             "chunks_stored": 0,
             "files_analyzed": 0,
         }
-    
-    # Run rollup analysis
-    rollup_service = RollupService()
-    result = rollup_service.create_rollup(all_chunks, min_actor_chunks=1)
     
     # Convert to JSON-serializable format
     actor_profiles = []
@@ -552,6 +569,7 @@ async def get_rollup_analysis(
         "actor_profiles": actor_profiles,
         "high_risk_actors": result.high_risk_actors,
         "cross_file_patterns": result.cross_file_patterns,
+        "gpu_accelerated": used_gpu,
         "created_at": result.created_at.isoformat(),
     }
 

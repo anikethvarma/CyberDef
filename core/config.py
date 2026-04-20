@@ -75,6 +75,9 @@ class Settings(BaseSettings):
     # Logging
     log_level: str = "INFO"
     log_format: str = "json"
+    log_max_size_mb: int = 100
+    probe_uri_threshold: int = 10
+    probe_count_threshold: int = 15
 
     # Authentication
     auth_username_prefix: str = "soc."

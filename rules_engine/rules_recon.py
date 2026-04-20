@@ -10,6 +10,81 @@ from shared_models.events import NormalizedEvent
 import re
 from urllib.parse import unquote, urlparse
 from collections import defaultdict
+from core.logging import get_logger
+from core.config import get_settings
+
+logger = get_logger(__name__)
+
+# --- Re-defined Regexes for Enhanced Detection ---
+
+# Sensitive config/env/credential files
+SENSITIVE_FILE_REGEX = re.compile(
+    r"(?i)^/(\.env(\.[a-z0-9_-]+)?|wp-config\.php|config\.(yml|yaml|json)"
+    r"|application\.(properties|yml)|\.htpasswd|\.htaccess|web\.config)$"
+)
+
+# Backup and archive files
+BACKUP_FILE_REGEX = re.compile(
+    r"(?i).*\.(bak|old|orig|copy|save|swp|tmp|temp|sql|dump|tar|gz|zip|rar|7z)(?:\?|$)|.*~$"
+)
+
+# Source code repositories and IDE metadata
+SOURCE_CODE_REGEX = re.compile(
+    r"(?i)/(\.git/(HEAD|config|index|objects|refs)|\.svn/(entries|wc\.db)|\.hg/|\.DS_Store|\.idea/)"
+)
+
+# Debug and admin info disclosure endpoints
+DEBUG_ENDPOINT_REGEX = re.compile(
+    r"(?i)/((debug|_debug|trace|_trace)\b|actuator(/|$)|console(/|$)|phpinfo(\.php)?|server-(status|info)|_profiler)"
+)
+
+def _check_recon_probing(
+    events: list[NormalizedEvent],
+    regex: re.Pattern,
+    rule_name: str,
+    category: str,
+    family: ThreatFamily,
+    probing_rule_name: str
+) -> list[ThreatMatch]:
+    """Helper to detect systematic probing for sensitive files/paths."""
+    settings = get_settings()
+    uri_threshold = settings.probe_uri_threshold
+    count_threshold = settings.probe_count_threshold
+
+    # Group by IP: track distinct URIs and total events
+    ip_stats = defaultdict(lambda: {"uris": set(), "events": []})
+
+    for ev in events:
+        if ev.http_status not in (403, 404):
+            continue
+        uri = (ev.uri_path or "").lower()
+        if regex.search(uri):
+            ip = ev.src_ip or "-"
+            ip_stats[ip]["uris"].add(uri)
+            ip_stats[ip]["events"].append(ev)
+
+    matches = []
+    for ip, stats in ip_stats.items():
+        if len(stats["uris"]) >= uri_threshold and len(stats["events"]) >= count_threshold:
+            last_ev = stats["events"][-1]
+            matches.append(ThreatMatch(
+                event_id=last_ev.event_id,
+                rule_name=probing_rule_name,
+                category=category,
+                family=family,
+                severity=ThreatSeverity.MEDIUM,
+                confidence=0.7,
+                evidence=(
+                    f"Systematic probing detected from {ip}: "
+                    f"{len(stats['uris'])} distinct sensitive URIs, "
+                    f"{len(stats['events'])} total hits (thresholds: {uri_threshold}/{count_threshold})"
+                ),
+                matched_field="uri_path",
+                uri=last_ev.uri_path,
+                timestamp=last_ev.timestamp,
+                src_ip=last_ev.src_ip,
+            ))
+    return matches
 
 SENSITIVE_PATHS = [
     r"^/export(/|$)",
@@ -24,15 +99,23 @@ AGGREGATE_THRESHOLD = 2000000  # 2 MB
 
 
 def normalize_uri(uri: str) -> str:
-    if not uri:
+    try:
+        if not uri:
+            return ""
+        uri = unquote(uri).lower()
+        return urlparse(uri).path
+    except Exception as e:
+        logger.warning(f"normalize_uri failed for uri '{uri}': {e}", exc_info=True)
         return ""
-    uri = unquote(uri).lower()
-    return urlparse(uri).path
 
 
 def is_sensitive_path(uri: str) -> bool:
-    path = normalize_uri(uri)
-    return any(re.search(p, path) for p in SENSITIVE_PATHS)
+    try:
+        path = normalize_uri(uri)
+        return any(re.search(p, path) for p in SENSITIVE_PATHS)
+    except Exception as e:
+        logger.warning(f"is_sensitive_path failed for uri '{uri}': {e}", exc_info=True)
+        return False
 
 
 class SensitiveFileExposureRule(ThreatRule):
@@ -41,16 +124,36 @@ class SensitiveFileExposureRule(ThreatRule):
     family = ThreatFamily.INFO_LEAKAGE
     severity = ThreatSeverity.CRITICAL
     confidence = 0.9
-    description = "Access to sensitive config/credential files"
+    description = "Exposure or probing of sensitive config/credential files (.env, wp-config, etc.)"
     check_fields = ["uri_path"]
-    patterns = [
-        r"(?:/\.env|/\.env\.local|/\.env\.prod)",
-        r"/wp-config\.php",
-        r"/config\.yml|/config\.yaml|/config\.json",
-        r"/application\.properties|/application\.yml",
-        r"/\.htpasswd|/\.htaccess",
-        r"/web\.config",
-    ]
+    
+    def match(self, event: NormalizedEvent) -> Optional[ThreatMatch]:
+        """Detect immediate SUCCESSFUL exposure (200 OK)."""
+        uri = (event.uri_path or "").lower()
+        if event.http_status == 200 and SENSITIVE_FILE_REGEX.search(uri):
+            return ThreatMatch(
+                event_id=event.event_id,
+                rule_name="sensitive_file_exposed",
+                category=self.category,
+                family=self.family,
+                severity=ThreatSeverity.CRITICAL,
+                confidence=0.95,
+                evidence=f"Sensitive file exposed: {uri}",
+                matched_field="uri_path",
+                uri=event.uri_path,
+                timestamp=event.timestamp,
+                src_ip=event.src_ip,
+            )
+        return None
+
+    @staticmethod
+    def check_batch(events: list[NormalizedEvent]) -> list[ThreatMatch]:
+        """Detect batch-level probing (403/404)."""
+        return _check_recon_probing(
+            events, SENSITIVE_FILE_REGEX,
+            "sensitive_file_exposure", "sensitive_information_disclosure",
+            ThreatFamily.INFO_LEAKAGE, "sensitive_file_probing"
+        )
 
 
 class BackupFileHuntingRule(ThreatRule):
@@ -59,13 +162,36 @@ class BackupFileHuntingRule(ThreatRule):
     family = ThreatFamily.INFO_LEAKAGE
     severity = ThreatSeverity.HIGH
     confidence = 0.75
-    description = "Probing for backup/archive files"
+    description = "Exposure or probing for backup/archive files (.bak, .zip, .sql, etc.)"
     check_fields = ["uri_path"]
-    patterns = [
-        r"\.(?:bak|old|orig|copy|save|swp|tmp|temp)(?:\?|$)",
-        r"\.(?:sql|dump|tar|gz|zip|rar|7z)(?:\?|$)",
-        r"~$",
-    ]
+
+    def match(self, event: NormalizedEvent) -> Optional[ThreatMatch]:
+        """Detect immediate SUCCESSFUL exposure (200 OK)."""
+        uri = (event.uri_path or "").lower()
+        if event.http_status == 200 and BACKUP_FILE_REGEX.search(uri):
+            return ThreatMatch(
+                event_id=event.event_id,
+                rule_name="backup_file_exposed",
+                category=self.category,
+                family=self.family,
+                severity=ThreatSeverity.HIGH,
+                confidence=0.85,
+                evidence=f"Backup/archive file exposed: {uri}",
+                matched_field="uri_path",
+                uri=event.uri_path,
+                timestamp=event.timestamp,
+                src_ip=event.src_ip,
+            )
+        return None
+
+    @staticmethod
+    def check_batch(events: list[NormalizedEvent]) -> list[ThreatMatch]:
+        """Detect batch-level probing (403/404)."""
+        return _check_recon_probing(
+            events, BACKUP_FILE_REGEX,
+            "backup_file_hunting", "sensitive_information_disclosure",
+            ThreatFamily.INFO_LEAKAGE, "backup_file_probing"
+        )
 
 
 class SourceCodeExposureRule(ThreatRule):
@@ -74,15 +200,36 @@ class SourceCodeExposureRule(ThreatRule):
     family = ThreatFamily.INFO_LEAKAGE
     severity = ThreatSeverity.CRITICAL
     confidence = 0.9
-    description = "Access to source code repo files"
+    description = "Exposure or probing for source code repository files (.git, .svn, etc.)"
     check_fields = ["uri_path"]
-    patterns = [
-        r"/\.git/(?:HEAD|config|index|objects|refs)",
-        r"/\.svn/(?:entries|wc\.db)",
-        r"/\.hg/",
-        r"/\.DS_Store",
-        r"/\.idea/",
-    ]
+
+    def match(self, event: NormalizedEvent) -> Optional[ThreatMatch]:
+        """Detect immediate SUCCESSFUL exposure (200 OK)."""
+        uri = (event.uri_path or "").lower()
+        if event.http_status == 200 and SOURCE_CODE_REGEX.search(uri):
+            return ThreatMatch(
+                event_id=event.event_id,
+                rule_name="source_code_exposed",
+                category=self.category,
+                family=self.family,
+                severity=ThreatSeverity.CRITICAL,
+                confidence=0.9,
+                evidence=f"Source code metadata/repo file exposed: {uri}",
+                matched_field="uri_path",
+                uri=event.uri_path,
+                timestamp=event.timestamp,
+                src_ip=event.src_ip,
+            )
+        return None
+
+    @staticmethod
+    def check_batch(events: list[NormalizedEvent]) -> list[ThreatMatch]:
+        """Detect batch-level probing (403/404)."""
+        return _check_recon_probing(
+            events, SOURCE_CODE_REGEX,
+            "source_code_exposure", "sensitive_information_disclosure",
+            ThreatFamily.INFO_LEAKAGE, "source_code_probing"
+        )
 
 
 class DebugEndpointExposureRule(ThreatRule):
@@ -91,16 +238,36 @@ class DebugEndpointExposureRule(ThreatRule):
     family = ThreatFamily.INFO_LEAKAGE
     severity = ThreatSeverity.HIGH
     confidence = 0.8
-    description = "Access to debug/admin endpoints"
+    description = "Exposure or probing for debug/admin/instrumentation endpoints"
     check_fields = ["uri_path"]
-    patterns = [
-        r"/(?:debug|_debug|trace|_trace)\b",
-        r"/actuator(?:/|$)",
-        r"/console(?:/|$)",
-        r"/phpinfo(?:\.php)?",
-        r"/server-(?:status|info)",
-        r"/_profiler",
-    ]
+
+    def match(self, event: NormalizedEvent) -> Optional[ThreatMatch]:
+        """Detect immediate SUCCESSFUL exposure (200 OK)."""
+        uri = (event.uri_path or "").lower()
+        if event.http_status == 200 and DEBUG_ENDPOINT_REGEX.search(uri):
+            return ThreatMatch(
+                event_id=event.event_id,
+                rule_name="debug_endpoint_exposed",
+                category=self.category,
+                family=self.family,
+                severity=ThreatSeverity.HIGH,
+                confidence=0.8,
+                evidence=f"Debug/admin endpoint exposed: {uri}",
+                matched_field="uri_path",
+                uri=event.uri_path,
+                timestamp=event.timestamp,
+                src_ip=event.src_ip,
+            )
+        return None
+
+    @staticmethod
+    def check_batch(events: list[NormalizedEvent]) -> list[ThreatMatch]:
+        """Detect batch-level probing (403/404)."""
+        return _check_recon_probing(
+            events, DEBUG_ENDPOINT_REGEX,
+            "debug_endpoint_exposure", "sensitive_information_disclosure",
+            ThreatFamily.INFO_LEAKAGE, "debug_endpoint_probing"
+        )
 
 
 class ErrorDetailDisclosureRule(ThreatRule):
@@ -113,22 +280,26 @@ class ErrorDetailDisclosureRule(ThreatRule):
     check_fields = []
 
     def match(self, event: NormalizedEvent) -> Optional[ThreatMatch]:
-        if event.http_status and event.http_status >= 500:
-            resp_size = event.response_size or event.bytes_sent or 0
-            if resp_size > 5000:
-                return ThreatMatch(
-                    event_id=event.event_id,
-                    rule_name=self.name,
-                    category=self.category,
-                    family=self.family,
-                    severity=self.severity,
-                    confidence=self.confidence,
-                    evidence=f"HTTP {event.http_status} with {resp_size}B response",
-                    matched_field="http_status",
-                    timestamp=event.timestamp,
-                    src_ip=event.src_ip,
-                )
-        return None
+        try:
+            if event.http_status and event.http_status >= 500:
+                resp_size = event.response_size or event.bytes_sent or 0
+                if resp_size > 5000:
+                    return ThreatMatch(
+                        event_id=event.event_id,
+                        rule_name=self.name,
+                        category=self.category,
+                        family=self.family,
+                        severity=self.severity,
+                        confidence=self.confidence,
+                        evidence=f"HTTP {event.http_status} with {resp_size}B response",
+                        matched_field="http_status",
+                        timestamp=event.timestamp,
+                        src_ip=event.src_ip,
+                    )
+            return None
+        except Exception as e:
+            logger.error(f"[{self.name}] match failed for event {event.event_id}: {e}", exc_info=True)
+            return None
 
 
 class TechFingerprintingRule(ThreatRule):
@@ -199,35 +370,96 @@ class HardcodedSecretPatternRule(ThreatRule):
     ]
 
 
-class DataExfiltrationPatternRule(ThreatRule):
-    name = "data_exfiltration_pattern"
+class DataExfiltrationBasicRule(ThreatRule):
+    name = "data_exfil_single"
     category = "sensitive_information_disclosure"
     family = ThreatFamily.INFO_LEAKAGE
     severity = ThreatSeverity.HIGH
-    confidence = 0.5
-    description = "Large data response from sensitive endpoints"
+    confidence = 0.75
+    description = "Large POST to sensitive endpoint (single-event exfiltration)"
     check_fields = []
-    _SENSITIVE = ["/export", "/download", "/dump", "/backup", "/api/users", "/api/data"]
 
     def match(self, event: NormalizedEvent) -> Optional[ThreatMatch]:
-        uri = (event.uri_path or "").lower()
-        resp_size = event.response_size or event.bytes_sent or 0
-        if resp_size > 100000:
-            for path in self._SENSITIVE:
-                if path in uri:
-                    return ThreatMatch(
-                        event_id=event.event_id,
-                        rule_name=self.name,
-                        category=self.category,
-                        family=self.family,
-                        severity=self.severity,
-                        confidence=self.confidence,
-                        evidence=f"Large response ({resp_size}B) from {uri[:80]}",
-                        matched_field="uri_path",
-                        timestamp=event.timestamp,
-                        src_ip=event.src_ip,
-                    )
+        try:
+            uri = (event.uri_path or "").lower()
+            method = (event.http_method or "").upper()
+            bytes_out = event.bytes_sent or 0
+
+            if method == "POST" and is_sensitive_path(uri) and bytes_out > SINGLE_THRESHOLD:
+                return ThreatMatch(
+                    event_id=event.event_id,
+                    rule_name=self.name,
+                    category=self.category,
+                    family=self.family,
+                    severity=self.severity,
+                    confidence=self.confidence,
+                    evidence=f"POST to sensitive path {uri[:80]} with {bytes_out}B sent (threshold: {SINGLE_THRESHOLD}B)",
+                    matched_field="uri_path",
+                    uri=event.uri_path,
+                    timestamp=event.timestamp,
+                    src_ip=event.src_ip,
+                )
+            return None
+        except Exception as e:
+            logger.error(f"[{self.name}] match failed for event {event.event_id}: {e}", exc_info=True)
+            return None
+
+
+class DataExfiltrationLowSlowRule(ThreatRule):
+    name = "data_exfil_low_slow"
+    category = "sensitive_information_disclosure"
+    family = ThreatFamily.INFO_LEAKAGE
+    severity = ThreatSeverity.HIGH
+    confidence = 0.65
+    description = "Low-and-slow data exfiltration: aggregate bytes to sensitive endpoints"
+    check_fields = []
+
+    def match(self, event: NormalizedEvent) -> Optional[ThreatMatch]:
+        # Handled at batch level via check_batch; per-event match is a no-op
         return None
+
+    @staticmethod
+    def check_batch(events: list[NormalizedEvent]) -> list[ThreatMatch]:
+        """Check aggregate bytes_sent per src_ip across all sensitive-path events."""
+        try:
+            traffic: dict[str, int] = defaultdict(int)
+            last_event_by_ip: dict[str, NormalizedEvent] = {}
+
+            for ev in events:
+                try:
+                    uri = (ev.uri_path or "").lower()
+                    if not is_sensitive_path(uri):
+                        continue
+                    ip = ev.src_ip or "-"
+                    traffic[ip] += ev.bytes_sent or 0
+                    last_event_by_ip[ip] = ev
+                except Exception as e:
+                    logger.warning(f"[data_exfil_low_slow] Failed to process event {ev.event_id}: {e}", exc_info=True)
+
+            matches = []
+            for ip, total_bytes in traffic.items():
+                try:
+                    if total_bytes > AGGREGATE_THRESHOLD:
+                        last = last_event_by_ip[ip]
+                        matches.append(ThreatMatch(
+                            event_id=last.event_id,
+                            rule_name="data_exfil_low_slow",
+                            category="sensitive_information_disclosure",
+                            family=ThreatFamily.INFO_LEAKAGE,
+                            severity=ThreatSeverity.HIGH,
+                            confidence=0.65,
+                            evidence=f"Low-and-slow exfil from {ip}: {total_bytes}B sent to sensitive paths (threshold: {AGGREGATE_THRESHOLD}B)",
+                            matched_field="bytes_sent",
+                            uri=last.uri_path,
+                            timestamp=last.timestamp,
+                            src_ip=last.src_ip,
+                        ))
+                except Exception as e:
+                    logger.warning(f"[data_exfil_low_slow] Failed to build ThreatMatch for IP {ip}: {e}", exc_info=True)
+            return matches
+        except Exception as e:
+            logger.error(f"[data_exfil_low_slow] check_batch failed: {e}", exc_info=True)
+            return []
 
 
 # Family 4: Path & File
@@ -242,13 +474,12 @@ class PathTraversalRule(ThreatRule):
     check_fields = ["uri_path", "uri_query", "original_message"]
     patterns = [
         r"\.\./",
-        r"\.\.\\",
+        r"\.\.\\ ",
         r"\.\.%2[fF]",
         r"\.\.%255[cC]",
         r"%2[eE]%2[eE]%2[fF]",
         r"\.\.%c0%af",
     ]
-
 
 
 class LFIRule(ThreatRule):
@@ -324,7 +555,8 @@ INFO_LEAKAGE_RULES = [
     APISchemaDiscoveryRule,
     HardcodedCredsInURLRule,
     HardcodedSecretPatternRule,
-    DataExfiltrationPatternRule,
+    DataExfiltrationBasicRule,
+    DataExfiltrationLowSlowRule,
 ]
 
 PATH_FILE_RULES = [

@@ -8,7 +8,11 @@ Ensures consistent data format across all log sources.
 from __future__ import annotations
 
 import ipaddress
+import os
+import re
+from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime, timezone
+from functools import lru_cache
 from typing import Any
 from urllib.parse import urlsplit
 from uuid import uuid4
@@ -36,6 +40,9 @@ class NormalizationService:
     - Assign stable event IDs
     - Classify internal vs external IPs
     """
+
+    # Pre-compiled regex for speed
+    IP_PATTERN = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")
 
     # RFC 1918 private IP ranges
     PRIVATE_RANGES = [
@@ -101,16 +108,19 @@ class NormalizationService:
             src_ip = self._normalize_ip(parsed.source_address)
             dst_ip = self._normalize_ip(parsed.destination_address)
             
-            # If src_ip is missing, keep it as "-" (do NOT fallback to dst_ip)
+            # If src_ip is missing, discard the event immediately
             if not src_ip:
-                src_ip = "-"
+                # Log at DEBUG only — callers (normalize_batch / normalize_batch_parallel)
+                # emit a single aggregated summary so this never floods INFO logs.
+                logger.debug(f"Discarding event due to missing source IP | file_id={parsed.file_id}, row_hash={parsed.row_hash}")
+                return None
             
             # Ensure src_ip and dst_ip are never the same
-            if src_ip != "-" and dst_ip and src_ip == dst_ip:
-                logger.warning(
-                    f"Source and destination IPs are identical, clearing dst_ip | file_id={parsed.file_id}, ip={src_ip}"
-                )
-                dst_ip = None
+            # if src_ip != "-" and dst_ip and src_ip == dst_ip:
+            #     logger.warning(
+            #         f"Source and destination IPs are identical, clearing dst_ip | file_id={parsed.file_id}, ip={src_ip}"
+            #     )
+            #     dst_ip = None
 
             # Get or infer timestamp - always normalize to naive UTC
             timestamp = self._strip_tz(parsed.timestamp) or datetime.utcnow()
@@ -121,8 +131,8 @@ class NormalizationService:
             # Normalize protocol
             protocol = self._normalize_protocol(parsed.protocol, parsed.destination_port)
 
-            # Classify internal/external
-            is_internal_src = self._is_internal_ip(src_ip)
+            # Classify internal/external (skip placeholder IPs)
+            is_internal_src = self._is_internal_ip(src_ip) if src_ip != "-" else None
             is_internal_dst = self._is_internal_ip(dst_ip) if dst_ip else None
 
             # Extract extended fields from parsed_data if available
@@ -219,23 +229,35 @@ class NormalizationService:
         file_id = parsed_events[0].file_id
         normalized = []
         error_count = 0
+        discard_count = 0  # Events dropped due to missing src_ip
+
+        logger.info(
+            f"Batch normalization started | file_id={file_id}, total_events={len(parsed_events)}"
+        )
 
         for parsed in parsed_events:
             event = self.normalize_event(parsed)
             if event:
                 normalized.append(event)
             else:
-                error_count += 1
+                # Distinguish discard (missing src_ip) from hard error
+                src_ip = self._normalize_ip(parsed.source_address)
+                if not src_ip:
+                    discard_count += 1
+                else:
+                    error_count += 1
 
         logger.info(
-            f"Batch normalization complete | file_id={file_id}, total={len(parsed_events)}, normalized={len(normalized)}, errors={error_count}"
+            f"Batch normalization complete | file_id={file_id}, "
+            f"total={len(parsed_events)}, normalized={len(normalized)}, "
+            f"discarded_no_src_ip={discard_count}, errors={error_count}"
         )
 
         return EventBatch(
             file_id=file_id,
             events=normalized,
             total_rows_processed=len(parsed_events),
-            parse_error_count=error_count,
+            parse_error_count=error_count + discard_count,
         )
 
     def _extract_uri_parts(
@@ -270,6 +292,7 @@ class NormalizationService:
 
         return path, query
 
+    @lru_cache(maxsize=10000)
     def _normalize_ip(self, ip_str: str | None) -> str | None:
         """Normalize and validate IP address. Treats '-' as missing value."""
         if not ip_str:
@@ -290,11 +313,8 @@ class NormalizationService:
             ip = ipaddress.ip_address(ip_str)
             return str(ip)
         except ValueError:
-            # Try to extract IP from string
-            import re
-
-            ip_pattern = r"\b(?:\d{1,3}\.){3}\d{1,3}\b"
-            match = re.search(ip_pattern, ip_str)
+            # Try to extract IP from string using pre-compiled pattern
+            match = self.IP_PATTERN.search(ip_str)
             if match:
                 try:
                     ip = ipaddress.ip_address(match.group())
@@ -365,8 +385,9 @@ class NormalizationService:
         except (ValueError, TypeError):
             return None
 
+    @lru_cache(maxsize=10000)
     def _is_internal_ip(self, ip_str: str) -> bool:
-        """Check if IP is internal (private)."""
+        """Check if IP is internal (private) with caching."""
         try:
             ip = ipaddress.ip_address(ip_str)
             return any(ip in network for network in self.PRIVATE_RANGES)
@@ -381,3 +402,117 @@ class NormalizationService:
             "normalization_errors": self.normalization_errors,
             "success_rate": (self.events_normalized / total if total > 0 else 0),
         }
+
+    def normalize_batch_parallel(
+        self,
+        parsed_events: list[ParsedEvent],
+        max_workers: int | None = None,
+        chunk_size: int = 5000,
+    ) -> EventBatch:
+        """
+        CPU-parallel normalization using ProcessPoolExecutor.
+
+        Splits parsed_events into sub-batches and normalizes them across
+        multiple CPU cores. Falls back to single-threaded for small batches.
+
+        Args:
+            parsed_events: List of parsed events
+            max_workers: Number of CPU cores to use (default: auto)
+            chunk_size: Events per sub-batch sent to each worker
+
+        Returns:
+            EventBatch with normalized events
+        """
+        if not parsed_events:
+            return EventBatch(
+                file_id=uuid4(),
+                events=[],
+                total_rows_processed=0,
+                parse_error_count=0,
+            )
+
+        # For small batches, single-threaded is faster (no IPC overhead)
+        if len(parsed_events) < chunk_size * 2:
+            return self.normalize_batch(parsed_events)
+
+        file_id = parsed_events[0].file_id
+        workers = max_workers or min(os.cpu_count() or 4, 8)
+
+        # Split into sub-batches
+        sub_batches = [
+            parsed_events[i : i + chunk_size]
+            for i in range(0, len(parsed_events), chunk_size)
+        ]
+
+        logger.info(
+            f"Parallel normalization starting | file_id={file_id}, "
+            f"events={len(parsed_events)}, workers={workers}, "
+            f"sub_batches={len(sub_batches)}"
+        )
+
+        all_normalized = []
+        total_errors = 0
+
+        with ProcessPoolExecutor(max_workers=workers) as executor:
+            futures = [
+                executor.submit(_worker_normalize_batch, batch)
+                for batch in sub_batches
+            ]
+            for future in futures:
+                events, errors = future.result()
+                all_normalized.extend(events)
+                total_errors += errors
+
+        self.events_normalized += len(all_normalized)
+        self.normalization_errors += total_errors
+
+        logger.info(
+            f"Parallel normalization complete | file_id={file_id}, "
+            f"total={len(parsed_events)}, normalized={len(all_normalized)}, "
+            f"errors={total_errors}"
+        )
+
+        return EventBatch(
+            file_id=file_id,
+            events=all_normalized,
+            total_rows_processed=len(parsed_events),
+            parse_error_count=total_errors,
+        )
+
+
+def _worker_normalize_batch(
+    parsed_events: list[ParsedEvent],
+) -> tuple[list[NormalizedEvent], int]:
+    """
+    Module-level worker function for ProcessPoolExecutor.
+    Each worker creates its own NormalizationService instance
+    (with its own LRU cache) to avoid pickle/shared-state issues.
+    """
+    svc = NormalizationService()
+    normalized = []
+    errors = 0
+    discard_count = 0
+    file_id = parsed_events[0].file_id if parsed_events else "unknown"
+
+    logger.info(
+        f"[worker] Normalization sub-batch started | file_id={file_id}, events={len(parsed_events)}"
+    )
+
+    for parsed in parsed_events:
+        event = svc.normalize_event(parsed)
+        if event:
+            normalized.append(event)
+        else:
+            src_ip = svc._normalize_ip(parsed.source_address)
+            if not src_ip:
+                discard_count += 1
+            else:
+                errors += 1
+
+    logger.info(
+        f"[worker] Normalization sub-batch complete | file_id={file_id}, "
+        f"total={len(parsed_events)}, normalized={len(normalized)}, "
+        f"discarded_no_src_ip={discard_count}, errors={errors}"
+    )
+
+    return normalized, errors + discard_count

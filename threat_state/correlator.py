@@ -226,12 +226,20 @@ class DayLevelCorrelator:
             )]
         return []
 
-    # â”€â”€ C8: Data exfiltration pattern â”€â”€
+    # ── C8: Data exfiltration pattern ──
     def _check_data_exfil(self, actor: ActorState) -> list[CorrelationFinding]:
-        # Check if actor has both recon AND large 200 response patterns
-        has_attacks = len(actor.attack_categories_seen) > 0
+        import ipaddress
+        
+        # Check if IP is public (interpreting dstip check against the actor's public address)
+        try:
+            is_public = not ipaddress.ip_address(actor.ip).is_private
+        except ValueError:
+            is_public = False
+            
         large_200_count = int(actor.requests_by_status.get("200", 0))
-        if has_attacks and large_200_count > 100 and actor.total_requests > 200:
+        
+        # Enforce thresholds without checking attack_categories_seen
+        if is_public and large_200_count > 100 and actor.total_requests > 200:
             success_ratio = large_200_count / actor.total_requests
             if success_ratio > 0.5 and actor.threat_score > 0.3:
                 return [CorrelationFinding(
@@ -239,10 +247,8 @@ class DayLevelCorrelator:
                     category="data_exfiltration",
                     severity="high",
                     confidence=0.6,
-                    description=f"Potential data exfil: attacker with {large_200_count} successful requests",
+                    description=f"Potential data exfil: Public IP actor with {large_200_count} successful requests",
                     src_ip=actor.ip,
                     evidence={"success_count": large_200_count, "threat_score": actor.threat_score},
                 )]
         return []
-
-

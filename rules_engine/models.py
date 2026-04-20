@@ -81,4 +81,7 @@ class DetectionResult(BaseModel):
 
     @property
     def high_confidence_threats(self) -> list[DeterministicThreat]:
-        return [t for t in self.threats if t.confidence >= 0.7]
+        try:
+            return [t for t in self.threats if t.confidence >= 0.7]
+        except Exception:
+            return []
