@@ -356,12 +356,10 @@ async def analyze_file(
         chunks = await chunking_svc.chunk_events(enriched_events, file_id=parsed_uuid)
 
         # Balanced filtering â€” catches low-volume targeted attacks too
-        suspicious_chunks = chunking_svc.filter_suspicious_chunks(
-            chunks,
-            min_events=10,           # catch targeted attacks (â‰¥10 events)
-            min_failure_rate=0.3,    # original threshold â€” good balance
-            min_unique_targets=3,    # original threshold
-        )
+        # Send ALL chunks to AI -- thresholds removed so no chunk is filtered out.
+        # Every event group, regardless of size, failure rate, or target count,
+        # will be included in AI analysis.
+        suspicious_chunks = chunks  # was: chunking_svc.filter_suspicious_chunks(...)
 
         # Store chunks for rollup via Async Flush Buffer
         from core.flush_buffer import get_flush_worker
@@ -370,7 +368,9 @@ async def analyze_file(
             await flush_worker.submit_chunk(chunk)
 
         ai_outputs = []
-        needs_ai = tier1_result.needs_ai_review or tier2_result.needs_ai_review
+        # Always escalate to AI — every deterministic and correlation finding
+        # should go through AI analysis regardless of tier flags.
+        needs_ai = True  # was: tier1_result.needs_ai_review or tier2_result.needs_ai_review
 
         # â”€â”€ Scale optimization: risk-score, deprioritize, and cap for AI â”€â”€
         MAX_AI_CHUNKS = 20          # Generous cap â€” ~4 min with 5 concurrent

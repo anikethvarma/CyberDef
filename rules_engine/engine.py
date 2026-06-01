@@ -282,28 +282,38 @@ class DeterministicEngine:
         matches: list[ThreatMatch],
         threats: list[DeterministicThreat],
     ) -> tuple[bool, list[str]]:
-        """Determine if AI escalation is needed."""
+        """Determine if AI escalation is needed.
+
+        Always escalates when any deterministic threats or rule matches exist so
+        that every Tier 1 finding gets AI analysis.  Falls back to heuristic
+        signal checks when the batch produced no threats at all.
+        """
         try:
             reasons = []
 
-            # If no threats found but suspicious signals exist
-            if not threats:
-                # High 4xx rate without specific rule matches
-                status_4xx = sum(
-                    1 for ev in events
-                    if ev.http_status and 400 <= ev.http_status < 500
+            # Always escalate if any threats were detected
+            if threats:
+                reasons.append(
+                    f"{len(threats)} deterministic threat(s) detected — escalating all to AI"
                 )
-                if len(events) > 0 and status_4xx / len(events) > 0.3:
-                    reasons.append(f"High 4xx rate ({status_4xx}/{len(events)}) without specific rule match")
+                return True, reasons
 
-            # Low-confidence threat — AI can provide context
-            low_conf = [t for t in threats if t.confidence < 0.6]
-            if low_conf:
-                reasons.append(f"{len(low_conf)} low-confidence threats need AI context")
+            # Always escalate if any rule matches fired (even without grouped threats)
+            if matches:
+                reasons.append(
+                    f"{len(matches)} rule match(es) detected — escalating all to AI"
+                )
+                return True, reasons
 
-            # Very high match count may indicate coordinated attack
-            if len(matches) > 500:
-                reasons.append(f"Very high match count ({len(matches)}) — possible coordinated attack")
+            # Fallback: no threats/matches but suspicious signal in the batch
+            status_4xx = sum(
+                1 for ev in events
+                if ev.http_status and 400 <= ev.http_status < 500
+            )
+            if len(events) > 0 and status_4xx / len(events) > 0.3:
+                reasons.append(
+                    f"High 4xx rate ({status_4xx}/{len(events)}) without specific rule match"
+                )
 
             return bool(reasons), reasons
         except Exception as e:

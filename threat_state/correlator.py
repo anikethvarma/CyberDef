@@ -84,13 +84,10 @@ class DayLevelCorrelator:
 
         elapsed_ms = int((time.perf_counter_ns() - start) / 1_000_000)
 
-        needs_ai = False
-        ai_reasons = []
-        # Escalate kill-chain or multi-vector actors
-        for f in new:
-            if f.correlation_rule in ("kill_chain_progression", "multi_vector_attacker"):
-                needs_ai = True
-                ai_reasons.append(f"{f.correlation_rule}: {f.src_ip}")
+        # Always escalate every new correlation finding to AI — not just
+        # kill_chain and multi_vector — so all Tier 2 findings get AI analysis.
+        needs_ai = bool(new)
+        ai_reasons = [f"{f.correlation_rule}: {f.src_ip}" for f in new]
 
         return CorrelationResult(
             findings=all_findings,
