@@ -58,7 +58,22 @@ class ChunkStorage:
             data["action_distribution"] = json.dumps(data.get("action_distribution", {}))
             
             # Serialize highly dynamic lists to avoid PyArrow schema inference errors
-            data["events"] = json.dumps(data.get("events", []))
+            events_to_store = []
+            for event in data.get("events", []):
+                pruned_event = {
+                    "event_id": event.get("event_id"),
+                    "timestamp": event.get("timestamp"),
+                    "src_ip": event.get("src_ip"),
+                    "dst_ip": event.get("dst_ip"),
+                    "username": event.get("username"),
+                    "raw_url": event.get("raw_url"),
+                    "user_agent": event.get("user_agent"),
+                    "http_status": event.get("http_status"),
+                    "original_message": event.get("original_message")
+                }
+                events_to_store.append({k: v for k, v in pruned_event.items() if v is not None})
+                
+            data["events"] = json.dumps(events_to_store)
             data["flagged_rules"] = json.dumps(data.get("flagged_rules") or [])
             
             chunk_data.append(data)

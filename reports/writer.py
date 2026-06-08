@@ -875,66 +875,15 @@ class ReportWriter:
             _a("No MITRE ATT&CK techniques mapped in this analysis.")
             _a("")
 
-        # ── Needs Human Review ────────────────────────────────────────────────
-        _a("---")
-        _a("## 🕵️‍♂️ Needs Human Review")
-        _a("")
-        
-        human_review_outputs = [o for o in ai_outputs if getattr(o, "requires_human_review", False)]
-        if human_review_outputs:
-            _a("> The following activities were flagged by the AI Tier as requiring manual SOC review.")
-            _a("")
-            for i, output in enumerate(human_review_outputs, 1):
-                extracted_ips = _agent_output_ips(output)
-                ip = ", ".join(extracted_ips) if extracted_ips else "Unknown"
 
-                triage = getattr(output, "triage", None)
-                intent = getattr(output, "intent", None)
-                behavioral = getattr(output, "behavioral", None)
-
-                title = intent.suspected_intent if intent and hasattr(intent, "suspected_intent") else "Suspicious Activity"
-                priority = triage.priority.value if triage and hasattr(triage, "priority") and hasattr(triage.priority, "value") else (getattr(triage, "priority", "Unknown") if triage else "Unknown")
-                
-                _a(f"### {i}. {title}")
-                _a("")
-                _a(f"**Source IP(s):** `{ip}`  ")
-                _a(f"**Priority:** {priority}  ")
-                if triage and getattr(triage, "risk_reason", None):
-                    _a(f"**Risk:** {triage.risk_reason}")
-                
-                _a("")
-                _a("**Evidence Details:**")
-                
-                if triage and getattr(triage, "tp_justification", None) and str(triage.tp_justification).lower() not in ("null", "none", ""):
-                    _a(f"- **TP Justification:** {triage.tp_justification}")
-                
-                if triage and getattr(triage, "suspicious_indicator", None) and str(triage.suspicious_indicator).lower() not in ("null", "none", ""):
-                    _a(f"- **Suspicious Indicator:** `{triage.suspicious_indicator}`")
-                
-                if behavioral and getattr(behavioral, "key_indicators", None):
-                    _a("- **Key Indicators:**")
-                    for ki in behavioral.key_indicators:
-                        _a(f"  - `{ki}`")
-                        
-                if triage and getattr(triage, "raw_log", None) and str(triage.raw_log).lower() not in ("null", "none", ""):
-                    _a("- **Raw Log Extract:**")
-                    _a("```text")
-                    # limit to 500 chars to keep report readable
-                    _a(str(triage.raw_log)[:500] + ("..." if len(str(triage.raw_log)) > 500 else ""))
-                    _a("```")
-                
-                _a("")
-        else:
-            _a("> No threats were flagged for human review in this batch.")
-            _a("")
 
         # ── Incidents Summary ─────────────────────────────────────────────────
         _a("---")
         _a("## 🚨 Incidents Created")
         _a("")
         if incidents:
-            _a("| # | ID | Title | Priority | Status | Tier |")
-            _a("|---|-----|-------|----------|--------|------|")
+            _a("| # | ID | Title | Priority | Status | Tier | IP | UserID |")
+            _a("|---|-----|-------|----------|--------|------|----|--------|")
             incident_rows_to_render = incidents[:MAX_INCIDENT_ROWS]
             omitted_incidents = len(incidents) - len(incident_rows_to_render)
             if omitted_incidents > 0:
@@ -948,7 +897,9 @@ class ReportWriter:
                     source_enum = getattr(inc, "source", "unknown")
                     tier = str(source_enum).replace("IncidentSource.", "").title()
                 inc_id         = str(getattr(inc, "incident_id", ""))[:8]
-                _a(f"| {i} | `{inc_id}…` | {title} | **{priority}** | {incident_status} | {tier} |")
+                ip             = getattr(inc, "primary_actor_ip", None) or getattr(inc, "source_ip", "Unknown")
+                userid         = getattr(inc, "primary_actor_username", None) or getattr(inc, "source_username", "N/A")
+                _a(f"| {i} | `{inc_id}…` | {title} | **{priority}** | {incident_status} | {tier} | {ip} | {userid} |")
             _a("")
         else:
             _a("No incidents created from this analysis.")
@@ -1044,6 +995,7 @@ class ReportWriter:
         top_mitre = mitre_techniques[0] if mitre_techniques else {}
 
         source_ip = data.get("source_ip") or data.get("primary_actor_ip")
+        source_username = data.get("source_username") or data.get("primary_actor_username")
 
         destination_ip = data.get("destination_ip")
         if not destination_ip:
@@ -1087,6 +1039,7 @@ class ReportWriter:
             "last_seen": data.get("last_seen"),
             "raw_log": raw_log,
             "source_ip": source_ip,
+            "source_username": source_username,
             "destination_ip": destination_ip,
             "hostname": hostname,
             "suspicious": data.get("suspicious", True),

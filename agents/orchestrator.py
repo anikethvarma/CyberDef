@@ -283,14 +283,13 @@ class AgentOrchestrator:
             if (
                 state.get("skip_if_not_suspicious", True)
                 and not behavioral.is_suspicious
-                and behavioral.confidence >= self.settings.min_confidence_threshold
             ):
                 state["stop_downstream"] = True
-                state["stop_reason"] = "behavioral_confident_benign"
+                state["stop_reason"] = "behavioral_benign"
         except Exception as e:
             self._record_agent_error(state, "behavioral_interpretation", str(e))
-            # DO NOT stop downstream if behavioral agent fails. Let TriageAgent try to recover it.
-            state["stop_downstream"] = False
+            # Behavioral agent failed. Without it, we cannot determine if the chunk is suspicious, so we must stop.
+            state["stop_downstream"] = True
             state["stop_reason"] = "behavioral_failed"
         return state
 
@@ -349,7 +348,7 @@ class AgentOrchestrator:
         output.errors = list(state.get("errors", []))
         output.compute_overall_confidence()
 
-        if state.get("stop_reason") == "behavioral_confident_benign":
+        if state.get("stop_reason") == "behavioral_benign":
             output.requires_human_review = False
         elif output.has_agent_result():
             # Let AI decide if human review is needed (from triage agent)

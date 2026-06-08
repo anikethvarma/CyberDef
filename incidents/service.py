@@ -378,7 +378,7 @@ class IncidentService:
                 )
             )),
             attack_name=attack_name,
-            brief_description=brief_description[:260] if brief_description else None,
+            brief_description=brief_description if brief_description else None,
             recommended_action=recommended_action,
             confidence_score=triage.confidence_score if triage else self._confidence_to_score(output.overall_confidence),
             mitre_tactic=(triage.mitre_tactic if triage and triage.mitre_tactic else (output.mitre.tactic if output.mitre else primary_tactic)),
@@ -408,10 +408,8 @@ class IncidentService:
         """Create an incident from a Tier 1 deterministic threat finding."""
         from datetime import datetime
 
-        # Check if threat should be excluded
-        if self._should_exclude_threat(threat):
-            return None
-
+        # The user requested that all threats be created as incidents, even if they are FPs
+        # (We bypass _should_exclude_threat)
         severity_to_priority = {
             "critical": IncidentPriority.CRITICAL,
             "high": IncidentPriority.HIGH,
@@ -430,12 +428,16 @@ class IncidentService:
         correlation_parts = []
         if threat.src_ip:
             correlation_parts.append(f"IP: {threat.src_ip}")
-        if threat.src_username:
-            correlation_parts.append(f"User: {threat.src_username}")
+            
+        primary_username = threat.usernames[0] if getattr(threat, "usernames", None) else threat.src_username
+        all_usernames = getattr(threat, "usernames", None) or threat.src_usernames
+
+        if primary_username:
+            correlation_parts.append(f"User: {primary_username}")
         if len(threat.src_ips) > 1:
             correlation_parts.append(f"Additional IPs: {', '.join(threat.src_ips[1:3])}")
-        if len(threat.src_usernames) > 1:
-            correlation_parts.append(f"Additional Users: {', '.join(threat.src_usernames[1:3])}")
+        if len(all_usernames) > 1:
+            correlation_parts.append(f"Additional Users: {', '.join(all_usernames[1:3])}")
         correlation_info = " | ".join(correlation_parts) if correlation_parts else None
 
         incident = Incident(
@@ -454,8 +456,8 @@ class IncidentService:
             file_ids=[file_id] if file_id else [],
             primary_actor_ip=threat.src_ip,
             actor_ips=threat.src_ips,
-            primary_actor_username=threat.src_username,
-            actor_usernames=threat.src_usernames,
+            primary_actor_username=primary_username,
+            actor_usernames=all_usernames,
             overall_confidence=threat.confidence,
             detection_tier="deterministic",
             detection_rule=threat.rule_name,
@@ -463,12 +465,12 @@ class IncidentService:
             recommended_actions=[f"Investigate {threat.category} from {actor}"],
             raw_log=threat.sample_evidence[0][:300] if threat.sample_evidence else None,
             source_ip=threat.src_ip,
-            source_username=threat.src_username,
+            source_username=primary_username,
             destination_ip=self._extract_destination_ip_from_text(evidence_str),
             suspicious=priority != IncidentPriority.INFORMATIONAL,
             suspicious_indicator=self._derive_indicator_from_corpus(" ".join([threat.category, threat.rule_name, evidence_str])),
             attack_name=threat.rule_name,
-            brief_description=threat.description[:260],
+            brief_description=threat.description,
             recommended_action=f"Investigate {threat.category} from {actor}",
             confidence_score=self._confidence_to_score(threat.confidence),
             correlation_info=correlation_info,
@@ -548,7 +550,7 @@ class IncidentService:
                 " ".join([finding.description or "", finding.correlation_rule or "", str(getattr(finding, "evidence", ""))])
             ),
             attack_name=finding.correlation_rule,
-            brief_description=finding.description[:260] if finding.description else None,
+            brief_description=finding.description if finding.description else None,
             recommended_action=f"Investigate correlated activity from {finding.src_ip}",
             confidence_score=self._confidence_to_score(finding.confidence),
             correlation_info=correlation_info,
@@ -675,7 +677,7 @@ class IncidentService:
             suspicious=highest_priority != IncidentPriority.INFORMATIONAL,
             suspicious_indicator=self._derive_indicator_from_corpus(" ".join([title, first_output.behavioral.interpretation if first_output.behavioral else ""])),
             attack_name=first_output.intent.suspected_intent if first_output.intent else title,
-            brief_description=first_output.behavioral.interpretation[:260] if first_output.behavioral else title,
+            brief_description=first_output.behavioral.interpretation if first_output.behavioral else title,
             recommended_action=first_output.triage.recommended_action if first_output.triage else "Investigate correlated sequence.",
             confidence_score=self._confidence_to_score(avg_confidence),
             mitre_tactic=first_output.mitre.tactic if first_output.mitre else (list(tactics)[0] if len(tactics) == 1 else None),

@@ -354,6 +354,54 @@ async def analyze_file(
         all_incidents = []
         parsed_uuid = UUID(file_id)
 
+        def _process_correlation_patterns(patterns, ai_confirmed_ips_set=None):
+            if not settings.enable_correlation_tier:
+                return
+            from collections import defaultdict
+            from threat_state.correlator import CorrelationFinding
+            patterns_by_ip = defaultdict(list)
+            for pattern in patterns:
+                patterns_by_ip[pattern.src_ip].append(pattern)
+            
+            for ip, ip_patterns in patterns_by_ip.items():
+                if len(ip_patterns) == 1:
+                    pattern_to_log = ip_patterns[0]
+                else:
+                    categories = list(set(p.category for p in ip_patterns))
+                    severities = [p.severity for p in ip_patterns]
+                    sev_rank = {"critical": 3, "high": 2, "medium": 1, "low": 0}
+                    highest_sev = max(severities, key=lambda s: sev_rank.get(s, 0))
+                    desc = f"Multi-vector correlation incident encompassing {len(ip_patterns)} findings: " + " | ".join(p.description for p in ip_patterns)
+                    combined_evidence = {}
+                    for p in ip_patterns:
+                        combined_evidence[p.correlation_rule] = p.evidence
+                        
+                    pattern_to_log = CorrelationFinding(
+                        correlation_rule="composite_multi_vector",
+                        category=", ".join(categories),
+                        severity=highest_sev,
+                        confidence=max(p.confidence for p in ip_patterns),
+                        description=desc,
+                        src_ip=ip,
+                        evidence=combined_evidence,
+                        detection_tier="correlation"
+                    )
+
+                incident = incident_service.create_from_correlation(
+                    pattern_to_log, file_id=parsed_uuid,
+                )
+                if incident:
+                    if ai_confirmed_ips_set is not None:
+                        if pattern_to_log.src_ip not in ai_confirmed_ips_set:
+                            fp_remark = _extract_fp_remark(pattern_to_log.src_ip or "")
+                            logger.info(
+                                f"Tier 2 finding dropped by AI (FP), lodging as human review | rule={pattern_to_log.correlation_rule}, ip={pattern_to_log.src_ip} | remark={fp_remark}"
+                            )
+                            incident.detection_tier = "AI Analyzed - needs human review"
+                        else:
+                            incident.detection_tier = "Correlation"
+                    all_incidents.append(incident)
+
         # Collect source IPs from Tier 1 threats
         incident_ips: set[str] = set()
         for threat in tier1_result.threats:
@@ -370,7 +418,7 @@ async def analyze_file(
 
         # Map IP -> Tier1 threats and IP -> Tier2 patterns for post-AI incident creation
         ip_to_tier1_threats: Dict[str, list] = {}
-        for threat in tier1_result.high_confidence_threats:
+        for threat in tier1_result.threats:
             ip = threat.src_ip or ""
             ip_to_tier1_threats.setdefault(ip, []).append(threat)
             for extra_ip in threat.src_ips:
@@ -412,9 +460,9 @@ async def analyze_file(
 
 
         # ——— Build rule-specific context for Chunks ————————————
-        # Build ip → list-of-rule-dicts from Tier 1 and Tier 2 findings.
-        ip_to_flagged_rules: Dict[str, list] = {}
-        for threat in tier1_result.high_confidence_threats:
+        # Build event_id → list-of-rule-dicts from Tier 1 and Tier 2 findings.
+        event_to_flagged_rules: Dict[UUID, list] = {}
+        for threat in tier1_result.threats:
             rule_entry = {
                 "tier": "Tier 1 (Deterministic)",
                 "rule": threat.rule_name,
@@ -423,33 +471,30 @@ async def analyze_file(
                 "description": getattr(threat, "description", threat.rule_name),
                 "evidence": getattr(threat, "sample_evidence", []),
             }
-            for ip in ([threat.src_ip] if threat.src_ip else []) + list(threat.src_ips or []):
-                if ip:
-                    ip_to_flagged_rules.setdefault(ip, []).append(rule_entry)
+            for event_id in getattr(threat, "affected_event_ids", []):
+                event_to_flagged_rules.setdefault(event_id, []).append(rule_entry)
 
         if settings.enable_correlation_tier:
             for pattern in tier2_result.new_patterns:
-                if pattern.src_ip:
-                    rule_entry = {
-                        "tier": "Tier 2 (Correlation)",
-                        "rule": pattern.correlation_rule,
-                        "category": getattr(pattern, "category", "correlation"),
-                        "severity": getattr(pattern, "severity", "medium"),
-                        "description": getattr(pattern, "description", pattern.correlation_rule),
-                        "evidence": getattr(pattern, "evidence", {}),
-                    }
-                    ip_to_flagged_rules.setdefault(pattern.src_ip, []).append(rule_entry)
+                rule_entry = {
+                    "tier": "Tier 2 (Correlation)",
+                    "rule": pattern.correlation_rule,
+                    "category": getattr(pattern, "category", "correlation"),
+                    "severity": getattr(pattern, "severity", "medium"),
+                    "description": getattr(pattern, "description", pattern.correlation_rule),
+                    "evidence": getattr(pattern, "evidence", {}),
+                }
+                for event_id in getattr(pattern, "affected_event_ids", []):
+                    event_to_flagged_rules.setdefault(event_id, []).append(rule_entry)
 
         # Store chunks for rollup via Async Flush Buffer
         flush_worker = get_flush_worker()
         for i, chunk in enumerate(chunks):
-            # Stamp BehavioralChunk with flagged rules
-            chunk_ip = chunk.actor.src_ip if chunk.actor else None
-            chunk_ips = (chunk.actor.src_ips if chunk.actor else []) or []
+            # Stamp BehavioralChunk with flagged rules that actually fired in this chunk's events
             rules: list = []
             seen_rules: set = set()
-            for ip in ([chunk_ip] if chunk_ip else []) + list(chunk_ips):
-                for r in ip_to_flagged_rules.get(ip, []):
+            for event_id in getattr(chunk, "source_event_ids", []):
+                for r in event_to_flagged_rules.get(event_id, []):
                     key = (r["tier"], r["rule"])
                     if key not in seen_rules:
                         rules.append(r)
@@ -592,93 +637,55 @@ async def analyze_file(
                 # Collect dropped threats with LLM remarks for the report
                 # (dropped_threats was already initialised above; we append to it here)
 
-                # Create Tier 1 incidents only for AI-confirmed IPs
-                for threat in tier1_result.high_confidence_threats:
+                # Create Tier 1 incidents
+                for threat in tier1_result.threats:
                     threat_ip = threat.src_ip or ""
                     confirmed = (
                         threat_ip in ai_confirmed_ips
                         or any(ip in ai_confirmed_ips for ip in threat.src_ips if ip)
                     )
-                    if not confirmed:
-                        fp_remark = _extract_fp_remark(threat_ip)
-                        logger.info(
-                            f"Tier 1 finding dropped by AI (FP) | rule={threat.rule_name}, ip={threat.src_ip} | remark={fp_remark}"
-                        )
-                        dropped_threats.append({
-                            "tier": "Tier 1 (Deterministic)",
-                            "rule": threat.rule_name,
-                            "source_ip": threat.src_ip,
-                            "severity": threat.severity.value,
-                            "confidence": threat.confidence,
-                            "llm_drop_remark": fp_remark,
-                        })
-                        continue
+                    
                     incident = incident_service.create_from_deterministic_threat(
                         threat, file_id=parsed_uuid,
                     )
                     if incident:
-                        ai_outs = ip_to_ai_outputs.get(threat_ip, [])
-                        if ai_outs:
-                            max_conf = max((out.overall_confidence for out in ai_outs), default=0.0)
-                            incident.detection_tier = "AI Analyzed" if max_conf >= 0.7 else "AI Analyzed - needs human review"
+                        if not confirmed:
+                            fp_remark = _extract_fp_remark(threat_ip)
+                            logger.info(
+                                f"Tier 1 finding dropped by AI (FP), lodging as human review | rule={threat.rule_name}, ip={threat.src_ip} | remark={fp_remark}"
+                            )
+                            incident.detection_tier = "AI Analyzed - needs human review"
+                        else:
+                            ai_outs = ip_to_ai_outputs.get(threat_ip, [])
+                            if ai_outs:
+                                max_conf = max((out.overall_confidence for out in ai_outs), default=0.0)
+                                incident.detection_tier = "AI Analyzed" if max_conf >= 0.7 else "AI Analyzed - needs human review"
                         all_incidents.append(incident)
 
-                # Create Tier 2 incidents only for AI-confirmed IPs
-                if settings.enable_correlation_tier:
-                    for pattern in tier2_result.new_patterns:
-                        if pattern.src_ip not in ai_confirmed_ips:
-                            fp_remark = _extract_fp_remark(pattern.src_ip or "")
-                            logger.info(
-                                f"Tier 2 finding dropped by AI (FP) | rule={pattern.correlation_rule}, ip={pattern.src_ip} | remark={fp_remark}"
-                            )
-                            dropped_threats.append({
-                                "tier": "Tier 2 (Correlation)",
-                                "rule": pattern.correlation_rule,
-                                "source_ip": pattern.src_ip,
-                                "severity": pattern.severity,
-                                "confidence": pattern.confidence,
-                                "llm_drop_remark": fp_remark,
-                            })
-                            continue
-                        incident = incident_service.create_from_correlation(
-                            pattern, file_id=parsed_uuid,
-                        )
-                        if incident:
-                            all_incidents.append(incident)
+                # Create Tier 2 incidents
+                _process_correlation_patterns(tier2_result.new_patterns, ai_confirmed_ips)
 
                 await orchestrator.close()
             else:
                 logger.info("No chunks qualified for AI review — falling back to direct incident creation")
                 # Fallback: no chunks to review, create incidents directly
-                for threat in tier1_result.high_confidence_threats:
+                for threat in tier1_result.threats:
                     incident = incident_service.create_from_deterministic_threat(
                         threat, file_id=parsed_uuid,
                     )
                     if incident:
                         all_incidents.append(incident)
-                if settings.enable_correlation_tier:
-                    for pattern in tier2_result.new_patterns:
-                        incident = incident_service.create_from_correlation(
-                            pattern, file_id=parsed_uuid,
-                        )
-                        if incident:
-                            all_incidents.append(incident)
+                _process_correlation_patterns(tier2_result.new_patterns, None)
         else:
             logger.info("Tier 3 AI skipped — creating incidents directly from deterministic findings")
             # AI tier disabled or no findings: create incidents directly from Tier 1 & Tier 2
-            for threat in tier1_result.high_confidence_threats:
+            for threat in tier1_result.threats:
                 incident = incident_service.create_from_deterministic_threat(
                     threat, file_id=parsed_uuid,
                 )
                 if incident:
                     all_incidents.append(incident)
-            if settings.enable_correlation_tier:
-                for pattern in tier2_result.new_patterns:
-                    incident = incident_service.create_from_correlation(
-                        pattern, file_id=parsed_uuid,
-                    )
-                    if incident:
-                        all_incidents.append(incident)
+            _process_correlation_patterns(tier2_result.new_patterns, None)
 
         def _incident_id_value(incident: Any) -> Any:
             if hasattr(incident, "incident_id"):

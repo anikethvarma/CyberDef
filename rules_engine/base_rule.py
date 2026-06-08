@@ -166,7 +166,7 @@ class ScoredThreatRule(ThreatRule, ABC):
         if (
             self.enforce_success_status_filter
             and event.http_status is not None
-            and not (200 <= event.http_status < 400)
+            and not (200 <= event.http_status < 300)
         ):
             return None
 
